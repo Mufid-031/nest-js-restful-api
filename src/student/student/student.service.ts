@@ -53,7 +53,7 @@ export class StudentService {
             data: {
                 name: requestRegister.name,
                 email: requestRegister.email,
-                password: await this.prismaService.hashPassword(requestRegister.password),
+                password: requestRegister.password,
                 role: 'STUDENT',
                 student: {
                     create: {
@@ -89,16 +89,16 @@ export class StudentService {
                 }
             }
         });
-
+        
         if (!user) {
             throw this.errorService.throwError(400, 'NIM or password is wrong');
-        }
-
+        };
+        
         const isPasswordCorrect = await this.prismaService.comparePassword(requestLogin.password, user.password);
-
+        
         if (!isPasswordCorrect) {
             throw this.errorService.throwError(400, 'NIM or password is wrong');
-        }
+        };
 
         user = await this.prismaService.user.update({
             where: {
@@ -113,6 +113,24 @@ export class StudentService {
             status: 200,
             message: 'Student logged in successfully',
             data: user
+        };
+    }
+
+    async logout(user: User): Promise<UserResponse> {
+
+        const student = await this.prismaService.user.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                token: null,
+            }
+        });
+
+        return {
+            status: 200,
+            message: 'Logout success',
+            data: student
         }
     }
 
@@ -124,11 +142,15 @@ export class StudentService {
             }
         });
 
+        if (!students) {
+            throw this.errorService.throwError(404, 'Students not found');
+        };
+
         return {
             status: 200,
             message: 'Students retrieved successfully',
             data: students
-        }
+        };
 
     }
 

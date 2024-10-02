@@ -106,4 +106,22 @@ export class AdminService {
             data: user
         };
     }
+
+    async logout(user: User): Promise<UserResponse> {
+
+        const admin = await this.prismaService.user.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                token: null,
+            }
+        });
+
+        return {
+            status: 200,
+            message: 'Logout success',
+            data: admin
+        };
+    }
 }

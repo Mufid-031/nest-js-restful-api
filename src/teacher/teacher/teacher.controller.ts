@@ -1,12 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Header, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, Post } from '@nestjs/common';
 import { TeacherService } from './teacher.service';
 import { User } from '@prisma/client';
+import { GetUser } from 'src/decorators/user.decorator';
 
 interface UserResponse {
     status: number;
     message: string;
-    data: User;    
+    data: User | User[];    
 };
 
 @Controller('/api/teacher')
@@ -35,5 +36,21 @@ export class TeacherController {
         @Body('password') password: string
     ): Promise<UserResponse> {
         return await this.TeacherService.login(nip, password);
+    }
+
+    @Post('/logout')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async logout(
+        @GetUser() user: User
+    ): Promise<UserResponse> {
+        return await this.TeacherService.logout(user);
+    }
+
+    @Get()
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async getTeachers(): Promise<UserResponse> {
+        return await this.TeacherService.getTeachers();
     }
 }

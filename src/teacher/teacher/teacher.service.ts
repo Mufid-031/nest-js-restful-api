@@ -10,7 +10,7 @@ import { User } from '@prisma/client';
 interface UserResponse {
     status: number;
     message: string;
-    data: User;
+    data: User | User[];
 }
 
 @Injectable()
@@ -45,7 +45,7 @@ export class TeacherService {
 
         if (userCount !== 0) {
             throw this.errorService.throwError(400, 'Email already exists');
-        }
+        };
 
         requestRegister.password = await this.prismaService.hashPassword(requestRegister.password);
 
@@ -53,7 +53,7 @@ export class TeacherService {
             data: {
                 name: requestRegister.name,
                 email: requestRegister.email,
-                password: await this.prismaService.hashPassword(requestRegister.password),
+                password: requestRegister.password,
                 role: 'TEACHER',
                 teacher: {
                     create: {
@@ -92,13 +92,13 @@ export class TeacherService {
 
         if (!user) {
             throw this.errorService.throwError(400, 'NIP or password is wrong');
-        }
+        };
 
         const isPasswordCorrect = await this.prismaService.comparePassword(requestLogin.password, user.password);
 
         if (!isPasswordCorrect) {
             throw this.errorService.throwError(400, 'NIP or password is wrong');
-        }
+        };
 
         user = await this.prismaService.user.update({
             where: {
@@ -113,6 +113,43 @@ export class TeacherService {
             status: 200,
             message: 'User logged in successfully',
             data: user
+        };
+    }
+
+    async logout(user: User): Promise<UserResponse> {
+
+        const teacher = await this.prismaService.user.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                token: null,
+            }
+        });
+
+        return {
+            status: 200,
+            message: 'Logout success',
+            data: teacher
         }
+    }
+
+    async getTeachers(): Promise<UserResponse> {
+
+        const teachers = await this.prismaService.user.findMany({
+            where: {
+                role: 'TEACHER',
+            }
+        });
+
+        if (!teachers) {
+            throw this.errorService.throwError(404, 'Teachers not found');
+        };
+
+        return {
+            status: 200,
+            message: 'Teachers retrieved successfully',
+            data: teachers
+        };
     }
 }

@@ -2,6 +2,7 @@
 import { Body, Controller, Header, HttpCode, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { User } from '@prisma/client';
+import { GetUser } from 'src/decorators/user.decorator';
 
 interface UserResponse {
     status: number;
@@ -34,5 +35,14 @@ export class AdminController {
         @Body('password') password: string
     ): Promise<UserResponse> {
         return await this.adminService.login(email, password);
+    }
+
+    @Post('/logout')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async logout(
+        @GetUser() user: User
+    ): Promise<UserResponse> {
+        return await this.adminService.logout(user);
     }
 }
