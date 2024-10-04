@@ -45,4 +45,16 @@ export class AdminController {
     ): Promise<UserResponse> {
         return await this.adminService.logout(user);
     }
+
+    @Post('/update')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(201)
+    async update(
+        @GetUser() user: User,
+        @Body('name') name?: string,
+        @Body('email') email?: string,
+        @Body('password') password?: string
+    ): Promise<UserResponse> {
+        return await this.adminService.update(user, name, email, password);
+    }
 }

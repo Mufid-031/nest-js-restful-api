@@ -152,4 +152,44 @@ export class TeacherService {
             data: teachers
         };
     }
+
+    async update(user: User, name?: string, email?: string, password?: string): Promise<UserResponse> {
+
+        const schema = z.object({
+            name: z.string().min(1).max(100).optional(),
+            email: z.string().min(1).max(100).optional(),
+            password: z.string().min(1).max(100).optional(),
+        });
+
+        const requestUpdate = this.validation.validate(schema, {
+            name,
+            email,
+            password
+        });
+
+        if (requestUpdate.name) {
+            user.name = requestUpdate.name;
+        };
+
+        if (requestUpdate.email) {
+            user.email = requestUpdate.email;
+        };
+
+        if (requestUpdate.password) {
+            user.password = await this.prismaService.hashPassword(requestUpdate.password);
+        };
+
+        const teacher = await this.prismaService.user.update({
+            where: {
+                id: user.id,
+            },
+            data: requestUpdate,
+        });
+
+        return {
+            status: 201,
+            message: 'User updated successfully',
+            data: teacher
+        };
+    }
 }

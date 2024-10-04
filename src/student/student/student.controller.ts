@@ -54,4 +54,16 @@ export class StudentController {
     async getStudents(): Promise<UserResponse> {
         return await this.studentService.getStudents();
     }
+
+    @Post('/update')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(201)
+    async update(
+        @GetUser() user: User,
+        @Body('name') name?: string,
+        @Body('email') email?: string,
+        @Body('password') password?: string
+    ): Promise<UserResponse> {
+        return await this.studentService.update(user, name, email, password);
+    }
 }
