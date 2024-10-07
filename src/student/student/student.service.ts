@@ -10,7 +10,7 @@ import { User } from '@prisma/client';
 interface UserResponse {
     status: number;
     message: string;
-    data: User | User[];
+    data?: User | User[];
 }
 
 @Injectable()
@@ -139,6 +139,9 @@ export class StudentService {
         const students = await this.prismaService.user.findMany({
             where: {
                 role: 'STUDENT'
+            },
+            include: {
+                student: true
             }
         });
 
@@ -189,6 +192,46 @@ export class StudentService {
         return {
             status: 201,
             message: 'Student updated successfully',
+            data: student
+        };
+    }
+
+    async delete(id: number): Promise<UserResponse> {
+
+        const student = await this.prismaService.user.deleteMany({
+            where: {
+                id: id
+            }
+        });
+
+        if (!student) {
+            throw this.errorService.throwError(404, "Student not found");
+        };
+
+        return {
+            status: 201,
+            message: "Success delete student",
+        };
+    }
+
+    async getStudent(id: number): Promise<UserResponse> {
+
+        const student = await this.prismaService.user.findUnique({
+            where: {
+                id: id,
+            },
+            include: {
+                student: true,
+            }
+        });
+
+        if (!student) {
+            throw this.errorService.throwError(404, "Student not found");
+        };
+
+        return {
+            status: 200,
+            message: "Success get student",
             data: student
         };
     }

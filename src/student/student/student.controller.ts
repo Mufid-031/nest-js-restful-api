@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Header, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
@@ -7,7 +7,7 @@ import { GetUser } from 'src/decorators/user.decorator';
 interface UserResponse {
     status: number;
     message: string;
-    data: User | User[];
+    data?: User | User[];
 }
 
 @Controller('/api/student')
@@ -39,7 +39,7 @@ export class StudentController {
         return await this.studentService.login(nim, password);
     }
 
-    @Post('/logout')
+    @Patch('/logout')
     @Header('Content-Type', 'application/json')
     @HttpCode(200)
     async logout(
@@ -55,7 +55,7 @@ export class StudentController {
         return await this.studentService.getStudents();
     }
 
-    @Post('/update')
+    @Patch()
     @Header('Content-Type', 'application/json')
     @HttpCode(201)
     async update(
@@ -65,5 +65,14 @@ export class StudentController {
         @Body('password') password?: string
     ): Promise<UserResponse> {
         return await this.studentService.update(user, name, email, password);
+    }
+
+    @Delete('/:id')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(201)
+    async delete(
+        @Param('id') id: number
+    ): Promise<UserResponse> {
+        return this.studentService.delete(id);
     }
 }

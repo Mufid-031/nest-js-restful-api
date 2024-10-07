@@ -24,6 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
       '/api/student/login',
       '/api/teacher/register',
       '/api/teacher/login',
+      '/api/users/param/:id'
     ];
 
     if (!req.path.startsWith('/api')) {

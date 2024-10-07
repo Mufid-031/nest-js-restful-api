@@ -13,6 +13,12 @@ interface UserResponse {
     data: User,
 }
 
+enum Role {
+    ADMIN = 'ADMIN',
+    TEACHER = 'TEACHER',
+    STUDENT = 'STUDENT',
+}
+
 @Injectable()
 export class AdminService {
     constructor(
@@ -162,6 +168,63 @@ export class AdminService {
             status: 201,
             message: 'Update success',
             data: admin
+        }
+    }
+
+    async updateUser(id: number, role: Role, name?: string, email?: string, password?: string): Promise<UserResponse> {
+        
+        const schema = z.object({
+            id: z.number().min(1),
+            role: z.enum([Role.ADMIN, Role.TEACHER, Role.STUDENT]),
+            name: z.string().min(1).max(100).optional(),
+            email: z.string().min(1).max(100).optional(),
+            password: z.string().min(1).max(100).optional(),
+        });
+
+        const requestUpdate = this.validation.validate(schema, {
+            id,
+            role,
+            name,
+            email,
+            password,
+        });
+
+        if (requestUpdate.role === Role.TEACHER) {
+            
+            const teacher = await this.prismaService.user.findUnique({
+                where: {
+                    id: requestUpdate.id,
+                }
+            });
+
+            if (!teacher) {
+                throw this.errorService.throwError(404, "Teacher not found");
+            };
+
+            if (requestUpdate.name) {
+                teacher.name = requestUpdate.name;
+            };
+
+            if (requestUpdate.email) {
+                teacher.email = requestUpdate.email;
+            };
+
+            if (requestUpdate.password) {
+                teacher.password = await this.prismaService.hashPassword(requestUpdate.password);
+            };
+
+            const teacherUpdate = await this.prismaService.user.update({
+                where: {
+                    id: requestUpdate.id,
+                },
+                data: teacher
+            });
+
+            return {
+                status: 201,
+                message: "Success update teacher",
+                data: teacherUpdate
+            };
         }
     }
 }

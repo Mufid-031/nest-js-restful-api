@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Header, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Header, HttpCode, Patch, Post } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
@@ -37,7 +37,7 @@ export class AdminController {
         return await this.adminService.login(email, password);
     }
 
-    @Post('/logout')
+    @Patch('/logout')
     @Header('Content-Type', 'application/json')
     @HttpCode(200)
     async logout(
@@ -46,7 +46,7 @@ export class AdminController {
         return await this.adminService.logout(user);
     }
 
-    @Post('/update')
+    @Patch()
     @Header('Content-Type', 'application/json')
     @HttpCode(201)
     async update(
