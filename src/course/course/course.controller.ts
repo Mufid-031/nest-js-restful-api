@@ -76,4 +76,5 @@ export class CourseController {
     ): Promise<CourseResponse> {
         return await this.courseService.getCourse(code);
     }
+    
 }
