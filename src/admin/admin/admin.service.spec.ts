@@ -24,10 +24,18 @@ describe('AdminService', () => {
     const password = 'admin';
     const result = await service.register(name, email, password);
     expect(result).toBe({
-      id: expect.any(String),
-      name,
-      email,
-      password: expect.any(String),
+      status: 201,
+      message: 'Register success',
+      data: {
+        id: expect.any(Number),
+        name,
+        email,
+        password,
+        role: 'ADMIN',
+        updateAt: expect.any(Date),
+        createAt: expect.any(Date),
+        token : expect.any(null),
+      },
     });
   });
 
