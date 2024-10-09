@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Grade } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
-import { ValidationService } from 'src/validation/validation/validation.service';
-import { z } from 'zod';
+import { GradeService as GradeValidationService } from 'src/validation/grade/grade.service';
 
 interface GradeResponse {
     status: number;
@@ -15,22 +14,14 @@ interface GradeResponse {
 @Injectable()
 export class GradeService {
     constructor(
-        private readonly validation: ValidationService,
         private readonly prismaService: PrismaService,
-        private readonly errorService: ErrorService
+        private readonly errorService: ErrorService,
+        private readonly GradeValidationService: GradeValidationService
     ) {}
 
     async create(enrollmentId: number, grade: number): Promise<GradeResponse> {
         
-        const schema = z.object({
-            enrollmentId: z.number().min(1),
-            grade: z.number().min(0).max(100)
-        });
-
-        const requestCreate = this.validation.validate(schema, {
-            enrollmentId,
-            grade
-        });
+        const requestCreate = this.GradeValidationService.create(enrollmentId, grade);
 
         const enrollmentGrade = await this.prismaService.grade.update({
             where: {
@@ -54,15 +45,7 @@ export class GradeService {
 
     async update(enrollmentId: number, grade: number): Promise<GradeResponse> {
         
-        const schema = z.object({
-            enrollmentId: z.number().min(1),
-            grade: z.number().min(0).max(100)
-        });
-
-        const requestUpdate = this.validation.validate(schema, {
-            enrollmentId,
-            grade
-        });
+        const requestUpdate = this.GradeValidationService.update(enrollmentId, grade);
 
         const enrollmentGrade = await this.prismaService.grade.update({
             where: {

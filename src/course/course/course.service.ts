@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Course } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
-import { ValidationService } from 'src/validation/validation/validation.service';
-import { z } from 'zod';
+import { CourseService as CourseValidationService } from 'src/validation/course/course.service';
 
 enum Semester {
     SEMESTER_1 = 'semester_1',
@@ -26,28 +25,14 @@ interface CourseResponse {
 @Injectable()
 export class CourseService {
     constructor(
-        private readonly validation: ValidationService,
         private readonly prismaService: PrismaService,
-        private readonly errorService: ErrorService
+        private readonly errorService: ErrorService,
+        private readonly CourseValidationService: CourseValidationService
     ) {}
 
     async create(name: string, code: string, teacherId: number, sks: number, semester: Semester): Promise<CourseResponse> {
         
-        const schema = z.object({
-            name: z.string().min(1).max(100),
-            code: z.string().min(1).max(100),
-            teacherId: z.number().min(1),
-            sks: z.number().min(1).max(100),
-            semester: z.enum([Semester.SEMESTER_1, Semester.SEMESTER_2, Semester.SEMESTER_3, Semester.SEMESTER_4, Semester.SEMESTER_5, Semester.SEMESTER_6, Semester.SEMESTER_7, Semester.SEMESTER_8])
-        });
-
-        const requestCreate = this.validation.validate(schema, {
-            name,
-            code,
-            teacherId,
-            sks,
-            semester
-        });
+        const requestCreate = this.CourseValidationService.create(name, code, teacherId, sks, semester);
 
         const course = await this.prismaService.course.create({
             data: {
@@ -68,21 +53,7 @@ export class CourseService {
 
     async update(name?: string, code?: string, teacherId?: number, sks?: number, semester?: Semester): Promise<CourseResponse> {
 
-        const schema = z.object({
-            name: z.string().min(1).max(100).optional(),
-            code: z.string().min(1).max(100).optional(),
-            teacherId: z.number().min(1).optional(),
-            sks: z.number().min(1).max(100).optional(),
-            semester: z.enum([Semester.SEMESTER_1, Semester.SEMESTER_2, Semester.SEMESTER_3, Semester.SEMESTER_4, Semester.SEMESTER_5, Semester.SEMESTER_6, Semester.SEMESTER_7, Semester.SEMESTER_8]).optional()
-        });
-
-        const requestUpdate = this.validation.validate(schema, {
-            name,
-            code,
-            teacherId,
-            sks,
-            semester
-        });
+        const requestUpdate = this.CourseValidationService.update(name, code, teacherId, sks, semester);
 
         const course = await this.prismaService.course.findUnique({
             where: {
@@ -130,13 +101,7 @@ export class CourseService {
 
     async delete(code: string): Promise<CourseResponse> {
         
-        const schema = z.object({
-            code: z.string().min(1).max(100)
-        });
-
-        const requestDelete = this.validation.validate(schema, {
-            code,
-        });
+        const requestDelete = this.CourseValidationService.delete(code);
 
         const course = await this.prismaService.course.findUnique({
             where: {
@@ -168,13 +133,7 @@ export class CourseService {
 
     async getCourse(code: string): Promise<CourseResponse> {
         
-        const schema = z.object({
-            code: z.string().min(1).max(100)
-        });
-
-        const requestGetCourse = this.validation.validate(schema, {
-            code,
-        });
+        const requestGetCourse = this.CourseValidationService.getCourse(code);
 
         const course = await this.prismaService.course.findUnique({
             where: {

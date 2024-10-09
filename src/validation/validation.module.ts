@@ -16,8 +16,8 @@ export class ValidationModule {
     return {
       module: ValidationModule,
       global: true,
-      providers: [ValidationService],
-      exports: [ValidationService],
+      providers: [ValidationService, AdminService, TeacherService, StudentService, EnrollmentService, GradeService, CourseService],
+      exports: [ValidationService, AdminService, TeacherService, StudentService, EnrollmentService, GradeService, CourseService],
     };
   }
 }

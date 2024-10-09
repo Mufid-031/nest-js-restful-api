@@ -2,8 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
-import { ValidationService } from 'src/validation/validation/validation.service';
-import { z } from 'zod';
+import { TeacherService as TeacherValidationService } from 'src/validation/teacher/teacher.service';
 import { v4 as uuid } from "uuid";
 import { User } from '@prisma/client';
 
@@ -16,26 +15,14 @@ interface UserResponse {
 @Injectable()
 export class TeacherService {
     constructor(
-        private readonly validation: ValidationService,
         private readonly prismaService: PrismaService,
         private readonly errorService: ErrorService,
+        private readonly TeacherValidationService: TeacherValidationService
     ) {}
 
     async register(name: string, email: string, password: string, nip: string): Promise<UserResponse> {
 
-        const schema = z.object({
-            name: z.string().min(1).max(100),
-            email: z.string().min(1).max(100),
-            password: z.string().min(1).max(100),
-            nip: z.string().min(1).max(100),
-        });
-
-        const requestRegister = this.validation.validate(schema, {
-            name,
-            email,
-            password,
-            nip
-        });
+        const requestRegister = this.TeacherValidationService.register(name, email, password, nip);
 
         const userCount = await this.prismaService.user.count({
             where: {
@@ -72,15 +59,7 @@ export class TeacherService {
 
     async login(nip: string, password: string): Promise<UserResponse> {
 
-        const schema = z.object({
-            nip: z.string().min(1).max(100),
-            password: z.string().min(1).max(100),
-        });
-
-        const requestLogin = this.validation.validate(schema, {
-            nip,
-            password
-        });
+        const requestLogin = this.TeacherValidationService.login(nip, password);
 
         let user = await this.prismaService.user.findFirst({
             where: {
@@ -158,17 +137,7 @@ export class TeacherService {
 
     async update(user: User, name?: string, email?: string, password?: string): Promise<UserResponse> {
 
-        const schema = z.object({
-            name: z.string().min(1).max(100).optional(),
-            email: z.string().min(1).max(100).optional(),
-            password: z.string().min(1).max(100).optional(),
-        });
-
-        const requestUpdate = this.validation.validate(schema, {
-            name,
-            email,
-            password
-        });
+        const requestUpdate = this.TeacherValidationService.update(name, email, password);
 
         if (requestUpdate.name) {
             user.name = requestUpdate.name;

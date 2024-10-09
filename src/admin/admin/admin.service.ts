@@ -2,10 +2,9 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
-import { ValidationService } from 'src/validation/validation/validation.service';
-import { z } from 'zod';
 import { v4 as uuid } from "uuid";
 import { User } from '@prisma/client';
+import { AdminService as AdminValidationService } from 'src/validation/admin/admin.service';
 
 interface UserResponse {
     status: number,
@@ -22,24 +21,14 @@ enum Role {
 @Injectable()
 export class AdminService {
     constructor(
-        private readonly validation: ValidationService,
         private readonly prismaService: PrismaService,
-        private readonly errorService: ErrorService
+        private readonly errorService: ErrorService,
+        private readonly AdminValidationService: AdminValidationService
     ) {}
 
     async register(name: string, email: string, password: string): Promise<UserResponse> {
 
-        const schema = z.object({
-            name: z.string().min(1).max(100),
-            email: z.string().min(1).max(100),
-            password: z.string().min(1).max(100),
-        });
-
-        const requestRegister = this.validation.validate(schema, {
-            name,
-            email,
-            password,
-        });
+        const requestRegister = this.AdminValidationService.register(name, email, password);
 
         const userCount = await this.prismaService.user.count({
             where: {
@@ -71,15 +60,7 @@ export class AdminService {
 
     async login(email: string, password: string): Promise<UserResponse> {
 
-        const schema = z.object({
-            email: z.string().min(1).max(100),
-            password: z.string().min(1).max(100),
-        });
-
-        const requestLogin = this.validation.validate(schema, {
-            email,
-            password,
-        });
+        const requestLogin = this.AdminValidationService.login(email, password);
 
         let user = await this.prismaService.user.findUnique({
             where: {
@@ -133,17 +114,7 @@ export class AdminService {
 
     async update(user: User, name?: string, email?: string, password?: string): Promise<UserResponse> {
 
-        const schema = z.object({
-            name: z.string().min(1).max(100).optional(),
-            email: z.string().min(1).max(100).optional(),
-            password: z.string().min(1).max(100).optional(),
-        });
-
-        const requestUpdate = this.validation.validate(schema, {
-            name,
-            email,
-            password,
-        });
+        const requestUpdate = this.AdminValidationService.update(name, email, password);
 
         if (requestUpdate.name) {
             user.name = requestUpdate.name;
@@ -173,21 +144,7 @@ export class AdminService {
 
     async updateUser(id: number, role: Role, name?: string, email?: string, password?: string): Promise<UserResponse> {
         
-        const schema = z.object({
-            id: z.number().min(1),
-            role: z.enum([Role.ADMIN, Role.TEACHER, Role.STUDENT]),
-            name: z.string().min(1).max(100).optional(),
-            email: z.string().min(1).max(100).optional(),
-            password: z.string().min(1).max(100).optional(),
-        });
-
-        const requestUpdate = this.validation.validate(schema, {
-            id,
-            role,
-            name,
-            email,
-            password,
-        });
+        const requestUpdate = this.AdminValidationService.updateUser(id, role, name, email, password);
 
         if (requestUpdate.role === Role.TEACHER) {
             

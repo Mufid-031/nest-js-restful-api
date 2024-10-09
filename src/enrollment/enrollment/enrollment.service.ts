@@ -4,8 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Enrollment } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
-import { ValidationService } from 'src/validation/validation/validation.service';
-import { z } from 'zod';
+import { EnrollmentService as EnrollmentValidationService } from 'src/validation/enrollment/enrollment.service';
 
 interface EnrollmentResponse {
     status: number;
@@ -16,22 +15,14 @@ interface EnrollmentResponse {
 @Injectable()
 export class EnrollmentService {
     constructor(
-        private readonly validation: ValidationService,
         private readonly prismaService: PrismaService,
-        private readonly errorService: ErrorService
+        private readonly errorService: ErrorService,
+        private readonly EnrollmentValidationService: EnrollmentValidationService
     ) {}
 
     async register(studentId: number, courseId: number): Promise<EnrollmentResponse> {
 
-        const schema = z.object({
-            studentId: z.number().min(1),
-            courseId: z.number().min(1)
-        });
-
-        const requestRegister = this.validation.validate(schema, {
-            studentId,
-            courseId
-        });
+        const requestRegister = this.EnrollmentValidationService.register(studentId, courseId);
 
         const enrollment = await this.prismaService.enrollment.create({
             data: {
@@ -49,15 +40,7 @@ export class EnrollmentService {
 
     async registerMany(studentId: number, coursesId: number[]): Promise<EnrollmentResponse> {
         
-        const schema = z.object({
-            studentId: z.number().min(1),
-            coursesId: z.array(z.number().min(1))
-        });
-
-        const requestRegister = this.validation.validate(schema, {
-            studentId,
-            coursesId
-        });
+        const requestRegister = this.EnrollmentValidationService.registerMany(studentId, coursesId);
 
         const { count } = await this.prismaService.enrollment.createMany({
             data: requestRegister.coursesId.map(courseId => ({
