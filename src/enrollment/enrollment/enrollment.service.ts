@@ -42,11 +42,13 @@ export class EnrollmentService {
         
         const requestRegister = this.EnrollmentValidationService.registerMany(studentId, coursesId);
 
-        const { count } = await this.prismaService.enrollment.createMany({
-            data: requestRegister.coursesId.map(courseId => ({
-                studentId: requestRegister.studentId,
-                courseId
-            }))
+        await this.prismaService.enrollment.createMany({
+            data: requestRegister.coursesId.map((courseId) => {
+                return {
+                    studentId: requestRegister.studentId,
+                    courseId: courseId
+                }
+            })
         });
 
         const enrollments = await this.prismaService.enrollment.findMany({

@@ -10,6 +10,12 @@ interface UserResponse {
     data: User;
 }
 
+enum Role {
+    ADMIN = 'ADMIN',
+    TEACHER = 'TEACHER',
+    STUDENT = 'STUDENT',
+}
+
 @Controller('/api/admin')
 export class AdminController {
     constructor(
@@ -56,5 +62,18 @@ export class AdminController {
         @Body('password') password?: string
     ): Promise<UserResponse> {
         return await this.adminService.update(user, name, email, password);
+    }
+
+    @Patch('/user')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(201)
+    async updateUser(
+        @Body('id') id: number,
+        @Body('role') role: Role,
+        @Body('name') name?: string,
+        @Body('email') email?: string,
+        @Body('password') password?: string
+    ): Promise<UserResponse> {
+        return await this.adminService.updateUser(id, role, name, email, password);
     }
 }

@@ -182,6 +182,43 @@ export class AdminService {
                 message: "Success update teacher",
                 data: teacherUpdate
             };
+        } else if (requestUpdate.role === Role.STUDENT) {
+            
+            const student = await this.prismaService.user.findUnique({
+                where: {
+                    id: requestUpdate.id,
+                }
+            });
+
+            if (!student) {
+                throw this.errorService.throwError(404, "Student not found");
+            };
+
+            if (requestUpdate.name) {
+                student.name = requestUpdate.name;
+            };
+
+            if (requestUpdate.email) {
+                student.email = requestUpdate.email;
+            };
+
+            if (requestUpdate.password) {
+                student.password = await this.prismaService.hashPassword(requestUpdate.password);
+            };
+
+            const studentUpdate = await this.prismaService.user.update({
+                where: {
+                    id: requestUpdate.id,
+                },
+                data: student
+            });
+
+            return {
+                status: 201,
+                message: "Success update student",
+                data: studentUpdate
+            };
+
         }
     }
 }

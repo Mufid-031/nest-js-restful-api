@@ -51,7 +51,7 @@ export class CourseService {
         }
     }
 
-    async update(name?: string, code?: string, teacherId?: number, sks?: number, semester?: Semester): Promise<CourseResponse> {
+    async update( code: string, name?: string, teacherId?: number, sks?: number, semester?: Semester): Promise<CourseResponse> {
 
         const requestUpdate = this.CourseValidationService.update(name, code, teacherId, sks, semester);
 

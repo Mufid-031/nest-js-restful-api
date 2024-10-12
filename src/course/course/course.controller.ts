@@ -43,13 +43,13 @@ export class CourseController {
     @Header('Content-Type', 'application/json')
     @HttpCode(201)
     async update(
+        @Body('code') code: string,
         @Body('name') name?: string,
-        @Body('code') code?: string,
         @Body('teacherId') teacherId?: number,
         @Body('sks') sks?: number,
         @Body('semester') semester?: Semester
     ): Promise<CourseResponse> {
-        return this.courseService.update(name, code, teacherId, sks, semester);
+        return this.courseService.update(code, name, teacherId, sks, semester);
     }
 
     @Delete('/:code')
