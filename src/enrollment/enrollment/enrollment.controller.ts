@@ -35,21 +35,23 @@ export class EnrollmentController {
         return this.enrollmentService.registerMany(studentId, coursesId);
     }
 
-    @Delete('/:id')
+    @Delete('/:courseId')
     @Header('Content-Type', 'application/json')
     @HttpCode(201)
     async delete(
-        @Param('id') id: number
+        @Body('studentId') studentId: number,
+        @Param('courseId') courseId: number
     ): Promise<EnrollmentResponse> {
-        return this.enrollmentService.delete(id);
+        return this.enrollmentService.delete(studentId, courseId);
     }
 
     @Delete()
     @Header('Content-Type', 'application/json')
     @HttpCode(201)
     async deleteMany(
-        @Body('id') id: number[]
+        @Body('studentId') studentId: number,
+        @Body('coursesId') courseId: number[]
     ): Promise<EnrollmentResponse> {
-        return this.enrollmentService.deleteMany(id);
+        return this.enrollmentService.deleteMany(studentId,courseId);
     }
 }

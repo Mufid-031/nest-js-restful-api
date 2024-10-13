@@ -65,11 +65,12 @@ export class EnrollmentService {
         }
     }
 
-    async delete(id: number): Promise<EnrollmentResponse> {
+    async delete(studentId: number, courseId: number): Promise<EnrollmentResponse> {
 
         const enrollment = await this.prismaService.enrollment.deleteMany({
             where: {
-                id: id,
+                studentId: studentId,
+                courseId: courseId
             }
         });
 
@@ -83,11 +84,12 @@ export class EnrollmentService {
         };
     }
 
-    async deleteMany(id: number[]): Promise<EnrollmentResponse> {
+    async deleteMany(studentId: number, courseId: number[]): Promise<EnrollmentResponse> {
         
         const enrollments = await this.prismaService.enrollment.deleteMany({
             where: {
-                id: { in: id }
+                studentId: studentId,
+                courseId: { in: courseId }
             }
         });
 
