@@ -2,7 +2,6 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
 import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { AdminModule } from './admin/admin.module';
@@ -16,7 +15,6 @@ import { AuthMiddleware } from './middleware/auth/auth.middleware';
 
 @Module({
   imports: [
-    UserModule,
     StudentModule,
     TeacherModule,
     AdminModule,

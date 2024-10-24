@@ -147,4 +147,25 @@ export class CourseService {
             data: course
         };
     }
+
+    async getCourseByName(name: string): Promise<CourseResponse> {
+        
+        const course = await this.prismaService.course.findMany({
+            where: {
+                name: {
+                    contains: name
+                }
+            }
+        });
+
+        if (!course) {
+            throw this.errorService.throwError(404, "Course not found");
+        };
+
+        return {
+            status: 200,
+            message: "Success get course",
+            data: course
+        };
+    }
 }

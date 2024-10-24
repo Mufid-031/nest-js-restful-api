@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Header, HttpCode, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpCode, Patch, Post, Query } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
@@ -7,7 +7,7 @@ import { GetUser } from 'src/decorators/user.decorator';
 interface UserResponse {
     status: number;
     message: string;
-    data: User;
+    data: User | User[];
 }
 
 enum Role {
@@ -75,5 +75,23 @@ export class AdminController {
         @Body('password') password?: string
     ): Promise<UserResponse> {
         return await this.adminService.updateUser(id, role, name, email, password);
+    }
+
+    @Get('/students')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async getStudentByName(
+        @Query('name') name: string
+    ): Promise<UserResponse> {
+        return await this.adminService.getStudentByName(name);
+    }
+
+    @Get('/teachers')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async getTeacherByName(
+        @Query('name') name: string
+    ): Promise<UserResponse> {
+        return await this.adminService.getTeacherByName(name);
     }
 }

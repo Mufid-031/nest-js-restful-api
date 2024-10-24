@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Delete, Get, Header, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { Course } from '@prisma/client';
 
@@ -75,6 +75,15 @@ export class CourseController {
         @Param('code') code: string
     ): Promise<CourseResponse> {
         return await this.courseService.getCourse(code);
+    }
+
+    @Get('/search')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async getCourseByName(
+        @Query('name') name: string
+    ): Promise<CourseResponse> {
+        return await this.courseService.getCourseByName(name);
     }
     
 }

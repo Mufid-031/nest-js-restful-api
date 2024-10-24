@@ -9,7 +9,7 @@ import { AdminService as AdminValidationService } from 'src/validation/admin/adm
 interface UserResponse {
     status: number,
     message: string,
-    data: User,
+    data: User | User[],
 }
 
 enum Role {
@@ -218,7 +218,48 @@ export class AdminService {
                 message: "Success update student",
                 data: studentUpdate
             };
-
         }
+    }
+
+    async getStudentByName(name: string): Promise<UserResponse> {
+
+        const student = await this.prismaService.user.findMany({
+            where: {
+                name: {
+                    contains: name
+                }
+            }
+        });
+
+        if (!student) {
+            throw this.errorService.throwError(404, "Student not found");
+        };
+
+        return {
+            status: 200,
+            message: "Success get student",
+            data: student
+        };
+    }
+
+    async getTeacherByName(name: string): Promise<UserResponse> {
+
+        const teacher = await this.prismaService.user.findMany({
+            where: {
+                name: {
+                    contains: name
+                }
+            }
+        });
+
+        if (!teacher) {
+            throw this.errorService.throwError(404, "Teacher not found");
+        };
+
+        return {
+            status: 200,
+            message: "Success get teacher",
+            data: teacher
+        };
     }
 }

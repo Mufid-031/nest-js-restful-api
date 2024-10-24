@@ -75,4 +75,13 @@ export class StudentController {
     ): Promise<UserResponse> {
         return this.studentService.delete(id);
     }
+
+    @Get('/:id')
+    @Header('Content-Type', 'application/json')
+    @HttpCode(200)
+    async getStudent(
+        @Param('id') id: number
+    ): Promise<UserResponse> {
+        return this.studentService.getStudent(id);
+    }
 }
