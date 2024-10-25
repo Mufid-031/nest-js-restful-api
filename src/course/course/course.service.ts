@@ -6,166 +6,255 @@ import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { CourseService as CourseValidationService } from 'src/validation/course/course.service';
 
 enum Semester {
-    SEMESTER_1 = 'semester_1',
-    SEMESTER_2 = 'semester_2',
-    SEMESTER_3 = 'semester_3',
-    SEMESTER_4 = 'semester_4',
-    SEMESTER_5 = 'semester_5',
-    SEMESTER_6 = 'semester_6',
-    SEMESTER_7 = 'semester_7',
-    SEMESTER_8 = 'semester_8',
+  SEMESTER_1 = 'semester_1',
+  SEMESTER_2 = 'semester_2',
+  SEMESTER_3 = 'semester_3',
+  SEMESTER_4 = 'semester_4',
+  SEMESTER_5 = 'semester_5',
+  SEMESTER_6 = 'semester_6',
+  SEMESTER_7 = 'semester_7',
+  SEMESTER_8 = 'semester_8',
 }
 
 interface CourseResponse {
-    status: number;
-    message: string;
-    data: Course | Course[];
+  status: number;
+  message: string;
+  data?: Course | Course[];
+}
+
+enum DayOfWeek {
+  MONDAY = 'MONDAY',
+  TUESDAY = 'TUESDAY',
+  WEDNESDAY = 'WEDNESDAY',
+  THURSDAY = 'THURSDAY',
+  FRIDAY = 'FRIDAY',
+  SATURDAY = 'SATURDAY',
+  SUNDAY = 'SUNDAY',
 }
 
 @Injectable()
 export class CourseService {
-    constructor(
-        private readonly prismaService: PrismaService,
-        private readonly errorService: ErrorService,
-        private readonly CourseValidationService: CourseValidationService
-    ) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly errorService: ErrorService,
+    private readonly CourseValidationService: CourseValidationService,
+  ) {}
 
-    async create(name: string, code: string, teacherId: number, sks: number, semester: Semester): Promise<CourseResponse> {
-        
-        const requestCreate = this.CourseValidationService.create(name, code, teacherId, sks, semester);
+  async create(
+    name: string,
+    code: string,
+    teacherId: number,
+    sks: number,
+    semester: Semester,
+    day: DayOfWeek,
+    time: string,
+    room: string,
+  ): Promise<CourseResponse> {
+    const requestCreate = this.CourseValidationService.create(
+      name,
+      code,
+      teacherId,
+      sks,
+      semester,
+      day,
+      time,
+      room,
+    );
 
-        const course = await this.prismaService.course.create({
-            data: {
-                name: requestCreate.name,
-                code: requestCreate.code,
-                teacherId: requestCreate.teacherId,
-                sks: requestCreate.sks,
-                semester: requestCreate.semester
-            }
-        });
+    const course = await this.prismaService.course.create({
+      data: {
+        name: requestCreate.name,
+        code: requestCreate.code,
+        teacherId: requestCreate.teacherId,
+        sks: requestCreate.sks,
+        semester: requestCreate.semester,
+        schedule: {
+          create: {
+            day: requestCreate.day,
+            time: requestCreate.time,
+            room: requestCreate.room,
+          },
+        },
+      },
+    });
 
-        return {
-            status: 201,
-            message: 'Course created successfully',
-            data: course
-        }
+    return {
+      status: 201,
+      message: 'Course created successfully',
+      data: course,
+    };
+  }
+
+  async update(
+    code: string,
+    name?: string,
+    teacherId?: number,
+    sks?: number,
+    semester?: Semester,
+    day?: DayOfWeek,
+    time?: string,
+    room?: string,
+  ): Promise<CourseResponse> {
+    const requestUpdate = this.CourseValidationService.update(
+      name,
+      code,
+      teacherId,
+      sks,
+      semester,
+      day,
+      time,
+      room,
+    );
+
+    const course = await this.prismaService.course.findUnique({
+      where: {
+        code: requestUpdate.code,
+      },
+      include: {
+        schedule: true,
+      },
+    });
+
+    if (!course) {
+      throw this.errorService.throwError(404, 'Course not found');
     }
 
-    async update( code: string, name?: string, teacherId?: number, sks?: number, semester?: Semester): Promise<CourseResponse> {
+    if (requestUpdate.name) {
+      course.name = requestUpdate.name;
+    }
 
-        const requestUpdate = this.CourseValidationService.update(name, code, teacherId, sks, semester);
+    if (requestUpdate.code) {
+      course.code = requestUpdate.code;
+    }
 
-        const course = await this.prismaService.course.findUnique({
+    if (requestUpdate.teacherId) {
+      course.teacherId = requestUpdate.teacherId;
+    }
+
+    if (requestUpdate.sks) {
+      course.sks = requestUpdate.sks;
+    }
+
+    if (requestUpdate.semester) {
+      course.semester = requestUpdate.semester;
+    }
+
+    if (requestUpdate.day) {
+      course.schedule[0].day = requestUpdate.day;
+    }
+
+    if (requestUpdate.time) {
+      course.schedule[0].time = requestUpdate.time;
+    }
+
+    if (requestUpdate.room) {
+      course.schedule[0].room = requestUpdate.room;
+    }
+
+    const update = await this.prismaService.course.update({
+      where: {
+        code: requestUpdate.code,
+      },
+      data: {
+        name: course.name,
+        code: course.code,
+        teacherId: course.teacherId,
+        sks: course.sks,
+        semester: course.semester,
+        schedule: {
+          update: {
             where: {
-                code: requestUpdate.code,
-            }
-        });
-
-        if (!course) {
-            throw this.errorService.throwError(404, "Course not found");
-        };
-
-        if (requestUpdate.name) {
-            course.name = requestUpdate.name;
-        };
-
-        if (requestUpdate.code) {
-            course.code = requestUpdate.code;
-        };
-
-        if (requestUpdate.teacherId) {
-            course.teacherId = requestUpdate.teacherId;
-        };
-
-        if (requestUpdate.sks) {
-            course.sks = requestUpdate.sks;
-        };
-
-        if (requestUpdate.semester) {
-            course.semester = requestUpdate.semester;
-        };
-
-        const update = await this.prismaService.course.update({
-            where: {
-                code: requestUpdate.code,
+              id: course.schedule[0].id,
             },
-            data: course
-        });
+            data: {
+              day: course.schedule[0].day,
+              time: course.schedule[0].time,
+              room: course.schedule[0].room,
+            },
+          },
+        },
+      },
+    });
 
-        return {
-            status: 201,
-            message: "Success update course",
-            data: update
-        };
+    return {
+      status: 201,
+      message: 'Success update course',
+      data: update,
+    };
+  }
+
+  async delete(code: string): Promise<CourseResponse> {
+    const requestDelete = this.CourseValidationService.delete(code);
+
+    const course = await this.prismaService.course.deleteMany({
+      where: {
+        code: requestDelete.code,
+      },
+    });
+
+    if (!course) {
+      throw this.errorService.throwError(404, 'Course not found');
     }
 
-    async delete(code: string): Promise<CourseResponse> {
-        
-        const requestDelete = this.CourseValidationService.delete(code);
+    return {
+      status: 200,
+      message: 'Success delete course',
+    };
+  }
 
-        const course = await this.prismaService.course.findUnique({
-            where: {
-                code: requestDelete.code,
-            }
-        });
+  async getCourses(): Promise<CourseResponse> {
+    const courses = await this.prismaService.course.findMany({
+        include: {
+            schedule: true,
+        }
+    });
 
-        if (!course) {
-            throw this.errorService.throwError(404, "Course not found");
-        };
+    return {
+      status: 200,
+      message: 'Success get courses',
+      data: courses,
+    };
+  }
 
-        return {
-            status: 200,
-            message: "Success delete course",
-            data: course
-        };
+  async getCourse(code: string): Promise<CourseResponse> {
+    const requestGetCourse = this.CourseValidationService.getCourse(code);
+
+    const course = await this.prismaService.course.findUnique({
+      where: {
+        code: requestGetCourse.code,
+      },
+      include: {
+        schedule: true,
+      }
+    });
+
+    return {
+      status: 200,
+      message: 'Succes get course',
+      data: course,
+    };
+  }
+
+  async getCourseByName(name: string): Promise<CourseResponse> {
+    const course = await this.prismaService.course.findMany({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+      include: {
+        schedule: true,
+      }
+    });
+
+    if (!course) {
+      throw this.errorService.throwError(404, 'Course not found');
     }
 
-    async getCourses(): Promise<CourseResponse> {
-        
-        const courses = await this.prismaService.course.findMany();
-
-        return {
-            status: 200,
-            message: "Success get courses",
-            data: courses
-        };
-    }
-
-    async getCourse(code: string): Promise<CourseResponse> {
-        
-        const requestGetCourse = this.CourseValidationService.getCourse(code);
-
-        const course = await this.prismaService.course.findUnique({
-            where: {
-                code: requestGetCourse.code,
-            }
-        });
-
-        return {
-            status: 200,
-            message: "Succes get course",
-            data: course
-        };
-    }
-
-    async getCourseByName(name: string): Promise<CourseResponse> {
-        
-        const course = await this.prismaService.course.findMany({
-            where: {
-                name: {
-                    contains: name
-                }
-            }
-        });
-
-        if (!course) {
-            throw this.errorService.throwError(404, "Course not found");
-        };
-
-        return {
-            status: 200,
-            message: "Success get course",
-            data: course
-        };
-    }
+    return {
+      status: 200,
+      message: 'Success get course',
+      data: course,
+    };
+  }
 }
