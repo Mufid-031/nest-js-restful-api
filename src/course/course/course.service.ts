@@ -22,16 +22,6 @@ interface CourseResponse {
   data?: Course | Course[];
 }
 
-enum DayOfWeek {
-  MONDAY = 'MONDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY',
-  THURSDAY = 'THURSDAY',
-  FRIDAY = 'FRIDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-}
-
 @Injectable()
 export class CourseService {
   constructor(
@@ -46,9 +36,6 @@ export class CourseService {
     teacherId: number,
     sks: number,
     semester: Semester,
-    day: DayOfWeek,
-    time: string,
-    room: string,
   ): Promise<CourseResponse> {
     const requestCreate = this.CourseValidationService.create(
       name,
@@ -56,9 +43,6 @@ export class CourseService {
       teacherId,
       sks,
       semester,
-      day,
-      time,
-      room,
     );
 
     const course = await this.prismaService.course.create({
@@ -68,13 +52,6 @@ export class CourseService {
         teacherId: requestCreate.teacherId,
         sks: requestCreate.sks,
         semester: requestCreate.semester,
-        schedule: {
-          create: {
-            day: requestCreate.day,
-            time: requestCreate.time,
-            room: requestCreate.room,
-          },
-        },
       },
     });
 
@@ -91,9 +68,6 @@ export class CourseService {
     teacherId?: number,
     sks?: number,
     semester?: Semester,
-    day?: DayOfWeek,
-    time?: string,
-    room?: string,
   ): Promise<CourseResponse> {
     const requestUpdate = this.CourseValidationService.update(
       name,
@@ -101,9 +75,6 @@ export class CourseService {
       teacherId,
       sks,
       semester,
-      day,
-      time,
-      room,
     );
 
     const course = await this.prismaService.course.findUnique({
@@ -139,18 +110,6 @@ export class CourseService {
       course.semester = requestUpdate.semester;
     }
 
-    if (requestUpdate.day) {
-      course.schedule[0].day = requestUpdate.day;
-    }
-
-    if (requestUpdate.time) {
-      course.schedule[0].time = requestUpdate.time;
-    }
-
-    if (requestUpdate.room) {
-      course.schedule[0].room = requestUpdate.room;
-    }
-
     const update = await this.prismaService.course.update({
       where: {
         code: requestUpdate.code,
@@ -161,18 +120,6 @@ export class CourseService {
         teacherId: course.teacherId,
         sks: course.sks,
         semester: course.semester,
-        schedule: {
-          update: {
-            where: {
-              id: course.schedule[0].id,
-            },
-            data: {
-              day: course.schedule[0].day,
-              time: course.schedule[0].time,
-              room: course.schedule[0].room,
-            },
-          },
-        },
       },
     });
 

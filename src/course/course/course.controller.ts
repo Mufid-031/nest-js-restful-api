@@ -31,16 +31,6 @@ interface CourseResponse {
   data?: Course | Course[];
 }
 
-enum DayOfWeek {
-  MONDAY = 'MONDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY',
-  THURSDAY = 'THURSDAY',
-  FRIDAY = 'FRIDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-}
-
 @Controller('/api/course')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
@@ -54,9 +44,6 @@ export class CourseController {
     @Body('teacherId') teacherId: number,
     @Body('sks') sks: number,
     @Body('semester') semester: Semester,
-    @Body('day') day: DayOfWeek,
-    @Body('time') time: string,
-    @Body('room') room: string,
   ): Promise<CourseResponse> {
     return await this.courseService.create(
       name,
@@ -64,9 +51,6 @@ export class CourseController {
       teacherId,
       sks,
       semester,
-      day,
-      time,
-      room,
     );
   }
 
@@ -79,9 +63,6 @@ export class CourseController {
     @Body('teacherId') teacherId?: number,
     @Body('sks') sks?: number,
     @Body('semester') semester?: Semester,
-    @Body('day') day?: DayOfWeek,
-    @Body('time') time?: string,
-    @Body('room') room?: string,
   ): Promise<CourseResponse> {
     return this.courseService.update(
       code,
@@ -89,9 +70,6 @@ export class CourseController {
       teacherId,
       sks,
       semester,
-      day,
-      time,
-      room,
     );
   }
 

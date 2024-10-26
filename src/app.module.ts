@@ -11,6 +11,7 @@ import { ValidationModule } from './validation/validation.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ErrorModule } from './error/error.module';
 import { AuthMiddleware } from './middleware/auth/auth.middleware';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthMiddleware } from './middleware/auth/auth.middleware';
     PrismaModule,
     ValidationModule.forRoot(),
     ErrorModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

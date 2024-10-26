@@ -6,6 +6,7 @@ import { CourseService } from './course/course.service';
 import { EnrollmentService } from './enrollment/enrollment.service';
 import { StudentService } from './student/student.service';
 import { TeacherService } from './teacher/teacher.service';
+import { ScheduleService } from './schedule/schedule.service';
 
 @Module({
   providers: [
@@ -14,6 +15,7 @@ import { TeacherService } from './teacher/teacher.service';
     StudentService,
     EnrollmentService,
     CourseService,
+    ScheduleService,
   ],
 })
 export class ValidationModule {
@@ -28,6 +30,7 @@ export class ValidationModule {
         StudentService,
         EnrollmentService,
         CourseService,
+        ScheduleService,
       ],
       exports: [
         ValidationService,
@@ -36,6 +39,7 @@ export class ValidationModule {
         StudentService,
         EnrollmentService,
         CourseService,
+        ScheduleService,
       ],
     };
   }

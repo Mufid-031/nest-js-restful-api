@@ -14,16 +14,6 @@ enum Semester {
   SEMESTER_8 = 'semester_8',
 }
 
-enum DayOfWeek {
-  MONDAY = 'MONDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY',
-  THURSDAY = 'THURSDAY',
-  FRIDAY = 'FRIDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-}
-
 @Injectable()
 export class CourseService {
   constructor(private readonly validation: ValidationService) {}
@@ -34,9 +24,6 @@ export class CourseService {
     teacherId: number,
     sks: number,
     semester: Semester,
-    day: DayOfWeek,
-    time: string,
-    room: string,
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100),
@@ -53,17 +40,6 @@ export class CourseService {
         Semester.SEMESTER_7,
         Semester.SEMESTER_8,
       ]),
-      day: z.enum([
-        DayOfWeek.SUNDAY,
-        DayOfWeek.MONDAY,
-        DayOfWeek.TUESDAY,
-        DayOfWeek.WEDNESDAY,
-        DayOfWeek.THURSDAY,
-        DayOfWeek.FRIDAY,
-        DayOfWeek.SATURDAY,
-      ]),
-      time: z.string().min(1).max(100),
-      room: z.string().min(1).max(100),
     });
 
     return this.validation.validate(schema, {
@@ -72,9 +48,6 @@ export class CourseService {
       teacherId,
       sks,
       semester,
-      day,
-      time,
-      room,
     });
   }
 
@@ -84,9 +57,6 @@ export class CourseService {
     teacherId?: number,
     sks?: number,
     semester?: Semester,
-    day?: DayOfWeek,
-    time?: string,
-    room?: string,
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100).optional(),
@@ -105,19 +75,6 @@ export class CourseService {
           Semester.SEMESTER_8,
         ])
         .optional(),
-      day: z
-        .enum([
-          DayOfWeek.SUNDAY,
-          DayOfWeek.MONDAY,
-          DayOfWeek.TUESDAY,
-          DayOfWeek.WEDNESDAY,
-          DayOfWeek.THURSDAY,
-          DayOfWeek.FRIDAY,
-          DayOfWeek.SATURDAY,
-        ])
-        .optional(),
-      time: z.string().min(1).max(100).optional(),
-      room: z.string().min(1).max(100).optional(),
     });
 
     return this.validation.validate(schema, {
@@ -126,9 +83,6 @@ export class CourseService {
       teacherId,
       sks,
       semester,
-      day,
-      time,
-      room,
     });
   }
 
