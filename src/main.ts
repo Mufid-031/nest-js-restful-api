@@ -9,6 +9,6 @@ async function bootstrap() {
     origin: 'http://next-siakad-new.test:30',
   });
   
-  await app.listen(3001);
+  await app.listen(3000);
 }
 bootstrap();
