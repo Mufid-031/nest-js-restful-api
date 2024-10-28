@@ -10,7 +10,7 @@ interface UserResponse {
     data?: User | User[]
 }
 
-@Controller('user')
+@Controller('/api/user')
 export class UserController {
 
     constructor(
@@ -18,7 +18,7 @@ export class UserController {
     ) {}
 
 
-    @Get('/api/user/recovery')
+    @Get('/recovery')
     @Header('Content-Type', 'application/json')
     @HttpCode(201)
     async recovery(
