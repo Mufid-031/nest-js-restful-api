@@ -9,6 +9,9 @@ export class MailerService {
 
     constructor() {
         this.transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
             service: 'gmail',
             auth: {
                 user: process.env.MAILER_EMAIL,

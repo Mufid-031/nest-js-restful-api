@@ -151,9 +151,14 @@ export class CourseService {
 
   async getCourses(): Promise<CourseResponse> {
     const courses = await this.prismaService.course.findMany({
-        include: {
-            schedule: true,
-        }
+      include: {
+        schedule: true,
+        teacher: {
+          select: {
+            user: true,
+          }
+        },
+      },
     });
 
     return {
@@ -172,7 +177,7 @@ export class CourseService {
       },
       include: {
         schedule: true,
-      }
+      },
     });
 
     return {
@@ -191,7 +196,7 @@ export class CourseService {
       },
       include: {
         schedule: true,
-      }
+      },
     });
 
     if (!course) {

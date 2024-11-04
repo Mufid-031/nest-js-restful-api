@@ -103,4 +103,23 @@ export class EnrollmentService {
         }
     }
 
+    async getEnrollments(studentId: number): Promise<EnrollmentResponse> {
+
+        const enrollments = await this.prismaService.enrollment.findMany({
+            where: {
+                studentId: studentId
+            }
+        });
+
+        if (!enrollments) {
+            throw this.errorService.throwError(404, "Enrollment not found");
+        };
+
+        return {
+            status: 200,
+            message: "Success get enrollments",
+            data: enrollments
+        };
+    }
+
 }

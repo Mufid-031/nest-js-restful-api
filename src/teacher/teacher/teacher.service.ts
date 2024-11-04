@@ -189,7 +189,7 @@ export class TeacherService {
   async delete(id: number): Promise<UserResponse> {
     const teacher = await this.prismaService.user.deleteMany({
       where: {
-        id: id,
+        id: Number(id),
       },
     });
 
@@ -206,7 +206,7 @@ export class TeacherService {
   async getTeacher(id: number): Promise<UserResponse> {
     const teacher = await this.prismaService.user.findUnique({
       where: {
-        id: id,
+        id: Number(id),
       },
       include: {
         teacher: true,

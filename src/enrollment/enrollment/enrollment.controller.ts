@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Header,
   HttpCode,
   Param,
@@ -211,5 +212,14 @@ export class EnrollmentController {
     @Body('coursesId') courseId: number[],
   ): Promise<EnrollmentResponse> {
     return this.enrollmentService.deleteMany(studentId, courseId);
+  }
+
+  @Get('/:studentId')
+  @Header('content-type', 'application/json')
+  @HttpCode(200)
+  async getEnrollments(
+    @Param('studentId') studentId: number
+  ): Promise<EnrollmentResponse> {
+    return this.enrollmentService.getEnrollments(studentId);
   }
 }
