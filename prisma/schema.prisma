@@ -44,6 +44,8 @@ model Student {
   gpa       Float?
   academicAdvisorId   Int?
   advisor   Teacher?  @relation(fields: [academicAdvisorId], references: [id])
+  sks       Int @default(0)
+  sksOFSemester Int @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   @@map("students")
