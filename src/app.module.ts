@@ -20,6 +20,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { MailerModule } from './mailer/mailer.module';
 import { RecoveryMiddleware } from './middleware/recovery/recovery.middleware';
 import { UserModule } from './user/user.module';
+import { ExceptionModule } from './exception/exception.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UserModule } from './user/user.module';
     ScheduleModule,
     MailerModule,
     UserModule,
+    ExceptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

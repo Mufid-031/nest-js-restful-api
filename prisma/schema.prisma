@@ -14,17 +14,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  role      Role
-  student   Student?
-  teacher   Teacher?
-  Admin     Admin?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  token     String?
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String
+  name          String
+  role          Role
+  student       Student?
+  teacher       Teacher?
+  Admin         Admin?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  token         String?
   recoveryToken String?
   @@map("users")
 }
@@ -36,18 +36,18 @@ enum Role {
 }
 
 model Student {
-  id        Int       @id @default(autoincrement())
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int       @unique
-  nim       String    @unique
-  enrollments Enrollment[]
-  gpa       Float?
+  id                  Int       @id @default(autoincrement())
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              Int       @unique
+  nim                 String    @unique
+  enrollments         Enrollment[]
+  gpa                 Float     @default(0)
   academicAdvisorId   Int?
-  advisor   Teacher?  @relation(fields: [academicAdvisorId], references: [id])
-  sks       Int @default(0)
-  sksOFSemester Int @default(0)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  advisor             Teacher?  @relation(fields: [academicAdvisorId], references: [id])
+  sks                 Int       @default(0)
+  sksOFSemester       Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
   @@map("students")
 }
 

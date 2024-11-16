@@ -191,31 +191,47 @@ export class AdminService {
         throw this.errorService.throwError(404, 'Teacher not found');
       }
 
+      let teacherUpdated: User;
+
       if (requestUpdate.name) {
-        teacher.name = requestUpdate.name;
+        teacherUpdated = await this.prismaService.user.update({
+          where: {
+            id: requestUpdate.id,
+          },
+          data: {
+            name: requestUpdate.name,
+          },
+        });
       }
 
       if (requestUpdate.email) {
-        teacher.email = requestUpdate.email;
+        teacherUpdated = await this.prismaService.user.update({
+          where: {
+            id: requestUpdate.id,
+          },
+          data: {
+            email: requestUpdate.email,
+          },
+        });
       }
 
       if (requestUpdate.password) {
-        teacher.password = await this.prismaService.hashPassword(
-          requestUpdate.password,
-        );
+        teacherUpdated = await this.prismaService.user.update({
+          where: {
+            id: requestUpdate.id,
+          },
+          data: {
+            password: await this.prismaService.hashPassword(
+              requestUpdate.password,
+            ),
+          },
+        });
       }
-
-      const teacherUpdate = await this.prismaService.user.update({
-        where: {
-          id: requestUpdate.id,
-        },
-        data: teacher,
-      });
 
       return {
         status: 201,
         message: 'Success update teacher',
-        data: teacherUpdate,
+        data: teacherUpdated,
       };
     } else if (requestUpdate.role === Role.STUDENT) {
       const student = await this.prismaService.user.findUnique({
@@ -228,31 +244,47 @@ export class AdminService {
         throw this.errorService.throwError(404, 'Student not found');
       }
 
+      let studentUpdated: User;
+
       if (requestUpdate.name) {
-        student.name = requestUpdate.name;
+        studentUpdated = await this.prismaService.user.update({
+          where: {
+            id: requestUpdate.id,
+          },
+          data: {
+            name: requestUpdate.name,
+          },
+        });
       }
 
       if (requestUpdate.email) {
-        student.email = requestUpdate.email;
+        studentUpdated = await this.prismaService.user.update({
+          where: {
+            id: requestUpdate.id,
+          },
+          data: {
+            email: requestUpdate.email,
+          },
+        });
       }
 
       if (requestUpdate.password) {
-        student.password = await this.prismaService.hashPassword(
-          requestUpdate.password,
-        );
+        studentUpdated = await this.prismaService.user.update({
+          where: {
+            id: requestUpdate.id,
+          },
+          data: {
+            password: await this.prismaService.hashPassword(
+              requestUpdate.password,
+            ),
+          },
+        });
       }
-
-      const studentUpdate = await this.prismaService.user.update({
-        where: {
-          id: requestUpdate.id,
-        },
-        data: student,
-      });
 
       return {
         status: 201,
         message: 'Success update student',
-        data: studentUpdate,
+        data: studentUpdated,
       };
     }
   }
