@@ -17,10 +17,11 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ErrorModule } from './error/error.module';
 import { AuthMiddleware } from './middleware/auth/auth.middleware';
 import { ScheduleModule } from './schedule/schedule.module';
-import { MailerModule } from './mailer/mailer.module';
 import { RecoveryMiddleware } from './middleware/recovery/recovery.middleware';
 import { UserModule } from './user/user.module';
 import { ExceptionModule } from './exception/exception.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -33,9 +34,21 @@ import { ExceptionModule } from './exception/exception.module';
     ValidationModule.forRoot(),
     ErrorModule,
     ScheduleModule,
-    MailerModule,
     UserModule,
     ExceptionModule,
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+    }),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

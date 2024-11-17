@@ -22,6 +22,7 @@ model User {
   student       Student?
   teacher       Teacher?
   Admin         Admin?
+  kritikSaran   KritikSaran[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   token         String?
@@ -46,6 +47,9 @@ model Student {
   advisor             Teacher?  @relation(fields: [academicAdvisorId], references: [id])
   sks                 Int       @default(0)
   sksOFSemester       Int       @default(0)
+  absensi             Absensi[]
+  beasiswa            PenerimaBeasiswa[]
+  pembayaran          Pembayaran[]
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   @@map("students")
@@ -104,6 +108,7 @@ model Enrollment {
   course    Course   @relation(fields: [courseId], references: [id])
   courseId  Int
   grade     Grade?
+  evaluasiDosen EvaluasiDosen?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("enrollments")
@@ -117,15 +122,6 @@ enum Grade {
   E
 }
 
-// model Grade {
-//   id            Int        @id @default(autoincrement())
-//   enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
-//   enrollmentId  Int        @unique
-//   grade         Float
-//   createdAt     DateTime   @default(now())
-//   updatedAt     DateTime   @updatedAt
-// }
-
 model Schedule {
   id          Int       @id @default(autoincrement())
   courseId    Int
@@ -133,6 +129,7 @@ model Schedule {
   time        String    // Example: "10:00-12:00"
   room        String
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  absensi     Absensi[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   @@map("schedules")
@@ -148,3 +145,87 @@ enum DayOfWeek {
   SUNDAY
 }
 
+model Absensi {
+  id              Int     @id @default(autoincrement())
+  studentId       Int
+  student         Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  scheduleId      Int
+  schedule        Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  statusKehadiran StatusKehadiran
+  keterangan      String?
+}
+
+enum StatusKehadiran {
+  HADIR
+  ALPA
+  SAKIT
+  IZIN
+}
+
+model Beasiswa {
+  id Int @id @default(autoincrement())
+  nama  String
+  deskripsi String?
+  mulai DateTime
+  akhir DateTime
+  penerima  PenerimaBeasiswa[]
+}
+
+model PenerimaBeasiswa {
+  id Int @id @default(autoincrement())
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  beasiswaId Int
+  beasiswa   Beasiswa @relation(fields: [beasiswaId], references: [id], onDelete: Cascade)
+}
+
+model Berita {
+  id Int @id @default(autoincrement())
+  judul String
+  konten String
+  gambar String?
+}
+
+model KritikSaran {
+  id Int @id @default(autoincrement())
+  userId Int
+  user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EvaluasiDosen {
+  id Int @id @default(autoincrement())
+  enrollmentId Int  @unique
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  nilai NilaiEvaluasi
+  komentar  String
+}
+
+enum NilaiEvaluasi {
+  S
+  A
+  B
+  C
+  D
+}
+
+model Pembayaran {
+  id Int @id @default(autoincrement())
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  total     Int
+  jenisPembayaran JenisPembayaran
+  tanggal   DateTime
+  bukti     String
+  statusPembayaran StatusPembayaran
+}
+
+enum JenisPembayaran {
+  BANK
+  EWALLET
+}
+
+enum StatusPembayaran {
+  FAILED
+  PENDING
+  SUCCESS
+}
