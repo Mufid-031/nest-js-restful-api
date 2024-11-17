@@ -20,8 +20,9 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { RecoveryMiddleware } from './middleware/recovery/recovery.middleware';
 import { UserModule } from './user/user.module';
 import { ExceptionModule } from './exception/exception.module';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigModule } from '@nestjs/config';
+import { MailModule } from './mail/mail.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -36,19 +37,12 @@ import { ConfigModule } from '@nestjs/config';
     ScheduleModule,
     UserModule,
     ExceptionModule,
-    MailerModule.forRoot({
-      transport: {
-        host: process.env.EMAIL_HOST,
-        auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-      },
-    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
     }),
+    MailModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

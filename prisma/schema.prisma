@@ -50,9 +50,17 @@ model Student {
   absensi             Absensi[]
   beasiswa            PenerimaBeasiswa[]
   pembayaran          Pembayaran[]
+  statusStudent       statusStudent
+  alumni              Alumni?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   @@map("students")
+}
+
+enum statusStudent {
+  ACTIVE
+  DO
+  LULUS
 }
 
 model Teacher {
@@ -228,4 +236,10 @@ enum StatusPembayaran {
   FAILED
   PENDING
   SUCCESS
+}
+
+model Alumni {
+  id Int @id @default(autoincrement())
+  studentId Int @unique
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }

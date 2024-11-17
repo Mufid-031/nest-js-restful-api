@@ -10,13 +10,9 @@ interface UserRequest extends Request {
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-
-  constructor(
-    private readonly prismaService: PrismaService
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async use(req: UserRequest, res: Response, next: () => void) {
-
     const excludeRoutes = [
       '/api/admin/register',
       '/api/admin/login',
@@ -24,7 +20,9 @@ export class AuthMiddleware implements NestMiddleware {
       '/api/student/login',
       '/api/teacher/register',
       '/api/teacher/login',
-      '/api/users/param/:id'
+      '/api/users/param/:id',
+      '/api/auth/signup',
+      '/api/auth/recovery',
     ];
 
     if (!req.path.startsWith('/api')) {
@@ -40,8 +38,8 @@ export class AuthMiddleware implements NestMiddleware {
     if (token) {
       const user = await this.prismaService.user.findFirst({
         where: {
-          token: token
-        }
+          token: token,
+        },
       });
 
       if (user) {
@@ -51,8 +49,11 @@ export class AuthMiddleware implements NestMiddleware {
       }
     }
 
-    res.status(401).json({
-      errors: 'Unauthorized'
-    }).end();
+    res
+      .status(401)
+      .json({
+        errors: 'Unauthorized',
+      })
+      .end();
   }
 }
