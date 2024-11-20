@@ -68,6 +68,8 @@ export class TeacherController {
                 id: { type: 'number', example: 1 },
                 userId: { type: 'number', example: 1 },
                 nip: { type: 'string', example: '1234567890' },
+                gelar: { type: 'string', example: 'Profesor' },
+                keahlian: { type: 'string', example: 'Web Programmer' },
                 createdAt: {
                   type: 'string',
                   example: '2022-01-01T00:00:00.000Z',
@@ -93,8 +95,10 @@ export class TeacherController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('nip') nip: string,
+    @Body('gelar') gelar: string,
+    @Body('keahlian') keahlian: string
   ): Promise<UserResponse> {
-    return await this.TeacherService.register(name, email, password, nip);
+    return await this.TeacherService.register(name, email, password, nip, gelar, keahlian);
   }
 
   @Post('/login')

@@ -68,6 +68,7 @@ export class StudentController {
                 id: { type: 'number', example: 1 },
                 userId: { type: 'number', example: 1 },
                 nim: { type: 'string', example: '123456789' },
+                programStudi: { type: 'string', example: 'Teknik Informatika' },
                 createdAt: {
                   type: 'string',
                   example: '2023-01-01T00:00:00.000Z',
@@ -92,8 +93,9 @@ export class StudentController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('nim') nim: string,
+    @Body('programStudi') programStudi: string,
   ): Promise<UserResponse> {
-    return await this.studentService.register(name, email, password, nim);
+    return await this.studentService.register(name, email, password, nim, programStudi);
   }
 
   @Post('/login')

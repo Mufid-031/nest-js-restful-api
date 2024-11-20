@@ -9,16 +9,17 @@ export class StudentService {
         private readonly validation: ValidationService
     ) {}
 
-    register(name: string, email: string, password: string, nim: string) {
+    register(name: string, email: string, password: string, nim: string, programStudi: string) {
 
         const schema = z.object({
             name: z.string().min(1).max(100),
             email: z.string().min(1).max(100),
             password: z.string().min(1).max(100),
             nim: z.string().min(1).max(100),
+            programStudi: z.string().min(1).max(100)
         });
 
-        return this.validation.validate(schema, { name, email, password, nim });
+        return this.validation.validate(schema, { name, email, password, nim, programStudi });
     }
 
     login(nim: string, password: string) {

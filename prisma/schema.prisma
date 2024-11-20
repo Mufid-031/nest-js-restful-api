@@ -23,6 +23,8 @@ model User {
   teacher       Teacher?
   Admin         Admin?
   kritikSaran   KritikSaran[]
+  telephone     String?
+  tanggalLahir  DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   token         String?
@@ -52,6 +54,7 @@ model Student {
   pembayaran          Pembayaran[]
   statusStudent       statusStudent
   alumni              Alumni?
+  programStudi        String
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   @@map("students")
@@ -70,6 +73,8 @@ model Teacher {
   nip       String    @unique
   courses   Course[]
   students  Student[]
+  gelar     String
+  keahlian  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   @@map("teachers")
@@ -185,6 +190,7 @@ model PenerimaBeasiswa {
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   beasiswaId Int
   beasiswa   Beasiswa @relation(fields: [beasiswaId], references: [id], onDelete: Cascade)
+  tanggalTerima DateTime
 }
 
 model Berita {
@@ -198,6 +204,7 @@ model KritikSaran {
   id Int @id @default(autoincrement())
   userId Int
   user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pesan String
 }
 
 model EvaluasiDosen {
@@ -205,7 +212,7 @@ model EvaluasiDosen {
   enrollmentId Int  @unique
   enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   nilai NilaiEvaluasi
-  komentar  String
+  komentar  String?
 }
 
 enum NilaiEvaluasi {
@@ -242,4 +249,7 @@ model Alumni {
   id Int @id @default(autoincrement())
   studentId Int @unique
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tanggalLulus DateTime
+  pekerjaan String?
+  perusahaan String?
 }

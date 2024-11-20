@@ -25,12 +25,16 @@ export class TeacherService {
     email: string,
     password: string,
     nip: string,
+    gelar: string,
+    keahlian: string
   ): Promise<UserResponse> {
     const requestRegister = this.TeacherValidationService.register(
       name,
       email,
       password,
       nip,
+      gelar,
+      keahlian
     );
 
     const userCount = await this.prismaService.user.count({
@@ -56,6 +60,8 @@ export class TeacherService {
         teacher: {
           create: {
             nip: requestRegister.nip,
+            gelar: requestRegister.gelar,
+            keahlian: requestRegister.keahlian
           },
         },
       },

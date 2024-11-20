@@ -353,7 +353,7 @@ export class AdminService {
   async getStudent(id: number): Promise<UserResponse> {
     const student = await this.prismaService.user.findUnique({
       where: {
-        id: id,
+        id: Number(id),
         role: 'STUDENT',
       },
       include: {
@@ -375,7 +375,7 @@ export class AdminService {
   async getTeacher(id: number): Promise<UserResponse> {
     const teacher = await this.prismaService.user.findUnique({
       where: {
-        id: id,
+        id: Number(id),
         role: 'TEACHER',
       },
       include: {
