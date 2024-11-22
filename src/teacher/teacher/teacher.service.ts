@@ -26,7 +26,7 @@ export class TeacherService {
     password: string,
     nip: string,
     gelar: string,
-    keahlian: string
+    keahlian: string,
   ): Promise<UserResponse> {
     const requestRegister = this.TeacherValidationService.register(
       name,
@@ -34,7 +34,7 @@ export class TeacherService {
       password,
       nip,
       gelar,
-      keahlian
+      keahlian,
     );
 
     const userCount = await this.prismaService.user.count({
@@ -44,7 +44,7 @@ export class TeacherService {
     });
 
     if (userCount !== 0) {
-      throw this.errorService.throwError(400, 'Email already exists');
+      throw new ErrorService(400, 'Email already exists');
     }
 
     requestRegister.password = await this.prismaService.hashPassword(
@@ -61,7 +61,7 @@ export class TeacherService {
           create: {
             nip: requestRegister.nip,
             gelar: requestRegister.gelar,
-            keahlian: requestRegister.keahlian
+            keahlian: requestRegister.keahlian,
           },
         },
       },
@@ -86,7 +86,7 @@ export class TeacherService {
     });
 
     if (!user) {
-      throw this.errorService.throwError(400, 'NIP or password is wrong');
+      throw new ErrorService(400, 'NIP or password is wrong');
     }
 
     const isPasswordCorrect = await this.prismaService.comparePassword(
@@ -95,7 +95,7 @@ export class TeacherService {
     );
 
     if (!isPasswordCorrect) {
-      throw this.errorService.throwError(400, 'NIP or password is wrong');
+      throw new ErrorService(400, 'NIP or password is wrong');
     }
 
     user = await this.prismaService.user.update({
@@ -142,7 +142,7 @@ export class TeacherService {
     });
 
     if (!teachers) {
-      throw this.errorService.throwError(404, 'Teachers not found');
+      throw new ErrorService(404, 'Teachers not found');
     }
 
     return {
@@ -157,11 +157,15 @@ export class TeacherService {
     name?: string,
     email?: string,
     password?: string,
+    gelar?: string,
+    keahlian?: string,
   ): Promise<UserResponse> {
     const requestUpdate = this.TeacherValidationService.update(
       name,
       email,
       password,
+      gelar,
+      keahlian,
     );
 
     if (requestUpdate.name) {
@@ -176,6 +180,28 @@ export class TeacherService {
       user.password = await this.prismaService.hashPassword(
         requestUpdate.password,
       );
+    }
+
+    if (requestUpdate.gelar) {
+      await this.prismaService.teacher.update({
+        where: {
+          userId: user.id,
+        },
+        data: {
+          gelar: requestUpdate.gelar,
+        },
+      });
+    }
+
+    if (requestUpdate.keahlian) {
+      await this.prismaService.teacher.update({
+        where: {
+          userId: user.id,
+        },
+        data: {
+          keahlian: requestUpdate.keahlian,
+        },
+      });
     }
 
     const teacher = await this.prismaService.user.update({
@@ -200,7 +226,7 @@ export class TeacherService {
     });
 
     if (!teacher) {
-      throw this.errorService.throwError(404, 'Teacher not found');
+      throw new ErrorService(404, 'Teacher not found');
     }
 
     return {
@@ -220,7 +246,7 @@ export class TeacherService {
     });
 
     if (!teacher) {
-      throw this.errorService.throwError(404, 'Teacher not found');
+      throw new ErrorService(404, 'Teacher not found');
     }
 
     return {

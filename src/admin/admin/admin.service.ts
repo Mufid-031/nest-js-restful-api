@@ -44,7 +44,7 @@ export class AdminService {
     });
 
     if (userCount !== 0) {
-      throw this.errorService.throwError(400, 'Email already exists');
+      throw new ErrorService(400, 'Email already exists');
     }
 
     requestRegister.password = await this.prismaService.hashPassword(
@@ -80,7 +80,7 @@ export class AdminService {
     });
 
     if (!user) {
-      throw this.errorService.throwError(404, 'Email or password is wrong');
+      throw new ErrorService(404, 'Email or password is wrong');
     }
 
     const isPasswordCorrect = await this.prismaService.comparePassword(
@@ -89,7 +89,7 @@ export class AdminService {
     );
 
     if (!isPasswordCorrect) {
-      throw this.errorService.throwError(404, 'Email or password is wrong');
+      throw new ErrorService(404, 'Email or password is wrong');
     }
 
     user = await this.prismaService.user.update({
@@ -188,7 +188,7 @@ export class AdminService {
       });
 
       if (!teacher) {
-        throw this.errorService.throwError(404, 'Teacher not found');
+        throw new ErrorService(404, 'Teacher not found');
       }
 
       let teacherUpdated: User;
@@ -241,7 +241,7 @@ export class AdminService {
       });
 
       if (!student) {
-        throw this.errorService.throwError(404, 'Student not found');
+        throw new ErrorService(404, 'Student not found');
       }
 
       let studentUpdated: User;
@@ -298,7 +298,7 @@ export class AdminService {
     });
 
     if (!user) {
-      throw this.errorService.throwError(404, 'User not found');
+      throw new ErrorService(404, 'User not found');
     }
 
     return {
@@ -318,8 +318,8 @@ export class AdminService {
       },
     });
 
-    if (!student) {
-      throw this.errorService.throwError(404, 'Student not found');
+    if (student.length === 0) {
+      throw new ErrorService(404, 'Student not found');
     }
 
     return {
@@ -339,8 +339,8 @@ export class AdminService {
       },
     });
 
-    if (!teacher) {
-      throw this.errorService.throwError(404, 'Teacher not found');
+    if (teacher.length === 0) {
+      throw new ErrorService(404, 'Teacher not found');
     }
 
     return {
@@ -362,7 +362,7 @@ export class AdminService {
     });
 
     if (!student) {
-      throw this.errorService.throwError(404, 'Student not found');
+      throw new ErrorService(404, 'Student not found');
     }
 
     return {
@@ -384,7 +384,7 @@ export class AdminService {
     });
 
     if (!teacher) {
-      throw this.errorService.throwError(404, 'Teacher not found');
+      throw new ErrorService(404, 'Teacher not found');
     }
 
     return {

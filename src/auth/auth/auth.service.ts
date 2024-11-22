@@ -32,7 +32,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw this.errorService.throwError(404, 'User not found');
+      throw new ErrorService(404, 'User not found');
     }
 
     const recoveryToken = uuid();

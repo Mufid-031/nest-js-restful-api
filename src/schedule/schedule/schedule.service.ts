@@ -113,7 +113,7 @@ export class ScheduleService {
     });
 
     if (!schedule) {
-      throw this.errorService.throwError(404, 'Schedule not found');
+      throw new ErrorService(404, 'Schedule not found');
     }
 
     const deleteSchedule = await this.prismaService.schedule.deleteMany({

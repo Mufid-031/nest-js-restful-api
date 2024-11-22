@@ -31,7 +31,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw this.errorService.throwError(404, 'User not found');
+      throw new ErrorService(404, 'User not found');
     }
 
     userResponse.password = await this.prismaService.hashPassword(password);

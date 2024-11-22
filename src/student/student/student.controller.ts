@@ -21,6 +21,7 @@ import {
 import { StudentService } from './student.service';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
+import { NextFunction } from 'express';
 
 interface UserResponse {
   status: number;
@@ -94,8 +95,14 @@ export class StudentController {
     @Body('password') password: string,
     @Body('nim') nim: string,
     @Body('programStudi') programStudi: string,
+    next: NextFunction
   ): Promise<UserResponse> {
-    return await this.studentService.register(name, email, password, nim, programStudi);
+    try {
+      const response = await this.studentService.register(name, email, password, nim, programStudi);
+      return response;
+    } catch (error) {
+      next(error);
+    }
   }
 
   @Post('/login')
@@ -298,8 +305,10 @@ export class StudentController {
     @Body('name') name?: string,
     @Body('email') email?: string,
     @Body('password') password?: string,
+    @Body('telephone') telephone?: string,
+    @Body('tanggalLahir') tanggalLahir?: Date,
   ): Promise<UserResponse> {
-    return await this.studentService.update(user, name, email, password);
+    return await this.studentService.update(user, name, email, password, telephone, tanggalLahir);
   }
 
   @Delete('/:id')

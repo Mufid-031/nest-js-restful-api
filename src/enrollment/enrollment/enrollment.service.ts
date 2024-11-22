@@ -87,7 +87,7 @@ export class EnrollmentService {
     });
 
     if (!enrollment) {
-      throw this.errorService.throwError(404, 'Enrollment not found');
+      throw new ErrorService(404, 'Enrollment not found');
     }
 
     return {
@@ -108,7 +108,7 @@ export class EnrollmentService {
     });
 
     if (!enrollments) {
-      throw this.errorService.throwError(404, 'Enrollment not found');
+      throw new ErrorService(404, 'Enrollment not found');
     }
 
     return {
@@ -125,7 +125,7 @@ export class EnrollmentService {
     });
 
     if (!enrollments) {
-      throw this.errorService.throwError(404, 'Enrollment not found');
+      throw new ErrorService(404, 'Enrollment not found');
     }
 
     return {

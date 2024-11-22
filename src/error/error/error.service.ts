@@ -1,9 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-@Injectable()
-export class ErrorService extends Error {
-    throwError(statusCode: number, message: string): HttpException {
-        return new HttpException(message, statusCode);
+export class ErrorService extends HttpException {
+    constructor(statusCode: number = HttpStatus.BAD_REQUEST, message: string) {
+        super(message, statusCode);
     }
 }

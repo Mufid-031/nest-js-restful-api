@@ -205,6 +205,13 @@ model KritikSaran {
   userId Int
   user  User @relation(fields: [userId], references: [id], onDelete: Cascade)
   pesan String
+  kategori String
+  type TypeKritikSaran
+}
+
+enum TypeKritikSaran {
+  KRITIK
+  SARAN
 }
 
 model EvaluasiDosen {

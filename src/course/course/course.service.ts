@@ -87,7 +87,7 @@ export class CourseService {
     });
 
     if (!course) {
-      throw this.errorService.throwError(404, 'Course not found');
+      throw new ErrorService(404, 'Course not found');
     }
 
     if (requestUpdate.name) {
@@ -140,7 +140,7 @@ export class CourseService {
     });
 
     if (!course) {
-      throw this.errorService.throwError(404, 'Course not found');
+      throw new ErrorService(404, 'Course not found');
     }
 
     return {
@@ -200,7 +200,7 @@ export class CourseService {
     });
 
     if (!course) {
-      throw this.errorService.throwError(404, 'Course not found');
+      throw new ErrorService(404, 'Course not found');
     }
 
     return {

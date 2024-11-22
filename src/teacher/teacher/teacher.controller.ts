@@ -306,8 +306,10 @@ export class TeacherController {
     @Body('name') name?: string,
     @Body('email') email?: string,
     @Body('password') password?: string,
+    @Body('gelar') gelar?: string,
+    @Body('keahlian') keahlian?: string,
   ): Promise<UserResponse> {
-    return await this.TeacherService.update(user, name, email, password);
+    return await this.TeacherService.update(user, name, email, password, gelar, keahlian);
   }
 
   @Delete('/:id')

@@ -42,7 +42,7 @@ export class StudentService {
     });
 
     if (userCount !== 0) {
-      throw this.errorService.throwError(400, 'Email already exists');
+      throw new ErrorService(400, 'Email already exists');
     }
 
     requestRegister.password = await this.prismaService.hashPassword(
@@ -84,7 +84,7 @@ export class StudentService {
     });
 
     if (!user) {
-      throw this.errorService.throwError(400, 'NIM or password is wrong');
+      throw new ErrorService(400, 'NIM or password is wrong');
     }
 
     const isPasswordCorrect = await this.prismaService.comparePassword(
@@ -93,7 +93,7 @@ export class StudentService {
     );
 
     if (!isPasswordCorrect) {
-      throw this.errorService.throwError(400, 'NIM or password is wrong');
+      throw new ErrorService(400, 'NIM or password is wrong');
     }
 
     user = await this.prismaService.user.update({
@@ -139,8 +139,8 @@ export class StudentService {
       },
     });
 
-    if (!students) {
-      throw this.errorService.throwError(404, 'Students not found');
+    if (students.length === 0) {
+      throw new ErrorService(404, 'Students not found');
     }
 
     return {
@@ -155,11 +155,15 @@ export class StudentService {
     name?: string,
     email?: string,
     password?: string,
+    telephone?: string,
+    tanggalLahir?: Date
   ): Promise<UserResponse> {
     const requestUpdate = this.StudentValidationService.update(
       name,
       email,
       password,
+      telephone,
+      tanggalLahir
     );
 
     if (requestUpdate.name) {
@@ -174,6 +178,14 @@ export class StudentService {
       user.password = await this.prismaService.hashPassword(
         requestUpdate.password,
       );
+    }
+
+    if (requestUpdate.telephone) {
+      user.telephone = requestUpdate.telephone;
+    }
+
+    if (requestUpdate.tanggalLahir) {
+      user.tanggalLahir = requestUpdate.tanggalLahir;
     }
 
     const student = await this.prismaService.user.update({
@@ -191,14 +203,14 @@ export class StudentService {
   }
 
   async delete(id: number): Promise<UserResponse> {
-    const student = await this.prismaService.user.deleteMany({
+    const { count } = await this.prismaService.user.deleteMany({
       where: {
         id: id,
       },
     });
 
-    if (!student) {
-      throw this.errorService.throwError(404, 'Student not found');
+    if (count === 0) {
+      throw new ErrorService(404, 'Student not found');
     }
 
     return {
@@ -218,7 +230,7 @@ export class StudentService {
     });
 
     if (!student) {
-      throw this.errorService.throwError(404, 'Student not found');
+      throw new ErrorService(404, 'Student not found');
     }
 
     return {
