@@ -1,27 +1,10 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { Schedule } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { DayOfWeek, ScheduleResponse } from 'src/types/schedule.type';
 import { ScheduleService as ScheduleValidationService } from 'src/validation/schedule/schedule.service';
 
-interface ScheduleResponse {
-  status: number;
-  message: string;
-  data?: Schedule | Schedule[];
-}
-
-enum DayOfWeek {
-  MONDAY = 'MONDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY',
-  THURSDAY = 'THURSDAY',
-  FRIDAY = 'FRIDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-}
 
 @Injectable()
 export class ScheduleService {
@@ -116,7 +99,7 @@ export class ScheduleService {
       throw new ErrorService(404, 'Schedule not found');
     }
 
-    const deleteSchedule = await this.prismaService.schedule.deleteMany({
+    await this.prismaService.schedule.deleteMany({
         where: {
             id: schedule.id
         }
@@ -125,7 +108,6 @@ export class ScheduleService {
     return {
       status: 201,
       message: 'Schedule deleted successfully',
-      data: schedule,
     }
   }
 }

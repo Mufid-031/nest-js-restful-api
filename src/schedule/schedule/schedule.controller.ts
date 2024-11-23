@@ -18,23 +18,8 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { ScheduleService } from './schedule.service';
-import { Schedule } from '@prisma/client';
+import { DayOfWeek, ScheduleResponse } from 'src/types/schedule.type';
 
-interface ScheduleResponse {
-  status: number;
-  message: string;
-  data?: Schedule | Schedule[];
-}
-
-enum DayOfWeek {
-  MONDAY = 'MONDAY',
-  TUESDAY = 'TUESDAY',
-  WEDNESDAY = 'WEDNESDAY',
-  THURSDAY = 'THURSDAY',
-  FRIDAY = 'FRIDAY',
-  SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY',
-}
 
 @ApiTags('Schedule')
 @Controller('/api/schedule')

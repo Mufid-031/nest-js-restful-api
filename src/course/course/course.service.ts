@@ -1,26 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { Course } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { CourseResponse, Semester } from 'src/types/course.type';
 import { CourseService as CourseValidationService } from 'src/validation/course/course.service';
-
-enum Semester {
-  SEMESTER_1 = 'semester_1',
-  SEMESTER_2 = 'semester_2',
-  SEMESTER_3 = 'semester_3',
-  SEMESTER_4 = 'semester_4',
-  SEMESTER_5 = 'semester_5',
-  SEMESTER_6 = 'semester_6',
-  SEMESTER_7 = 'semester_7',
-  SEMESTER_8 = 'semester_8',
-}
-
-interface CourseResponse {
-  status: number;
-  message: string;
-  data?: Course | Course[];
-}
 
 @Injectable()
 export class CourseService {

@@ -1,16 +1,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { Enrollment } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { EnrollmentResponse } from 'src/types/enrollment.type';
 import { EnrollmentService as EnrollmentValidationService } from 'src/validation/enrollment/enrollment.service';
 
-interface EnrollmentResponse {
-  status: number;
-  message: string;
-  data?: Enrollment | Enrollment[];
-}
 
 @Injectable()
 export class EnrollmentService {

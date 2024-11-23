@@ -23,6 +23,7 @@ import { ExceptionModule } from './exception/exception.module';
 import { ConfigModule } from '@nestjs/config';
 import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
+import { AbsensiModule } from './absensi/absensi.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     MailModule,
     AuthModule,
+    AbsensiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

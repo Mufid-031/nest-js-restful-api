@@ -18,13 +18,8 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { EnrollmentService } from './enrollment.service';
-import { Enrollment } from '@prisma/client';
+import { EnrollmentResponse } from 'src/types/enrollment.type';
 
-interface EnrollmentResponse {
-  status: number;
-  message: string;
-  data?: Enrollment | Enrollment[];
-}
 
 @ApiTags('Enrollment')
 @Controller('/api/enrollment')

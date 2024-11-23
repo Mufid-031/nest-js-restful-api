@@ -23,18 +23,7 @@ import {
 import { AdminService } from './admin.service';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
-
-interface UserResponse {
-  status: number;
-  message: string;
-  data: User | User[];
-}
-
-enum Role {
-  ADMIN = 'ADMIN',
-  TEACHER = 'TEACHER',
-  STUDENT = 'STUDENT',
-}
+import { UserResponse, Role } from 'src/types/user.type';
 
 @ApiTags('Admin')
 @Controller('/api/admin')

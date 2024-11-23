@@ -5,18 +5,7 @@ import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { v4 as uuid } from 'uuid';
 import { User } from '@prisma/client';
 import { AdminService as AdminValidationService } from 'src/validation/admin/admin.service';
-
-interface UserResponse {
-  status: number;
-  message: string;
-  data: User | User[];
-}
-
-enum Role {
-  ADMIN = 'ADMIN',
-  TEACHER = 'TEACHER',
-  STUDENT = 'STUDENT',
-}
+import { Role, UserResponse } from 'src/types/user.type';
 
 @Injectable()
 export class AdminService {

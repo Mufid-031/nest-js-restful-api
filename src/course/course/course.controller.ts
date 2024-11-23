@@ -21,24 +21,8 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { CourseService } from './course.service';
-import { Course } from '@prisma/client';
+import { CourseResponse, Semester } from 'src/types/course.type';
 
-enum Semester {
-  SEMESTER_1 = 'semester_1',
-  SEMESTER_2 = 'semester_2',
-  SEMESTER_3 = 'semester_3',
-  SEMESTER_4 = 'semester_4',
-  SEMESTER_5 = 'semester_5',
-  SEMESTER_6 = 'semester_6',
-  SEMESTER_7 = 'semester_7',
-  SEMESTER_8 = 'semester_8',
-}
-
-interface CourseResponse {
-  status: number;
-  message: string;
-  data?: Course | Course[];
-}
 
 @ApiTags('Course')
 @Controller('/api/course')
