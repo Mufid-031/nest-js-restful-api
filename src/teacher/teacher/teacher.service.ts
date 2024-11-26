@@ -4,8 +4,8 @@ import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { TeacherService as TeacherValidationService } from 'src/validation/teacher/teacher.service';
 import { v4 as uuid } from 'uuid';
-import { User } from '@prisma/client';
-import { UserResponse } from 'src/types/user.type';
+import { Teacher, User } from '@prisma/client';
+import { Gender, UserResponse } from 'src/types/user.type';
 
 @Injectable()
 export class TeacherService {
@@ -20,16 +20,16 @@ export class TeacherService {
     email: string,
     password: string,
     nip: string,
-    gelar: string,
-    keahlian: string,
+    tanggalLahir: Date,
+    gender: Gender,
   ): Promise<UserResponse> {
     const requestRegister = this.TeacherValidationService.register(
       name,
       email,
       password,
       nip,
-      gelar,
-      keahlian,
+      new Date(tanggalLahir),
+      gender,
     );
 
     const userCount = await this.prismaService.user.count({
@@ -51,12 +51,12 @@ export class TeacherService {
         name: requestRegister.name,
         email: requestRegister.email,
         password: requestRegister.password,
+        tanggalLahir: requestRegister.tanggalLahir,
+        gender: requestRegister.gender,
         role: 'TEACHER',
         teacher: {
           create: {
             nip: requestRegister.nip,
-            gelar: requestRegister.gelar,
-            keahlian: requestRegister.keahlian,
           },
         },
       },
@@ -149,6 +149,7 @@ export class TeacherService {
 
   async update(
     user: User,
+    teacher: Teacher,
     name?: string,
     email?: string,
     password?: string,
@@ -178,38 +179,34 @@ export class TeacherService {
     }
 
     if (requestUpdate.gelar) {
-      await this.prismaService.teacher.update({
-        where: {
-          userId: user.id,
-        },
-        data: {
-          gelar: requestUpdate.gelar,
-        },
-      });
+      teacher.gelar = requestUpdate.gelar;
     }
 
     if (requestUpdate.keahlian) {
-      await this.prismaService.teacher.update({
-        where: {
-          userId: user.id,
-        },
-        data: {
-          keahlian: requestUpdate.keahlian,
-        },
-      });
+      teacher.keahlian = requestUpdate.keahlian;
     }
 
-    const teacher = await this.prismaService.user.update({
+    const updatedTeacher = await this.prismaService.user.update({
       where: {
         id: user.id,
       },
-      data: requestUpdate,
+      data: {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        teacher: {
+          update: {
+            gelar: teacher.gelar,
+            keahlian: teacher.keahlian,
+          },
+        },
+      },
     });
 
     return {
       status: 201,
       message: 'User updated successfully',
-      data: teacher,
+      data: updatedTeacher,
     };
   }
 
@@ -223,6 +220,12 @@ export class TeacherService {
     if (!teacher) {
       throw new ErrorService(404, 'Teacher not found');
     }
+
+    await this.prismaService.teacher.deleteMany({
+      where: {
+        userId: Number(id),
+      },
+    });
 
     return {
       status: 201,

@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+import { v4 as uuid } from "uuid";
+
 export const TeacherRequestRegister = {
   schema: {
     type: 'object',
@@ -6,8 +8,11 @@ export const TeacherRequestRegister = {
       name: { type: 'string', example: 'John Doe' },
       email: { type: 'string', example: 'V9xv2@example.com' },
       password: { type: 'string', example: 'password123' },
+      nip: { type: 'string', example: '123456789' },
+      tanggalLahir: { type: 'date', example: '2005-03-27' },
+      gender: { type: 'string', example: 'MAN' },
     },
-    required: ['name', 'email', 'password'],
+    required: ['name', 'email', 'password', 'nip'],
   },
 };
 
@@ -25,14 +30,16 @@ export const TeacherResponseRegister = {
           id: { type: 'number', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'XHkQO@example.com' },
+          tanggalLahir: { type: 'date', example: '2005-03-27' },
+          gender: { type: 'string', example: 'MAN' },
           teacher: {
             type: 'object',
             properties: {
               id: { type: 'number', example: 1 },
               userId: { type: 'number', example: 1 },
               nip: { type: 'string', example: '1234567890' },
-              gelar: { type: 'string', example: 'Profesor' },
-              keahlian: { type: 'string', example: 'Web Programmer' },
+              gelar: { type: 'string', example: null },
+              keahlian: { type: 'string', example: null },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',
@@ -79,6 +86,8 @@ export const TeacherResponseLogin = {
           id: { type: 'number', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'XHkQO@example.com' },
+          tanggalLahir: { type: 'date', example: '2005-03-27' },
+          gender: { type: 'string', example: 'MAN' },
           teacher: {
             type: 'object',
             properties: {
@@ -102,7 +111,7 @@ export const TeacherResponseLogin = {
           updatedAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
           token: {
             type: 'string',
-            example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
+            example: uuid(),
           },
           recoveryToken: { type: 'string', example: null },
         },
@@ -125,6 +134,8 @@ export const TeacherResponseLogout = {
           id: { type: 'number', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'XHkQO@example.com' },
+          tanggalLahir: { type: 'date', example: '2005-03-27' },
+          gender: { type: 'string', example: 'MAN' },
           teacher: {
             type: 'object',
             properties: {
@@ -170,6 +181,8 @@ export const TeacherResponseGetTeachers = {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: 'John Doe' },
             email: { type: 'string', example: 'XHkQO@example.com' },
+            tanggalLahir: { type: 'date', example: '2005-03-27' },
+            gender: { type: 'string', example: 'MAN' },
             teacher: {
               type: 'object',
               properties: {
@@ -236,6 +249,8 @@ export const TeacherResponseUpdate = {
           id: { type: 'number', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'XHkQO@example.com' },
+          tanggalLahir: { type: 'date', example: '2005-03-27' },
+          gender: { type: 'string', example: 'MAN' },
           teacher: {
             type: 'object',
             properties: {
@@ -289,6 +304,8 @@ export const TeacherResponseDelete = {
           id: { type: 'number', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'XHkQO@example.com' },
+          tanggalLahir: { type: 'date', example: '2005-03-27' },
+          gender: { type: 'string', example: 'MAN' },
           teacher: {
             type: 'object',
             properties: {
@@ -335,12 +352,16 @@ export const TeacherResponseGetTeacher = {
           id: { type: 'number', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'XHkQO@example.com' },
+          tanggalLahir: { type: 'date', example: '2005-03-27' },
+          gender: { type: 'string', example: 'MAN' },
           teacher: {
             type: 'object',
             properties: {
               id: { type: 'number', example: 1 },
               userId: { type: 'number', example: 1 },
               nip: { type: 'string', example: '1234567890' },
+              gelar: { type: 'string', example: 'Profesor' },
+              keahlian: { type: 'string', example: 'Web Programmer' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',

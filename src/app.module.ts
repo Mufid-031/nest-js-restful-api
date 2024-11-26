@@ -18,11 +18,8 @@ import { ErrorModule } from './error/error.module';
 import { AuthMiddleware } from './middleware/auth/auth.middleware';
 import { ScheduleModule } from './schedule/schedule.module';
 import { RecoveryMiddleware } from './middleware/recovery/recovery.middleware';
-import { UserModule } from './user/user.module';
 import { ExceptionModule } from './exception/exception.module';
 import { ConfigModule } from '@nestjs/config';
-import { MailModule } from './mail/mail.module';
-import { AuthModule } from './auth/auth.module';
 import { AbsensiModule } from './absensi/absensi.module';
 import { BeasiswaModule } from './beasiswa/beasiswa.module';
 import { BeritaModule } from './berita/berita.module';
@@ -39,14 +36,11 @@ import { PembayaranModule } from './pembayaran/pembayaran.module';
     ValidationModule.forRoot(),
     ErrorModule,
     ScheduleModule,
-    UserModule,
     ExceptionModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MailModule,
-    AuthModule,
     AbsensiModule,
     BeasiswaModule,
     BeritaModule,

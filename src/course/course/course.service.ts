@@ -98,7 +98,7 @@ export class CourseService {
       course.semester = requestUpdate.semester;
     }
 
-    const update = await this.prismaService.course.update({
+    const updatedCourse = await this.prismaService.course.update({
       where: {
         code: requestUpdate.code,
       },
@@ -114,7 +114,7 @@ export class CourseService {
     return {
       status: 201,
       message: 'Success update course',
-      data: update,
+      data: updatedCourse,
     };
   }
 
@@ -151,7 +151,7 @@ export class CourseService {
 
     return {
       status: 200,
-      message: 'Success get courses',
+      message: 'Success get all courses',
       data: courses,
     };
   }
@@ -179,21 +179,18 @@ export class CourseService {
     const course = await this.prismaService.course.findMany({
       where: {
         name: {
-          contains: name,
-        },
-      },
-      include: {
-        schedule: true,
+          contains: name
+        }
       },
     });
 
-    if (!course) {
+    if (course.length === null) {
       throw new ErrorService(404, 'Course not found');
     }
 
     return {
       status: 200,
-      message: 'Success get course',
+      message: 'Success get course by name',
       data: course,
     };
   }

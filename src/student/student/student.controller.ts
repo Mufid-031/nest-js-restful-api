@@ -35,6 +35,7 @@ import {
   StudentResponseUpdate,
 } from '../model/student.model';
 import { RequestHeader } from 'src/model/x-api-token.model';
+import { Gender } from 'src/types/user.type';
 
 interface UserResponse {
   status: number;
@@ -58,14 +59,20 @@ export class StudentController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('nim') nim: string,
+    @Body('tanggalLahir') tanggalLahir: Date,
+    @Body('gender') gender: Gender,
     @Body('programStudi') programStudi: string,
+    @Body('academicAdvisorId') academicAdvisorId: number,
   ): Promise<UserResponse> {
     return await this.studentService.register(
       name,
       email,
       password,
       nim,
+      tanggalLahir,
+      gender,
       programStudi,
+      academicAdvisorId,
     );
   }
 
@@ -115,7 +122,6 @@ export class StudentController {
     @Body('email') email?: string,
     @Body('password') password?: string,
     @Body('telephone') telephone?: string,
-    @Body('tanggalLahir') tanggalLahir?: Date,
   ): Promise<UserResponse> {
     return await this.studentService.update(
       user,
@@ -123,7 +129,6 @@ export class StudentController {
       email,
       password,
       telephone,
-      tanggalLahir,
     );
   }
 

@@ -5,29 +5,23 @@ import { z } from 'zod';
 
 @Injectable()
 export class EnrollmentService {
-    constructor(
-        private readonly validation: ValidationService
-    ) {}
+  constructor(private readonly validation: ValidationService) {}
 
-    register(studentId: number, scheduleId: number) {
+  register(studentId: number, schedulesId: number[]) {
+    const schema = z.object({
+      studentId: z.number().min(1),
+      schedulesId: z.array(z.number().min(1)),
+    });
 
-        const schema = z.object({
-            studentId: z.number().min(1),
-            scheduleId: z.number().min(1)
-        });
+    return this.validation.validate(schema, { studentId, schedulesId });
+  }
 
-        return this.validation.validate(schema, { studentId, scheduleId });
-    }
+  delete(studentId: number, scheduleId: number[]) {
+    const schema = z.object({
+      studentId: z.number().min(1),
+      scheduleId: z.array(z.number().min(1)),
+    });
 
-    registerMany(studentId: number, coursesId: number[]) {
-
-        const schema = z.object({
-            studentId: z.number().min(1),
-            coursesId: z.array(z.number().min(1))
-        });
-
-        return this.validation.validate(schema, { studentId, coursesId });
-    }
-
-    
+    return this.validation.validate(schema, { studentId, scheduleId });
+  }
 }

@@ -19,9 +19,9 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import { TeacherService } from './teacher.service';
-import { User } from '@prisma/client';
+import { Teacher, User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
-import { UserResponse } from 'src/types/user.type';
+import { Gender, UserResponse } from 'src/types/user.type';
 import {
   TeacherRequestDelete,
   TeacherRequestLogin,
@@ -36,6 +36,7 @@ import {
   TeacherResponseUpdate,
 } from '../model/teacher.model';
 import { RequestHeader } from 'src/model/x-api-token.model';
+import { GetTeacher } from 'src/decorators/teacher.decorator';
 
 @ApiTags('Teacher')
 @Controller('/api/teacher')
@@ -53,16 +54,16 @@ export class TeacherController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('nip') nip: string,
-    @Body('gelar') gelar: string,
-    @Body('keahlian') keahlian: string,
+    @Body('tanggalLahir') tanggalLahir: Date,
+    @Body('gender') gender: Gender,
   ): Promise<UserResponse> {
     return await this.TeacherService.register(
       name,
       email,
       password,
       nip,
-      gelar,
-      keahlian,
+      tanggalLahir,
+      gender,
     );
   }
 
@@ -82,6 +83,7 @@ export class TeacherController {
   @Patch('/logout')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
+  @ApiOperation({ summary: 'Logout teacher' })
   @ApiHeader(RequestHeader)
   @ApiResponse(TeacherResponseLogout)
   async logout(@GetUser() user: User): Promise<UserResponse> {
@@ -107,6 +109,7 @@ export class TeacherController {
   @ApiResponse(TeacherResponseUpdate)
   async update(
     @GetUser() user: User,
+    @GetTeacher() teacher: Teacher,
     @Body('name') name?: string,
     @Body('email') email?: string,
     @Body('password') password?: string,
@@ -115,6 +118,7 @@ export class TeacherController {
   ): Promise<UserResponse> {
     return await this.TeacherService.update(
       user,
+      teacher,
       name,
       email,
       password,

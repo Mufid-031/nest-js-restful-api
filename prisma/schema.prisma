@@ -25,11 +25,17 @@ model User {
   kritikSaran   KritikSaran[]
   telephone     String?
   tanggalLahir  DateTime?
+  gender        Gender?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   token         String?
   recoveryToken String?
   @@map("users")
+}
+
+enum Gender {
+  MAN
+  WOMAN
 }
 
 enum Role {

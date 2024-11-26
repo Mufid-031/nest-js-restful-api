@@ -13,3 +13,7 @@ export interface UserResponse {
   data?: User | User[];
 }
 
+export enum Gender {
+  MAN = 'MAN',
+  WOMAN = 'WOMAN',
+}

@@ -1,11 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Admin, Student, Teacher, User } from '@prisma/client';
 import { Request, Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 
 interface UserRequest extends Request {
   user: User;
+  admin: Admin;
+  teacher: Teacher;
+  student: Student;
 }
 
 @Injectable()
@@ -47,8 +50,23 @@ export class AuthMiddleware implements NestMiddleware {
         },
       });
 
-      if (user) {
+      if (user && user.role === 'ADMIN') {
         req.user = user;
+        req.admin = user.Admin;
+        next();
+        return;
+      }
+
+      if (user && user.role === 'TEACHER') {
+        req.user = user;
+        req.teacher = user.teacher;
+        next();
+        return;
+      }
+
+      if (user && user.role === 'STUDENT') {
+        req.user = user;
+        req.student = user.student;
         next();
         return;
       }

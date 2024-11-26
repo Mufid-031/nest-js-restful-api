@@ -46,6 +46,7 @@ export class CourseController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Create a new course' })
+  @ApiHeader(RequestHeader)
   @ApiBody(CourseRequestCreate)
   @ApiResponse(CourseResponseCreate)
   async create(
@@ -112,7 +113,7 @@ export class CourseController {
     return await this.courseService.getCourses();
   }
 
-  @Get('/:code')
+  @Get('/detail/:code')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
   @ApiOperation({ summary: 'Get course by code' })

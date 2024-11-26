@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { StudentService as StudentValidationService } from 'src/validation/student/student.service';
 import { v4 as uuid } from 'uuid';
 import { User } from '@prisma/client';
-import { UserResponse } from 'src/types/user.type';
+import { Gender, UserResponse } from 'src/types/user.type';
 
 @Injectable()
 export class StudentService {
@@ -20,14 +20,20 @@ export class StudentService {
     email: string,
     password: string,
     nim: string,
-    programStudi: string
+    tanggalLahir: Date,
+    gender: Gender,
+    programStudi: string,
+    academicAdvisorId: number,
   ): Promise<UserResponse> {
     const requestRegister = this.StudentValidationService.register(
       name,
       email,
       password,
       nim,
-      programStudi
+      new Date(tanggalLahir),
+      gender,
+      programStudi,
+      academicAdvisorId,
     );
 
     const userCount = await this.prismaService.user.count({
@@ -49,12 +55,15 @@ export class StudentService {
         name: requestRegister.name,
         email: requestRegister.email,
         password: requestRegister.password,
+        tanggalLahir: requestRegister.tanggalLahir,
+        gender: requestRegister.gender,
         role: 'STUDENT',
         student: {
           create: {
             nim: requestRegister.nim,
             programStudi: requestRegister.programStudi,
-            statusStudent: 'ACTIVE'
+            statusStudent: 'ACTIVE',
+            academicAdvisorId: requestRegister.academicAdvisorId
           },
         },
       },
@@ -151,14 +160,12 @@ export class StudentService {
     email?: string,
     password?: string,
     telephone?: string,
-    tanggalLahir?: Date
   ): Promise<UserResponse> {
     const requestUpdate = this.StudentValidationService.update(
       name,
       email,
       password,
       telephone,
-      tanggalLahir
     );
 
     if (requestUpdate.name) {
@@ -177,10 +184,6 @@ export class StudentService {
 
     if (requestUpdate.telephone) {
       user.telephone = requestUpdate.telephone;
-    }
-
-    if (requestUpdate.tanggalLahir) {
-      user.tanggalLahir = requestUpdate.tanggalLahir;
     }
 
     const student = await this.prismaService.user.update({

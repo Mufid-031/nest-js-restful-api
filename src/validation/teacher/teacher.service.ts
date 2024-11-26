@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { ValidationService } from '../validation/validation.service';
 import { z } from 'zod';
+import { Gender } from 'src/types/user.type';
 
 @Injectable()
 export class TeacherService {
@@ -12,16 +13,18 @@ export class TeacherService {
     email: string,
     password: string,
     nip: string,
-    gelar: string,
-    keahlian: string,
+    tanggalLahir: Date,
+    gender: Gender
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100),
       email: z.string().min(1).max(100),
       password: z.string().min(1).max(100),
       nip: z.string().min(1).max(100),
-      gelar: z.string().min(1).max(100),
-      keahlian: z.string().min(1).max(100),
+      gelar: z.string().min(1).max(100).optional(),
+      keahlian: z.string().min(1).max(100).optional(),
+      tanggalLahir: z.date(),
+      gender: z.enum(["MAN", "WOMAN"])
     });
 
     return this.validation.validate(schema, {
@@ -29,8 +32,8 @@ export class TeacherService {
       email,
       password,
       nip,
-      gelar,
-      keahlian,
+      tanggalLahir,
+      gender
     });
   }
 
