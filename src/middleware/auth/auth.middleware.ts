@@ -40,6 +40,11 @@ export class AuthMiddleware implements NestMiddleware {
         where: {
           token: token,
         },
+        include: {
+          Admin: true,
+          teacher: true,
+          student: true,
+        },
       });
 
       if (user) {

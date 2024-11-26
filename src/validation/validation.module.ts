@@ -8,6 +8,9 @@ import { StudentService } from './student/student.service';
 import { TeacherService } from './teacher/teacher.service';
 import { ScheduleService } from './schedule/schedule.service';
 import { AbsensiService } from './absensi/absensi.service';
+import { BeasiswaService } from './beasiswa/beasiswa.service';
+import { PembayaranService } from './pembayaran/pembayaran.service';
+import { BeritaService } from './berita/berita.service';
 
 @Module({
   providers: [
@@ -19,6 +22,9 @@ import { AbsensiService } from './absensi/absensi.service';
     ScheduleService,
     ValidationService,
     AbsensiService,
+    BeasiswaService,
+    PembayaranService,
+    BeritaService,
   ],
 })
 export class ValidationModule {
@@ -44,6 +50,7 @@ export class ValidationModule {
         CourseService,
         ScheduleService,
         AbsensiService,
+        BeasiswaService,
       ],
     };
   }

@@ -14,9 +14,10 @@ export class MailService {
   constructor(private mailService: MailerService) {
     this.transporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
+      service: 'gmail',
       port: 587,
       auth: {
-        user: 'amelie49@ethereal.email',
+        user: 'amelie49@ethereal.email?recoveryToken={}',
         pass: '3AFdbK1y6zgVKtUK9v',
       },
     });

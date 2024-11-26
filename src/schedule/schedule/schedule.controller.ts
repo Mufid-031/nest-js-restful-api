@@ -19,7 +19,15 @@ import {
 } from '@nestjs/swagger';
 import { ScheduleService } from './schedule.service';
 import { DayOfWeek, ScheduleResponse } from 'src/types/schedule.type';
-
+import { RequestHeader } from 'src/model/x-api-token.model';
+import {
+  ScheduleRequestCreate,
+  ScheduleRequestDelete,
+  ScheduleRequestUpdate,
+  ScheduleResponseCreate,
+  ScheduleResponseDelete,
+  ScheduleResponseUpdate,
+} from '../model/schedule.model';
 
 @ApiTags('Schedule')
 @Controller('/api/schedule')
@@ -30,85 +38,9 @@ export class ScheduleController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Create Schedule' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        courseId: {
-          type: 'number',
-          example: 1,
-        },
-        day: {
-          type: 'string',
-          example: 'MONDAY',
-        },
-        time: {
-          type: 'string',
-          example: '08:00',
-        },
-        room: {
-          type: 'string',
-          example: 'R1',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Schedule created successfully',
-    schema: {
-      type: 'object',
-      properties: {
-        status: {
-          type: 'number',
-          example: 201,
-        },
-        message: {
-          type: 'string',
-          example: 'Schedule created successfully',
-        },
-        data: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'number',
-              example: 1,
-            },
-            courseId: {
-              type: 'number',
-              example: 1,
-            },
-            day: {
-              type: 'string',
-              example: 'MONDAY',
-            },
-            time: {
-              type: 'string',
-              example: '08:00',
-            },
-            room: {
-              type: 'string',
-              example: 'R1',
-            },
-            createdAt: {
-              type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
-            },
-          },
-        },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiBody(ScheduleRequestCreate)
+  @ApiResponse(ScheduleResponseCreate)
   async create(
     @Body('courseId') courseId: number,
     @Body('day') day: DayOfWeek,
@@ -122,35 +54,9 @@ export class ScheduleController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Update Schedule' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'number',
-          example: 1,
-        },
-        day: {
-          type: 'string',
-          example: 'MONDAY',
-        },
-        time: {
-          type: 'string',
-          example: '08:00',
-        },
-        room: {
-          type: 'string',
-          example: 'R1',
-        },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiBody(ScheduleRequestUpdate)
+  @ApiResponse(ScheduleResponseUpdate)
   async update(
     @Body('id') id: number,
     @Body('day') day?: DayOfWeek,
@@ -164,68 +70,9 @@ export class ScheduleController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Delete schedule' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'id from request param',
-    required: true,
-    example: 1,
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Success to delete schedule',
-    schema: {
-      type: 'object',
-      properties: {
-        status: {
-          type: 'number',
-          example: 201,
-        },
-        message: {
-          type: 'string',
-          example: 'Success delete schedule',
-        },
-        data: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'number',
-              example: 1,
-            },
-            courseId: {
-              type: 'number',
-              example: 1,
-            },
-            day: {
-              type: 'string',
-              example: 'MONDAY',
-            },
-            time: {
-              type: 'string',
-              example: '08:00',
-            },
-            room: {
-              type: 'string',
-              example: 'S1',
-            },
-            createdAt: {
-              type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
-            },
-          },
-        },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiParam(ScheduleRequestDelete)
+  @ApiResponse(ScheduleResponseDelete)
   async delete(@Param('id') id: number): Promise<ScheduleResponse> {
     return await this.scheduleService.delete(id);
   }

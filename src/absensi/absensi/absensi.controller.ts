@@ -1,20 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Header, HttpCode, Patch, Post } from '@nestjs/common';
 import { AbsensiService } from './absensi.service';
-import { Absensi } from '@prisma/client';
-
-interface AbsensiResponse {
-    status: number;
-    message: string;
-    data: Absensi | Absensi[];
-}
-
-enum StatusKehadiran {
-    HADIR = 'HADIR',
-    ALPA = 'ALPA',
-    SAKIT = 'SAKIT',
-    IZIN = 'IZIN',
-}
+import { AbsensiResponse, StatusKehadiran } from 'src/types/absensi.type';
 
 @Controller('/api/absensi')
 export class AbsensiController {
@@ -30,9 +17,10 @@ export class AbsensiController {
         @Body('scheduleId') scheduleId: number,
         @Body('statusKehadiran') statusKehadiran: StatusKehadiran,
         @Body('pertemuan') pertemuan: number,
+        @Body('materi') materi: string,
         @Body('keterangan') keterangan?: string,
     ): Promise<AbsensiResponse> {
-        return await this.absensiService.register(studentId, scheduleId, statusKehadiran, pertemuan, keterangan);
+        return await this.absensiService.register(studentId, scheduleId, statusKehadiran, pertemuan, materi, keterangan);
     }
 
     @Patch()
@@ -43,8 +31,9 @@ export class AbsensiController {
         @Body('scheduleId') scheduleId: number,
         @Body('statusKehadiran') statusKehadiran: StatusKehadiran,
         @Body('pertemuan') pertemuan: number,
+        @Body('materi') materi?: string,
         @Body('keterangan') keterangan?: string,
     ): Promise<AbsensiResponse> {
-        return await this.absensiService.update(studentId, scheduleId, statusKehadiran, pertemuan, keterangan);
+        return await this.absensiService.update(studentId, scheduleId, statusKehadiran, pertemuan, materi, keterangan);
     }
 }

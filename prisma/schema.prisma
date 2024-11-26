@@ -73,8 +73,8 @@ model Teacher {
   nip       String    @unique
   courses   Course[]
   students  Student[]
-  gelar     String
-  keahlian  String
+  gelar     String?
+  keahlian  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   @@map("teachers")
@@ -94,9 +94,9 @@ model Course {
   code        String        @unique
   teacher     Teacher       @relation(fields: [teacherId], references: [id])
   teacherId   Int
-  enrollments Enrollment[]
   semester    Semester
   sks         Int
+  programStudi String
   schedule    Schedule[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -118,8 +118,8 @@ model Enrollment {
   id        Int      @id @default(autoincrement())
   student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  courseId  Int
+  schedule  Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  scheduleId Int
   grade     Grade?
   evaluasiDosen EvaluasiDosen?
   createdAt DateTime @default(now())
@@ -136,13 +136,15 @@ enum Grade {
 }
 
 model Schedule {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   courseId    Int
   day         DayOfWeek
   time        String    // Example: "10:00-12:00"
   room        String
   course      Course   @relation(fields: [courseId], references: [id])
   absensi     Absensi[]
+  enrollments Enrollment[]
+  kouta       Int      @default(30)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   @@map("schedules")

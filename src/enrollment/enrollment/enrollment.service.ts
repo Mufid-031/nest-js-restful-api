@@ -6,9 +6,13 @@ import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { EnrollmentResponse } from 'src/types/enrollment.type';
 import { EnrollmentService as EnrollmentValidationService } from 'src/validation/enrollment/enrollment.service';
 
-
 @Injectable()
 export class EnrollmentService {
+  private errors: {
+    scheduleId: number;
+    message: string;
+  }[];
+
   constructor(
     private readonly prismaService: PrismaService,
     private readonly errorService: ErrorService,
@@ -17,22 +21,68 @@ export class EnrollmentService {
 
   async register(
     studentId: number,
-    courseId: number,
+    scheduleId: number,
   ): Promise<EnrollmentResponse> {
     const requestRegister = this.EnrollmentValidationService.register(
       studentId,
-      courseId,
+      scheduleId,
     );
+
+    const schedule = await this.prismaService.schedule.findFirst({
+      where: {
+        id: requestRegister.scheduleId,
+      },
+    });
+
+    if (schedule.kouta < 0) {
+      this.errors.push({
+        scheduleId,
+        message: 'Kouta is full',
+      });
+      return;
+    }
 
     const enrollment = await this.prismaService.enrollment.create({
       data: {
         studentId: requestRegister.studentId,
-        courseId: requestRegister.courseId,
+        scheduleId: requestRegister.scheduleId,
+      },
+      include: {
+        schedule: {
+          include: {
+            course: true,
+          }
+        },
+      },
+    });
+
+    await this.prismaService.schedule.updateMany({
+      where: {
+        id: enrollment.scheduleId,
+      },
+      data: {
+        kouta: {
+          decrement: 1,
+        },
+      },
+    });
+
+    await this.prismaService.student.update({
+      where: {
+        id: enrollment.studentId,
+      },
+      data: {
+        sksOFSemester: {
+          increment: enrollment.schedule.course.sks,
+        },
+        sks: {
+          increment: enrollment.schedule.course.sks,
+        },
       },
     });
 
     return {
-      status: 201,
+      status: 200,
       message: 'Success register course',
       data: enrollment,
     };
@@ -47,19 +97,49 @@ export class EnrollmentService {
       coursesId,
     );
 
-    await this.prismaService.enrollment.createMany({
-      data: requestRegister.coursesId.map((courseId) => {
-        return {
-          studentId: requestRegister.studentId,
-          courseId: courseId,
-        };
-      }),
-    });
+    // const register = requestRegister.coursesId.map((scheduleId) => this.register(requestRegister.studentId, scheduleId));
 
     const enrollments = await this.prismaService.enrollment.findMany({
       where: {
         studentId: requestRegister.studentId,
-        courseId: { in: requestRegister.coursesId },
+        scheduleId: { in: requestRegister.coursesId },
+      },
+      include: {
+        student: true,
+        schedule: {
+          include: {
+            course: true,
+          }
+        }
+      },
+    });
+
+    await this.prismaService.schedule.updateMany({
+      where: {
+        id: { in: requestRegister.coursesId },
+      },
+      data: {
+        kouta: {
+          decrement: 1,
+        },
+      },
+    });
+
+    await this.prismaService.student.update({
+      where: {
+        id: requestRegister.studentId,
+      },
+      data: {
+        sksOFSemester: {
+          increment: enrollments
+            .map((enrollment) => enrollment.schedule.course.sks)
+            .reduce((a, b) => a + b, 0),
+        },
+        sks: {
+          increment: enrollments
+            .map((enrollment) => enrollment.schedule.course.sks)
+            .reduce((a, b) => a + b, 0),
+        },
       },
     });
 
@@ -72,12 +152,12 @@ export class EnrollmentService {
 
   async delete(
     studentId: number,
-    courseId: number,
+    scheduleId: number,
   ): Promise<EnrollmentResponse> {
     const enrollment = await this.prismaService.enrollment.deleteMany({
       where: {
         studentId: studentId,
-        courseId: courseId,
+        scheduleId: scheduleId,
       },
     });
 
@@ -93,12 +173,44 @@ export class EnrollmentService {
 
   async deleteMany(
     studentId: number,
-    courseId: number[],
+    scheduleId: number[],
   ): Promise<EnrollmentResponse> {
-    const enrollments = await this.prismaService.enrollment.deleteMany({
+    const enrollments = await this.prismaService.enrollment.findMany({
       where: {
         studentId: studentId,
-        courseId: { in: courseId },
+        scheduleId: { in: scheduleId },
+      },
+      include: {
+        student: true,
+        schedule: {
+          include: {
+            course: true,
+          }
+        }
+      },
+    });
+
+    await this.prismaService.schedule.updateMany({
+      where: {
+        id: { in: scheduleId },
+      },
+      data: {
+        kouta: {
+          increment: 1,
+        },
+      },
+    });
+
+    await this.prismaService.student.update({
+      where: {
+        id: studentId,
+      },
+      data: {
+        sksOFSemester: {
+          decrement: enrollments
+            .map((enrollment) => enrollment.schedule.course.sks)
+            .reduce((a, b) => a + b, 0),
+        },
       },
     });
 
@@ -116,6 +228,13 @@ export class EnrollmentService {
     const enrollments = await this.prismaService.enrollment.findMany({
       where: {
         studentId: studentId,
+      },
+      include: {
+        schedule: {
+          include: {
+            course: true,
+          }
+        }
       },
     });
 

@@ -21,7 +21,20 @@ import {
 import { StudentService } from './student.service';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
-import { NextFunction } from 'express';
+import {
+  StudentRequestDelete,
+  StudentRequestLogin,
+  StudentRequestRegister,
+  StudentRequestUpdate,
+  StudentResponseDelete,
+  StudentResponseGetStudent,
+  StudentResponseGetStudents,
+  StudentResponseLogin,
+  StudentResponseLogout,
+  StudentResponseRegister,
+  StudentResponseUpdate,
+} from '../model/student.model';
+import { RequestHeader } from 'src/model/x-api-token.model';
 
 interface UserResponse {
   status: number;
@@ -38,112 +51,30 @@ export class StudentController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Register student' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        email: { type: 'string' },
-        password: { type: 'string' },
-        nim: { type: 'string' },
-      },
-      required: ['name', 'email', 'password', 'nim'],
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 201 },
-        message: { type: 'string', example: 'success register student' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'YqyZ4@example.com' },
-            student: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                userId: { type: 'number', example: 1 },
-                nim: { type: 'string', example: '123456789' },
-                programStudi: { type: 'string', example: 'Teknik Informatika' },
-                createdAt: {
-                  type: 'string',
-                  example: '2023-01-01T00:00:00.000Z',
-                },
-                updatedAt: {
-                  type: 'string',
-                  example: '2023-01-01T00:00:00.000Z',
-                },
-              },
-            },
-            createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-            updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-            token: { type: 'string', example: null },
-            recoveryToken: { type: 'string', example: null },
-          },
-        },
-      },
-    },
-  })
+  @ApiBody(StudentRequestRegister)
+  @ApiResponse(StudentResponseRegister)
   async register(
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('nim') nim: string,
     @Body('programStudi') programStudi: string,
-    next: NextFunction
   ): Promise<UserResponse> {
-    try {
-      const response = await this.studentService.register(name, email, password, nim, programStudi);
-      return response;
-    } catch (error) {
-      next(error);
-    }
+    return await this.studentService.register(
+      name,
+      email,
+      password,
+      nim,
+      programStudi,
+    );
   }
 
   @Post('/login')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
   @ApiOperation({ summary: 'Login student' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        nim: { type: 'string' },
-        password: { type: 'string' },
-      },
-      required: ['nim', 'password'],
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 200 },
-        message: { type: 'string', example: 'success login student' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'YqyZ4@example.com' },
-            createAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-            updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-            token: {
-              type: 'string',
-              example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-            },
-            recoveryToken: { type: 'string', example: null },
-          },
-        },
-      },
-    },
-  })
+  @ApiBody(StudentRequestLogin)
+  @ApiResponse(StudentResponseLogin)
   async login(
     @Body('nim') nim: string,
     @Body('password') password: string,
@@ -155,22 +86,8 @@ export class StudentController {
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
   @ApiOperation({ summary: 'Logout student' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 200 },
-        message: { type: 'string', example: 'success logout student' },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiResponse(StudentResponseLogout)
   async logout(@GetUser() user: User): Promise<UserResponse> {
     return await this.studentService.logout(user);
   }
@@ -179,59 +96,8 @@ export class StudentController {
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
   @ApiOperation({ summary: 'Get all students' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 200 },
-        message: { type: 'string', example: 'success get all students' },
-        data: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              name: { type: 'string', example: 'John Doe' },
-              email: { type: 'string', example: 'YqyZ4@example.com' },
-              student: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  userId: { type: 'number', example: 1 },
-                  nim: { type: 'string', example: '123456789' },
-                  createdAt: {
-                    type: 'string',
-                    example: '2023-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2023-01-01T00:00:00.000Z',
-                  },
-                },
-              },
-              createAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-              updatedAt: {
-                type: 'string',
-                example: '2023-01-01T00:00:00.000Z',
-              },
-              token: {
-                type: 'string',
-                example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-              },
-              recoveryToken: { type: 'string', example: null },
-            },
-          },
-        },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiResponse(StudentResponseGetStudents)
   async getStudents(): Promise<UserResponse> {
     return await this.studentService.getStudents();
   }
@@ -240,66 +106,9 @@ export class StudentController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Update student' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', example: 'John Doe' },
-        email: { type: 'string', example: 'YqyZ4@example.com' },
-        password: { type: 'string', example: 'password123' },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 201 },
-        message: { type: 'string', example: 'success update student' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'YqyZ4@example.com' },
-            student: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                userId: { type: 'number', example: 1 },
-                nim: { type: 'string', example: '123456789' },
-                createdAt: {
-                  type: 'string',
-                  example: '2023-01-01T00:00:00.000Z',
-                },
-                updatedAt: {
-                  type: 'string',
-                  example: '2023-01-01T00:00:00.000Z',
-                },
-              },
-            },
-            createAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
-            updatedAt: {
-              type: 'string',
-              example: '2023-01-01T00:00:00.000Z',
-            },
-            token: {
-              type: 'string',
-              example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-            },
-            recoveryToken: { type: 'string', example: null },
-          },
-        },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiBody(StudentRequestUpdate)
+  @ApiResponse(StudentResponseUpdate)
   async update(
     @GetUser() user: User,
     @Body('name') name?: string,
@@ -308,80 +117,34 @@ export class StudentController {
     @Body('telephone') telephone?: string,
     @Body('tanggalLahir') tanggalLahir?: Date,
   ): Promise<UserResponse> {
-    return await this.studentService.update(user, name, email, password, telephone, tanggalLahir);
+    return await this.studentService.update(
+      user,
+      name,
+      email,
+      password,
+      telephone,
+      tanggalLahir,
+    );
   }
 
   @Delete('/:id')
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Delete student' })
-  @ApiHeader({
-    name: 'X-API-TOKEN',
-    description: 'X-API-TOKEN',
-    required: true,
-    example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-  })
-  @ApiParam({
-    name: 'id',
-    type: 'number',
-    required: true,
-    example: 1,
-  })
-  @ApiResponse({
-    status: 201,
-    schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'number', example: 201 },
-        message: { type: 'string', example: 'success delete student' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'YqyZ4@example.com' },
-            student: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                userId: { type: 'number', example: 1 },
-                nim: { type: 'string', example: '123456789' },
-                createdAt: {
-                  type: 'string',
-                  example: '2023-01-01T00:00:00.000Z',
-                },
-                updatedAt: {
-                  type: 'string',
-                  example: '2023-01-01T00:00:00.000Z',
-                },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2023-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2023-01-01T00:00:00.000Z',
-            },
-            token: {
-              type: 'string',
-              example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
-            },
-            recoveryToken: { type: 'string', example: null },
-          },
-        },
-      },
-    },
-  })
+  @ApiHeader(RequestHeader)
+  @ApiParam(StudentRequestDelete)
+  @ApiResponse(StudentResponseDelete)
   async delete(@Param('id') id: number): Promise<UserResponse> {
     return this.studentService.delete(id);
   }
 
-  @Get('/:id')
+  @Get('/detail')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
-  async getStudent(@Param('id') id: number): Promise<UserResponse> {
-    return this.studentService.getStudent(id);
+  @ApiOperation({ summary: 'Student detail after login' })
+  @ApiHeader(RequestHeader)
+  @ApiResponse(StudentResponseGetStudent)
+  async getStudent(@GetUser() user: User): Promise<UserResponse> {
+    return this.studentService.getStudent(user);
   }
 }

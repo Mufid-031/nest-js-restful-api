@@ -24,6 +24,9 @@ import { ConfigModule } from '@nestjs/config';
 import { MailModule } from './mail/mail.module';
 import { AuthModule } from './auth/auth.module';
 import { AbsensiModule } from './absensi/absensi.module';
+import { BeasiswaModule } from './beasiswa/beasiswa.module';
+import { BeritaModule } from './berita/berita.module';
+import { PembayaranModule } from './pembayaran/pembayaran.module';
 
 @Module({
   imports: [
@@ -45,6 +48,9 @@ import { AbsensiModule } from './absensi/absensi.module';
     MailModule,
     AuthModule,
     AbsensiModule,
+    BeasiswaModule,
+    BeritaModule,
+    PembayaranModule,
   ],
   controllers: [AppController],
   providers: [AppService],

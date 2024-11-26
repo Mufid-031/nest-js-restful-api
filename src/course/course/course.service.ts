@@ -19,6 +19,7 @@ export class CourseService {
     teacherId: number,
     sks: number,
     semester: Semester,
+    programStudi: string
   ): Promise<CourseResponse> {
     const requestCreate = this.CourseValidationService.create(
       name,
@@ -26,6 +27,7 @@ export class CourseService {
       teacherId,
       sks,
       semester,
+      programStudi
     );
 
     const course = await this.prismaService.course.create({
@@ -35,6 +37,7 @@ export class CourseService {
         teacherId: requestCreate.teacherId,
         sks: requestCreate.sks,
         semester: requestCreate.semester,
+        programStudi: requestCreate.programStudi,
       },
     });
 
@@ -51,6 +54,7 @@ export class CourseService {
     teacherId?: number,
     sks?: number,
     semester?: Semester,
+    programStudi?: string
   ): Promise<CourseResponse> {
     const requestUpdate = this.CourseValidationService.update(
       name,
@@ -58,6 +62,7 @@ export class CourseService {
       teacherId,
       sks,
       semester,
+      programStudi
     );
 
     const course = await this.prismaService.course.findUnique({

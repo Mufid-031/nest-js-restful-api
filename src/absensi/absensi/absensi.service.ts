@@ -1,22 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { Absensi } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { AbsensiResponse, StatusKehadiran } from 'src/types/absensi.type';
 import { AbsensiService as AbsensiValidationService } from 'src/validation/absensi/absensi.service';
-
-interface AbsensiResponse {
-  status: number;
-  message: string;
-  data: Absensi | Absensi[];
-}
-
-enum StatusKehadiran {
-  HADIR = 'HADIR',
-  ALPA = 'ALPA',
-  SAKIT = 'SAKIT',
-  IZIN = 'IZIN',
-}
 
 @Injectable()
 export class AbsensiService {
@@ -31,6 +18,7 @@ export class AbsensiService {
     scheduleId: number,
     statusKehadiran: StatusKehadiran,
     pertemuan: number,
+    materi: string,
     keterangan?: string,
   ): Promise<AbsensiResponse> {
     const requestRegister = this.absensiService.register(
@@ -38,6 +26,7 @@ export class AbsensiService {
       scheduleId,
       statusKehadiran,
       pertemuan,
+      materi,
       keterangan,
     );
 
@@ -59,6 +48,7 @@ export class AbsensiService {
         scheduleId: requestRegister.scheduleId,
         statusKehadiran: requestRegister.statusKehadiran,
         pertemuan: requestRegister.pertemuan,
+        materi: requestRegister.materi,
         keterangan: requestRegister.keterangan || null,
       },
     });
@@ -75,6 +65,7 @@ export class AbsensiService {
     scheduleId: number,
     statusKehadiran: StatusKehadiran,
     pertemuan: number,
+    materi?: string,
     keterangan?: string,
   ): Promise<AbsensiResponse> {
     const requestUpdate = this.absensiService.update(
@@ -82,6 +73,7 @@ export class AbsensiService {
       scheduleId,
       statusKehadiran,
       pertemuan,
+      materi,
       keterangan,
     );
 
@@ -108,6 +100,17 @@ export class AbsensiService {
         },
         data: {
           statusKehadiran: requestUpdate.statusKehadiran,
+        },
+      });
+    }
+
+    if (requestUpdate.materi) {
+      absensi = await this.prismaService.absensi.update({
+        where: {
+          id: absensiId.id,
+        },
+        data: {
+          materi: requestUpdate.materi,
         },
       });
     }

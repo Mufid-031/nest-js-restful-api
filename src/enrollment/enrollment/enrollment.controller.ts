@@ -41,9 +41,9 @@ export class EnrollmentController {
       type: 'object',
       properties: {
         studentId: { type: 'number', example: 1 },
-        courseId: { type: 'number', example: 1 },
+        scheduleId: { type: 'number', example: 1 },
       },
-      required: ['studentId', 'courseId'],
+      required: ['studentId', 'scheduleId'],
     },
   })
   @ApiResponse({
@@ -58,8 +58,33 @@ export class EnrollmentController {
           type: 'object',
           properties: {
             studentId: { type: 'number', example: 1 },
-            courseId: { type: 'number', example: 1 },
+            scheduleId: { type: 'number', example: 1 },
             grade: { type: 'number', example: 0 },
+            schedule: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                day: { type: 'string', example: 'Monday' },
+                time: { type: 'string', example: '08:00' },
+                courseId: { type: 'number', example: 1 },
+                course: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    name: { type: 'string', example: 'Math' },
+                    code: { type: 'string', example: 'MATH101' },
+                    teacherId: { type: 'number', example: 1 },
+                    semester: { type: 'string', example: 'SEMESTER_1' },
+                    sks: { type: 'number', example: 3 },
+                    programStudi: { type: 'string', example: 'Teknik Informatika' },
+                    createdAt: { type: 'string', example: '2020-01-01T00:00:00.000Z' },
+                    updatedAt: { type: 'string', example: '2020-01-01T00:00:00.000Z' },
+                  },
+                },
+                createdAt: { type: 'string', example: '2020-01-01T00:00:00.000Z' },
+                updatedAt: { type: 'string', example: '2020-01-01T00:00:00.000Z' },
+              },
+            },
             createdAt: { type: 'string', example: '2020-01-01T00:00:00.000Z' },
             updatedAt: { type: 'string', example: '2020-01-01T00:00:00.000Z' },
           },
@@ -69,9 +94,9 @@ export class EnrollmentController {
   })
   async register(
     @Body('studentId') studentId: number,
-    @Body('courseId') courseId: number,
+    @Body('scheduleId') scheduleId: number,
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.register(studentId, courseId);
+    return this.enrollmentService.register(studentId, scheduleId);
   }
 
   @Post('/registerMany')
@@ -111,7 +136,7 @@ export class EnrollmentController {
             type: 'object',
             properties: {
               studentId: { type: 'number', example: 1 },
-              courseId: { type: 'number', example: 1 },
+              scheduleId: { type: 'number', example: 1 },
               grade: { type: 'number', example: 0 },
               createdAt: {
                 type: 'string',
@@ -134,7 +159,7 @@ export class EnrollmentController {
     return this.enrollmentService.registerMany(studentId, coursesId);
   }
 
-  @Delete('/:courseId')
+  @Delete('/:scheduleId')
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Delete course for student' })
@@ -145,7 +170,7 @@ export class EnrollmentController {
     example: '765ceff9-ed3b-44b6-89ec-46bd58758e58',
   })
   @ApiParam({
-    name: 'courseId',
+    name: 'scheduleId',
     type: 'number',
     description: 'Course ID to delete',
     required: true,
@@ -163,9 +188,9 @@ export class EnrollmentController {
   })
   async delete(
     @Body('studentId') studentId: number,
-    @Param('courseId') courseId: number,
+    @Param('scheduleId') scheduleId: number,
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.delete(studentId, courseId);
+    return this.enrollmentService.delete(studentId, scheduleId);
   }
 
   @Delete()
@@ -204,9 +229,9 @@ export class EnrollmentController {
   })
   async deleteMany(
     @Body('studentId') studentId: number,
-    @Body('coursesId') courseId: number[],
+    @Body('coursesId') scheduleId: number[],
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.deleteMany(studentId, courseId);
+    return this.enrollmentService.deleteMany(studentId, scheduleId);
   }
 
   @Get('/:studentId')

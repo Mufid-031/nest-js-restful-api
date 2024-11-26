@@ -5,12 +5,7 @@ import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { TeacherService as TeacherValidationService } from 'src/validation/teacher/teacher.service';
 import { v4 as uuid } from 'uuid';
 import { User } from '@prisma/client';
-
-interface UserResponse {
-  status: number;
-  message: string;
-  data?: User | User[];
-}
+import { UserResponse } from 'src/types/user.type';
 
 @Injectable()
 export class TeacherService {
@@ -235,10 +230,10 @@ export class TeacherService {
     };
   }
 
-  async getTeacher(id: number): Promise<UserResponse> {
+  async getTeacher(user: User): Promise<UserResponse> {
     const teacher = await this.prismaService.user.findUnique({
       where: {
-        id: Number(id),
+        id: user.id,
       },
       include: {
         teacher: true,

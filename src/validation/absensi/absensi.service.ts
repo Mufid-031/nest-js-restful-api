@@ -19,6 +19,7 @@ export class AbsensiService {
     scheduleId: number,
     statusKehadiran: StatusKehadiran,
     pertemuan: number,
+    materi: string,
     keterangan?: string,
   ) {
     const schema = z.object({
@@ -26,6 +27,7 @@ export class AbsensiService {
       scheduleId: z.number().min(1),
       statusKehadiran: z.enum(['HADIR', 'ALPA', 'SAKIT', 'IZIN']),
       pertemuan: z.number().min(1),
+      materi: z.string(),
       keterangan: z.string().optional(),
     });
 
@@ -34,6 +36,7 @@ export class AbsensiService {
       scheduleId,
       statusKehadiran,
       pertemuan,
+      materi,
       keterangan,
     });
   }
@@ -43,6 +46,7 @@ export class AbsensiService {
     scheduleId: number,
     statusKehadiran: StatusKehadiran,
     pertemuan: number,
+    materi?: string,
     keterangan?: string,
   ) {
     const schema = z.object({
@@ -50,6 +54,7 @@ export class AbsensiService {
       scheduleId: z.number().min(1),
       statusKehadiran: z.enum(['HADIR', 'ALPA', 'SAKIT', 'IZIN']),
       pertemuan: z.number().min(1),
+      materi: z.string().optional(),
       keterangan: z.string().optional(),
     });
 
@@ -58,6 +63,7 @@ export class AbsensiService {
       scheduleId,
       statusKehadiran,
       pertemuan,
+      materi,
       keterangan,
     });
   }

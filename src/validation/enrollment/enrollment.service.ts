@@ -9,14 +9,14 @@ export class EnrollmentService {
         private readonly validation: ValidationService
     ) {}
 
-    register(studentId: number, courseId: number) {
+    register(studentId: number, scheduleId: number) {
 
         const schema = z.object({
             studentId: z.number().min(1),
-            courseId: z.number().min(1)
+            scheduleId: z.number().min(1)
         });
 
-        return this.validation.validate(schema, { studentId, courseId });
+        return this.validation.validate(schema, { studentId, scheduleId });
     }
 
     registerMany(studentId: number, coursesId: number[]) {
