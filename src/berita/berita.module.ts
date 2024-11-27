@@ -4,6 +4,6 @@ import { BeritaController } from './berita/berita.controller';
 
 @Module({
   providers: [BeritaService],
-  controllers: [BeritaController]
+  controllers: [BeritaController],
 })
 export class BeritaModule {}

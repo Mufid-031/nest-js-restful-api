@@ -2,7 +2,9 @@
 import { Body, Controller, Header, HttpCode, Patch, Post } from '@nestjs/common';
 import { AbsensiService } from './absensi.service';
 import { AbsensiResponse, StatusKehadiran } from 'src/types/absensi.type';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Absensi')
 @Controller('/api/absensi')
 export class AbsensiController {
     constructor(

@@ -227,7 +227,6 @@ model KritikSaran {
   userId     Int
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   pesan      String
-  kategori   String
   type       TypeKritikSaran
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
