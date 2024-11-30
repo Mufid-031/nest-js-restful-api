@@ -7,11 +7,12 @@ import { z } from 'zod';
 export class BeasiswaService {
   constructor(private readonly validation: ValidationService) {}
 
-  register(nama: string, mulai: Date, akhir: Date, deskripsi?: string) {
+  register(nama: string, mulai: Date, akhir: Date, link: string, deskripsi?: string) {
     const schema = z.object({
       nama: z.string().min(1).max(100),
       mulai: z.date(),
       akhir: z.date(),
+      link: z.string().min(1),
       deskripsi: z.string().optional(),
     });
 
@@ -19,6 +20,7 @@ export class BeasiswaService {
       nama,
       mulai,
       akhir,
+      link,
       deskripsi,
     });
   }

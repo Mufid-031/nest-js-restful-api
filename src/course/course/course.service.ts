@@ -142,7 +142,7 @@ export class CourseService {
       include: {
         schedule: true,
         teacher: {
-          select: {
+          include: {
             user: true,
           }
         },

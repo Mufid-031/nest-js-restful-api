@@ -50,7 +50,7 @@ export class AdminService {
           create: {},
         },
       },
-    });
+    }); 
 
     return {
       status: 201,
@@ -380,6 +380,51 @@ export class AdminService {
       status: 200,
       message: 'Success get teacher',
       data: teacher,
+    };
+  }
+
+  async getUsers(): Promise<UserResponse> {
+    const user = await this.prismaService.user.findMany({
+      where: {
+        NOT: {
+          role: 'ADMIN',
+        },
+      },
+      include: {
+        student: true,
+        teacher: true,
+      },
+    });
+
+    if (user.length === 0) {
+      throw new ErrorService(404, 'User not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success to get user',
+      data: user,
+    };
+  }
+
+  async getAdminDetail(user: User): Promise<UserResponse> {
+    const admin = await this.prismaService.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        Admin: true,
+      },
+    });
+
+    if (!admin) {
+      throw new ErrorService(404, 'Admin not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success get admin',
+      data: admin,
     };
   }
 }

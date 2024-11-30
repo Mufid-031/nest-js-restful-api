@@ -56,7 +56,6 @@ model Student {
   sks                 Int       @default(0)
   sksOFSemester       Int       @default(0)
   absensi             Absensi[]
-  beasiswa            PenerimaBeasiswa[]
   pembayaran          Pembayaran[]
   statusStudent       statusStudent
   alumni              Alumni?
@@ -194,23 +193,11 @@ model Beasiswa {
   deskripsi  String?
   mulai      DateTime
   akhir      DateTime
-  penerima   PenerimaBeasiswa[]
+  link       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   @@map("scholarships")
-}
-
-model PenerimaBeasiswa {
-  id            Int       @id @default(autoincrement())
-  studentId     Int
-  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  beasiswaId    Int
-  beasiswa      Beasiswa  @relation(fields: [beasiswaId], references: [id], onDelete: Cascade)
-  tanggalTerima DateTime
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  @@map("scholarship_recipients")
-}
+} // Beasiswa dari luar tabel penerima tidak dibutuhkan diganti dengan link beasiswa
 
 model Berita {
   id        Int      @id @default(autoincrement())
@@ -264,7 +251,6 @@ model Pembayaran {
   total            Int
   jenisPembayaran  JenisPembayaran
   tanggal          DateTime
-  bukti            String
   statusPembayaran StatusPembayaran
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

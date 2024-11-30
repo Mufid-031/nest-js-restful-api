@@ -179,4 +179,21 @@ export class AdminController {
   async getTeacher(@Param('id') id: number): Promise<UserResponse> {
     return await this.adminService.getTeacher(id);
   }
+
+  @Get('/users')
+  @Header('Content-type', 'application/json')
+  @HttpCode(200)
+  async getUsers(): Promise<UserResponse> {
+    return await this.adminService.getUsers();
+  }
+
+  @Get()
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get user profile' })
+  @ApiHeader(RequestHeader)
+  // @ApiResponse(AdminResponseGetUser)
+  async getUser(@GetUser() user: User): Promise<UserResponse> {
+    return await this.adminService.getAdminDetail(user);
+  }
 }

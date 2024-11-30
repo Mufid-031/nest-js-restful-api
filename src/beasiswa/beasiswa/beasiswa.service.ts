@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { BeasiswaResponse } from 'src/types/beasiswa.type';
 import { BeasiswaService as BeasiswaValidationService } from 'src/validation/beasiswa/beasiswa.service';
@@ -15,12 +16,14 @@ export class BeasiswaService {
     nama: string,
     mulai: Date,
     akhir: Date,
+    link: string,
     deskripsi?: string,
   ): Promise<BeasiswaResponse> {
     const requestRegister = this.beasiswaValidationService.register(
       nama,
       mulai,
       akhir,
+      link,
       deskripsi,
     );
 
@@ -29,6 +32,7 @@ export class BeasiswaService {
         nama: requestRegister.nama,
         mulai: requestRegister.mulai,
         akhir: requestRegister.akhir,
+        link: requestRegister.link,
         deskripsi: requestRegister.deskripsi || null,
       },
     });
@@ -87,6 +91,37 @@ export class BeasiswaService {
       status: 201,
       message: 'Success update beasiswa',
       data: updatedBeasiswa,
+    };
+  }
+
+  async delete(id: number): Promise<BeasiswaResponse> {
+    const beasiswa = await this.prismaService.beasiswa.deleteMany({
+      where: {
+        id: id,
+      },
+    });
+
+    if (beasiswa.count === 0) {
+      throw new ErrorService(404, 'Beasiswa not found');
+    }
+
+    return {
+      status: 201,
+      message: 'Success delete beasiswa',
+    };
+  }
+
+  async getBeasiswa(): Promise<BeasiswaResponse> {
+    const beasiswa = await this.prismaService.beasiswa.findMany();
+
+    if (beasiswa.length === 0) {
+      throw new ErrorService(404, 'Beasiswa not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success get beasiswa',
+      data: beasiswa,
     };
   }
 }

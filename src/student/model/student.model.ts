@@ -11,7 +11,7 @@ export const StudentRequestRegister = {
       nim: { type: 'string', example: '12345678' },
       tanggalLahir: { type: 'date', example: '2005-03-27' },
       gender: { type: 'string', example: 'MAN' },
-      programStudy: { type: 'string', example: 'Teknik Informatika' },
+      programStudi: { type: 'string', example: 'Teknik Informatika' },
       academicAdvisorId: { type: 'number', example: 1 },
     },
     required: [

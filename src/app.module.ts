@@ -17,7 +17,6 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ErrorModule } from './error/error.module';
 import { AuthMiddleware } from './middleware/auth/auth.middleware';
 import { ScheduleModule } from './schedule/schedule.module';
-import { RecoveryMiddleware } from './middleware/recovery/recovery.middleware';
 import { ExceptionModule } from './exception/exception.module';
 import { ConfigModule } from '@nestjs/config';
 import { AbsensiModule } from './absensi/absensi.module';
@@ -53,16 +52,9 @@ import { KritikSaranModule } from './kritik-saran/kritik-saran.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({
-        path: '/api/*',
-        method: RequestMethod.ALL,
-      })
-      .apply(RecoveryMiddleware)
-      .forRoutes({
-        path: '/api/user/recovery',
-        method: RequestMethod.GET,
-      });
+    consumer.apply(AuthMiddleware).forRoutes({
+      path: '/api/*',
+      method: RequestMethod.ALL,
+    });
   }
 }
