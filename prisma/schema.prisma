@@ -60,6 +60,7 @@ model Student {
   statusStudent       statusStudent
   alumni              Alumni?
   programStudi        String
+  fakultas            String?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   @@map("students")
@@ -80,6 +81,7 @@ model Teacher {
   students  Student[]
   gelar     String?
   keahlian  String?
+  fakultas  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   @@map("teachers")
@@ -102,6 +104,7 @@ model Course {
   semester    Semester
   sks         Int
   programStudi String
+  fakultas    String?
   schedule    Schedule[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

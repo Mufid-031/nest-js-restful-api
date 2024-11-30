@@ -356,3 +356,66 @@ export const AdminResponseGetTeacherId = {
     },
   },
 };
+
+export const AdminResponseUsers = {
+  status: 200,
+  schema: {
+    type: 'object',
+    properties: {
+      status: { type: 'number', example: 200 },
+      message: { type: 'string', example: 'Success get users' },
+      data: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'John' },
+            email: { type: 'string', example: 'pKQ9T@example.com' },
+            role: { type: 'string', example: 'STUDENT' },
+            createdAt: {
+              type: 'string',
+              example: '2022-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2022-01-01T00:00:00.000Z',
+            },
+            token: { type: 'string', example: null },
+            recoveryToken: { type: 'string', example: null },
+          },
+        },
+      },
+    },
+  },
+}
+
+export const AdminResponseDetail = {
+  status: 200,
+  schema: {
+    type: 'object',
+    properties: {
+      status: { type: 'number', example: 200 },
+      message: { type: 'string', example: 'Success get user' },
+      data: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          name: { type: 'string', example: 'John' },
+          email: { type: 'string', example: 'pKQ9T@example.com' },
+          role: { type: 'string', example: 'ADMIN' },
+          createdAt: {
+            type: 'string',
+            example: '2022-01-01T00:00:00.000Z',
+          },
+          updatedAt: {
+            type: 'string',
+            example: '2022-01-01T00:00:00.000Z',
+          },
+          token: { type: 'string', example: null },
+          recoveryToken: { type: 'string', example: null },
+        },
+      },
+    },
+  },
+}

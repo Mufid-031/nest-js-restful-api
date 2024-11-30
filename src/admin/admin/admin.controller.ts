@@ -35,6 +35,7 @@ import {
   AdminRequestUpdate,
   AdminRequestUpdateUser,
   AdminResponseDeleteUser,
+  AdminResponseDetail,
   AdminResponseGetStudentId,
   AdminResponseGetStudentName,
   AdminResponseGetTeacherId,
@@ -44,6 +45,7 @@ import {
   AdminResponseRegister,
   AdminResponseUpdate,
   AdminResponseUpdateUser,
+  AdminResponseUsers,
 } from '../model/admin.model';
 import { RequestHeader } from 'src/model/x-api-token.model';
 
@@ -183,6 +185,9 @@ export class AdminController {
   @Get('/users')
   @Header('Content-type', 'application/json')
   @HttpCode(200)
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiHeader(RequestHeader)
+  @ApiResponse(AdminResponseUsers)
   async getUsers(): Promise<UserResponse> {
     return await this.adminService.getUsers();
   }
@@ -190,9 +195,9 @@ export class AdminController {
   @Get()
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Get user profile' })
+  @ApiOperation({ summary: 'Get admin profile' })
   @ApiHeader(RequestHeader)
-  // @ApiResponse(AdminResponseGetUser)
+  @ApiResponse(AdminResponseDetail)
   async getUser(@GetUser() user: User): Promise<UserResponse> {
     return await this.adminService.getAdminDetail(user);
   }

@@ -11,8 +11,9 @@ export const TeacherRequestRegister = {
       nip: { type: 'string', example: '123456789' },
       tanggalLahir: { type: 'date', example: '2005-03-27' },
       gender: { type: 'string', example: 'MAN' },
+      fakultas: { type: 'string', example: 'Fakultas Teknik' },
     },
-    required: ['name', 'email', 'password', 'nip'],
+    required: ['name', 'email', 'password', 'nip', 'fakultas'],
   },
 };
 
@@ -40,6 +41,7 @@ export const TeacherResponseRegister = {
               nip: { type: 'string', example: '1234567890' },
               gelar: { type: 'string', example: null },
               keahlian: { type: 'string', example: null },
+              fakultas: { type: 'string', example: 'Fakultas Teknik' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',
@@ -96,6 +98,7 @@ export const TeacherResponseLogin = {
               nip: { type: 'string', example: '1234567890' },
               gelar: { type: 'string', example: 'Profesor' },
               keahlian: { type: 'string', example: 'Web Programmer' },
+              fakultas: { type: 'string', example: 'Fakultas Teknik' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',
@@ -144,6 +147,7 @@ export const TeacherResponseLogout = {
               nip: { type: 'string', example: '1234567890' },
               gelar: { type: 'string', example: 'Profesor' },
               keahlian: { type: 'string', example: 'Web Programmer' },
+              fakultas: { type: 'string', example: 'Fakultas Teknik' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',
@@ -191,6 +195,7 @@ export const TeacherResponseGetTeachers = {
                 nip: { type: 'string', example: '1234567890' },
                 gelar: { type: 'string', example: 'Profesor' },
                 keahlian: { type: 'string', example: 'Web Programmer' },
+                fakultas: { type: 'string', example: 'Fakultas Teknik' },
                 createdAt: {
                   type: 'string',
                   example: '2022-01-01T00:00:00.000Z',
@@ -259,6 +264,7 @@ export const TeacherResponseUpdate = {
               nip: { type: 'string', example: '1234567890' },
               gelar: { type: 'string', example: 'Profesor' },
               keahlian: { type: 'string', example: 'Web Programmer' },
+              fakultas: { type: 'string', example: 'Fakultas Teknik' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',
@@ -314,6 +320,7 @@ export const TeacherResponseDelete = {
               nip: { type: 'string', example: '1234567890' },
               gelar: { type: 'string', example: 'Profesor' },
               keahlian: { type: 'string', example: 'Web Programmer' },
+              fakultas: { type: 'string', example: 'Fakultas Teknik' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',
@@ -362,6 +369,7 @@ export const TeacherResponseGetTeacher = {
               nip: { type: 'string', example: '1234567890' },
               gelar: { type: 'string', example: 'Profesor' },
               keahlian: { type: 'string', example: 'Web Programmer' },
+              fakultas: { type: 'string', example: 'Fakultas Teknik' },
               createdAt: {
                 type: 'string',
                 example: '2022-01-01T00:00:00.000Z',

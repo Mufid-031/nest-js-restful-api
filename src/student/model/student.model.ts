@@ -13,6 +13,7 @@ export const StudentRequestRegister = {
       gender: { type: 'string', example: 'MAN' },
       programStudi: { type: 'string', example: 'Teknik Informatika' },
       academicAdvisorId: { type: 'number', example: 1 },
+      fakultas: { type: 'string', example: 'Fakultas Teknik' },
     },
     required: [
       'name',
@@ -23,6 +24,7 @@ export const StudentRequestRegister = {
       'gender',
       'programStudi',
       'academicAdvisorId',
+      'fakultas',
     ],
   },
 };
@@ -54,6 +56,7 @@ export const StudentResponseRegister = {
             statusStudent: 'ACTIVE',
             programStudi: 'Teknik Informatika',
             academicAdvisorId: 1,
+            fakultas: 'Fakultas Teknik',
             createdAt: '2022-01-01T00:00:00.000Z',
             updatedAt: '2022-01-01T00:00:00.000Z',
           },
@@ -101,6 +104,7 @@ export const StudentResponseLogin = {
             statusStudent: 'ACTIVE',
             programStudi: 'Teknik Informatika',
             academicAdvisorId: 1,
+            fakultas: 'Fakultas Teknik',
             createdAt: '2022-01-01T00:00:00.000Z',
             updatedAt: '2022-01-01T00:00:00.000Z',
           },
@@ -137,6 +141,7 @@ export const StudentResponseLogout = {
             statusStudent: 'ACTIVE',
             programStudi: 'Teknik Informatika',
             academicAdvisorId: 1,
+            fakultas: 'Fakultas Teknik',
             createdAt: '2022-01-01T00:00:00.000Z',
             updatedAt: '2022-01-01T00:00:00.000Z',
           },
@@ -189,6 +194,10 @@ export const StudentResponseGetStudents = {
                 academicAdvisorId: {
                   type: 'number',
                   example: 1,
+                },
+                fakultas: {
+                  type: 'string',
+                  example: 'Fakultas Teknik',
                 },
                 createdAt: {
                   type: 'string',
@@ -261,6 +270,14 @@ export const StudentResponseUpdate = {
                 type: 'string',
                 example: 'Teknik Informatika',
               },
+              academicAdvisorId: {
+                type: 'number',
+                example: 1,
+              },
+              fakultas: {
+                type: 'string',
+                example: 'Fakultas Teknik',
+              },
               createdAt: {
                 type: 'string',
                 example: '2023-01-01T00:00:00.000Z',
@@ -321,6 +338,14 @@ export const StudentResponseDelete = {
                 type: 'string',
                 example: 'Teknik Informatika',
               },
+              academicAdvisorId: {
+                type: 'number',
+                example: 1,
+              },
+              fakultas: {
+                type: 'string',
+                example: 'Fakultas Teknik',
+              },
               createdAt: {
                 type: 'string',
                 example: '2023-01-01T00:00:00.000Z',
@@ -374,6 +399,8 @@ export const StudentResponseGetStudent = {
             nim: '12345678',
             statusStudent: 'ACTIVE',
             programStudi: 'Teknik Informatika',
+            academicAdvisorId: 1,
+            fakultas: 'Fakultas Teknik',
             createdAt: '2022-01-01T00:00:00.000Z',
             updatedAt: '2022-01-01T00:00:00.000Z',
           },

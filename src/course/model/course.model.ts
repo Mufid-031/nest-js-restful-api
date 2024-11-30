@@ -9,8 +9,17 @@ export const CourseRequestCreate = {
       sks: { type: 'number', example: 4 },
       semester: { type: 'string', example: 'semester_3' },
       programStudi: { type: 'string', example: 'Informatika' },
+      fakultas: { type: 'string', example: 'Fakultas Teknik' },
     },
-    required: ['name', 'code', 'teacherId', 'sks', 'semester', 'programStudi'],
+    required: [
+      'name',
+      'code',
+      'teacherId',
+      'sks',
+      'semester',
+      'programStudi',
+      'fakultas',
+    ],
   },
 };
 
@@ -31,6 +40,7 @@ export const CourseResponseCreate = {
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_3' },
           programStudi: { type: 'string', example: 'Informatika' },
+          fakultas: { type: 'string', example: 'Fakultas Teknik' },
           createAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
           updateAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
         },
@@ -49,6 +59,7 @@ export const CourseRequestUpdate = {
       sks: { type: 'number', example: 4 },
       semester: { type: 'string', example: 'semester_2' },
       programStudi: { type: 'string', example: 'Informatika' },
+      fakultas: { type: 'string', example: 'Fakultas Teknik' },
     },
   },
 };
@@ -70,6 +81,7 @@ export const CourseResponseUpdate = {
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_2' },
           programStudi: { type: 'string', example: 'Informatika' },
+          fakultas: { type: 'string', example: 'Fakultas Teknik' },
           createAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
           updateAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
         },
@@ -102,6 +114,7 @@ export const CourseResponseDelete = {
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_2' },
           programStudi: { type: 'string', example: 'Informatika' },
+          fakultas: { type: 'string', example: 'Fakultas Teknik' },
           createAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
           updateAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
         },
@@ -129,8 +142,46 @@ export const CourseResponseGetCourses = {
             sks: { type: 'number', example: 4 },
             semester: { type: 'string', example: 'semester_2' },
             programStudi: { type: 'string', example: 'Informatika' },
+            fakultas: { type: 'string', example: 'Fakultas Teknik' },
             createAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
             updateAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
+            schedule: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  day: { type: 'string', example: 'Senin' },
+                  time: { type: 'string', example: '08:00-10:00' },
+                  room: { type: 'string', example: 'Lab CC' },
+                },
+              },
+            },
+            teacher: {
+              type: 'object',
+              properties: {
+                nip: { type: 'string', example: '123456789' },
+                gelar: { type: 'string', example: 'Profesor' },
+                keahlian: { type: 'string', example: 'Web Programmer' },
+                user: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    name: { type: 'string', example: 'John Doe' },
+                    email: { type: 'string', example: 'XHkQO@example.com' },
+                    password: { type: 'string', example: 'password' },
+                    role: { type: 'string', example: 'TEACHER' },
+                    createAt: {
+                      type: 'string',
+                      example: '2022-11-17T16:00:00.000Z',
+                    },
+                    updateAt: {
+                      type: 'string',
+                      example: '2022-11-17T16:00:00.000Z',
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },
@@ -162,6 +213,7 @@ export const CourseResponseGetCourse = {
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_2' },
           programStudi: { type: 'string', example: 'Informatika' },
+          fakultas: { type: 'string', example: 'Fakultas Teknik' },
           createAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
           updateAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
         },
@@ -196,6 +248,7 @@ export const CourseResponseGetCoursesByName = {
             sks: { type: 'number', example: 4 },
             semester: { type: 'string', example: 'semester_2' },
             programStudi: { type: 'string', example: 'Informatika' },
+            fakultas: { type: 'string', example: 'Fakultas Teknik' },
             createAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
             updateAt: { type: 'string', example: '2022-11-17T16:00:00.000Z' },
           },
@@ -204,5 +257,3 @@ export const CourseResponseGetCoursesByName = {
     },
   },
 };
-
-
