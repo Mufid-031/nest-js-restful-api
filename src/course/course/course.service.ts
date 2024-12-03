@@ -19,7 +19,8 @@ export class CourseService {
     teacherId: number,
     sks: number,
     semester: Semester,
-    programStudi: string
+    programStudi: string,
+    fakultas?: string
   ): Promise<CourseResponse> {
     const requestCreate = this.CourseValidationService.create(
       name,
@@ -27,7 +28,8 @@ export class CourseService {
       teacherId,
       sks,
       semester,
-      programStudi
+      programStudi,
+      fakultas,
     );
 
     const course = await this.prismaService.course.create({
@@ -38,6 +40,7 @@ export class CourseService {
         sks: requestCreate.sks,
         semester: requestCreate.semester,
         programStudi: requestCreate.programStudi,
+        fakultas: requestCreate.fakultas,
       },
     });
 

@@ -64,8 +64,9 @@ export class AdminController {
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,
+    @GetUser() user: User,
   ): Promise<UserResponse> {
-    return await this.adminService.register(name, email, password);
+    return await this.adminService.register(name, email, password, user);
   }
 
   @Post('/login')
@@ -120,8 +121,16 @@ export class AdminController {
     @Body('name') name?: string,
     @Body('email') email?: string,
     @Body('password') password?: string,
+    @GetUser() user?: User,
   ): Promise<UserResponse> {
-    return await this.adminService.updateUser(id, role, name, email, password);
+    return await this.adminService.updateUser(
+      id,
+      role,
+      name,
+      email,
+      password,
+      user,
+    );
   }
 
   @Delete('/user')
@@ -134,8 +143,9 @@ export class AdminController {
   async deleteUser(
     @Body('id') id: number,
     @Body('role') role: Role,
+    @GetUser() user: User,
   ): Promise<UserResponse> {
-    return await this.adminService.deleteUser(id, role);
+    return await this.adminService.deleteUser(id, role, user);
   }
 
   @Get('/students')

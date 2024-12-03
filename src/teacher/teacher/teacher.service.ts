@@ -22,6 +22,8 @@ export class TeacherService {
     nip: string,
     tanggalLahir: Date,
     gender: Gender,
+    fakultas?: string,
+    userLogin?: User,
   ): Promise<UserResponse> {
     const requestRegister = this.TeacherValidationService.register(
       name,
@@ -30,6 +32,7 @@ export class TeacherService {
       nip,
       new Date(tanggalLahir),
       gender,
+      fakultas
     );
 
     const userCount = await this.prismaService.user.count({
@@ -57,8 +60,16 @@ export class TeacherService {
         teacher: {
           create: {
             nip: requestRegister.nip,
+            fakultas: requestRegister.fakultas,
           },
         },
+      },
+    });
+
+    await this.prismaService.log.create({
+      data: {
+        userId: userLogin.id,
+        action: 'Register Teacher By Admin',
       },
     });
 

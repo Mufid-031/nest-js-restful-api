@@ -12,6 +12,7 @@ import { BeasiswaService } from './beasiswa/beasiswa.service';
 import { PembayaranService } from './pembayaran/pembayaran.service';
 import { BeritaService } from './berita/berita.service';
 import { KritikSaranService } from './kritik-saran/kritik-saran.service';
+import { AlumniService } from './alumni/alumni.service';
 
 @Module({
   providers: [
@@ -27,6 +28,8 @@ import { KritikSaranService } from './kritik-saran/kritik-saran.service';
     PembayaranService,
     BeritaService,
     KritikSaranService,
+    PembayaranService,
+    AlumniService,
   ],
 })
 export class ValidationModule {
@@ -55,6 +58,8 @@ export class ValidationModule {
         BeasiswaService,
         BeritaService,
         KritikSaranService,
+        PembayaranService,
+        AlumniService,
       ],
     };
   }

@@ -19,6 +19,7 @@ export class AdminService {
     name: string,
     email: string,
     password: string,
+    userLogin?: User,
   ): Promise<UserResponse> {
     const requestRegister = this.AdminValidationService.register(
       name,
@@ -50,7 +51,14 @@ export class AdminService {
           create: {},
         },
       },
-    }); 
+    });
+
+    await this.prismaService.log.create({
+      data: {
+        userId: userLogin.id,
+        action: 'Register New Admin By Admin',
+      },
+    });
 
     return {
       status: 201,
@@ -160,6 +168,7 @@ export class AdminService {
     name?: string,
     email?: string,
     password?: string,
+    userLogin?: User,
   ): Promise<UserResponse> {
     const requestUpdate = this.AdminValidationService.updateUser(
       id,
@@ -217,6 +226,13 @@ export class AdminService {
         });
       }
 
+      await this.prismaService.log.create({
+        data: {
+          userId: userLogin.id,
+          action: 'Update Teacher By Admin',
+        },
+      });
+
       return {
         status: 201,
         message: 'Success update teacher',
@@ -270,6 +286,13 @@ export class AdminService {
         });
       }
 
+      await this.prismaService.log.create({
+        data: {
+          userId: userLogin.id,
+          action: 'Update Student By Admin',
+        },
+      });
+
       return {
         status: 201,
         message: 'Success update student',
@@ -278,7 +301,11 @@ export class AdminService {
     }
   }
 
-  async deleteUser(id: number, role: Role): Promise<UserResponse> {
+  async deleteUser(
+    id: number,
+    role: Role,
+    userLogin?: User,
+  ): Promise<UserResponse> {
     const user = await this.prismaService.user.delete({
       where: {
         id: id,
@@ -289,6 +316,13 @@ export class AdminService {
     if (!user) {
       throw new ErrorService(404, 'User not found');
     }
+
+    await this.prismaService.log.create({
+      data: {
+        userId: userLogin.id,
+        action: 'Delete User By Admin',
+      },
+    });
 
     return {
       status: 201,

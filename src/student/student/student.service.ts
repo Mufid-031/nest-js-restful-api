@@ -24,6 +24,8 @@ export class StudentService {
     gender: Gender,
     programStudi: string,
     academicAdvisorId: number,
+    fakultas?: string,
+    userLogin?: User
   ): Promise<UserResponse> {
     const requestRegister = this.StudentValidationService.register(
       name,
@@ -34,6 +36,7 @@ export class StudentService {
       gender,
       programStudi,
       academicAdvisorId,
+      fakultas
     );
 
     const userCount = await this.prismaService.user.count({
@@ -63,9 +66,17 @@ export class StudentService {
             nim: requestRegister.nim,
             programStudi: requestRegister.programStudi,
             statusStudent: 'ACTIVE',
-            academicAdvisorId: requestRegister.academicAdvisorId
+            academicAdvisorId: requestRegister.academicAdvisorId,
+            fakultas: requestRegister.fakultas,
           },
         },
+      },
+    });
+
+    await this.prismaService.log.create({
+      data: {
+        userId: userLogin.id,
+        action: 'Register Student By Admin',
       },
     });
 

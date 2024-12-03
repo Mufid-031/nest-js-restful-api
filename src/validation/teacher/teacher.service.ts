@@ -14,7 +14,8 @@ export class TeacherService {
     password: string,
     nip: string,
     tanggalLahir: Date,
-    gender: Gender
+    gender: Gender,
+    fakultas?: string
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100),
@@ -24,7 +25,8 @@ export class TeacherService {
       gelar: z.string().min(1).max(100).optional(),
       keahlian: z.string().min(1).max(100).optional(),
       tanggalLahir: z.date(),
-      gender: z.enum(["MAN", "WOMAN"])
+      gender: z.enum(["MAN", "WOMAN"]),
+      fakultas: z.string().min(1).max(100).optional(),
     });
 
     return this.validation.validate(schema, {
@@ -33,7 +35,8 @@ export class TeacherService {
       password,
       nip,
       tanggalLahir,
-      gender
+      gender,
+      fakultas
     });
   }
 

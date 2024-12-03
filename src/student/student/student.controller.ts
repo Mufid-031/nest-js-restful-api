@@ -63,6 +63,8 @@ export class StudentController {
     @Body('gender') gender: Gender,
     @Body('programStudi') programStudi: string,
     @Body('academicAdvisorId') academicAdvisorId: number,
+    @Body('fakultas') fakultas?: string,
+    @GetUser() user?: User
   ): Promise<UserResponse> {
     return await this.studentService.register(
       name,
@@ -73,6 +75,8 @@ export class StudentController {
       gender,
       programStudi,
       academicAdvisorId,
+      fakultas,
+      user
     );
   }
 

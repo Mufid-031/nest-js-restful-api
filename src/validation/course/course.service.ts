@@ -24,7 +24,8 @@ export class CourseService {
     teacherId: number,
     sks: number,
     semester: Semester,
-    programStudi: string
+    programStudi: string,
+    fakultas?: string
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100),
@@ -42,6 +43,7 @@ export class CourseService {
         Semester.SEMESTER_8,
       ]),
       programStudi: z.string().min(1).max(100),
+      fakultas: z.string().min(1).max(100).optional(),
     });
 
     return this.validation.validate(schema, {
@@ -51,6 +53,7 @@ export class CourseService {
       sks,
       semester,
       programStudi,
+      fakultas
     });
   }
 

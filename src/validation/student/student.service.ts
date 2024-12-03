@@ -17,6 +17,7 @@ export class StudentService {
     gender: Gender,
     programStudi: string,
     academicAdvisorId: number,
+    fakultas?: string,
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100),
@@ -27,6 +28,7 @@ export class StudentService {
       gender: z.enum(['MAN', 'WOMAN']),
       programStudi: z.string().min(1).max(100),
       academicAdvisorId: z.number().min(1),
+      fakultas: z.string().min(1).max(100).optional(),
     });
 
     return this.validation.validate(schema, {
@@ -38,6 +40,7 @@ export class StudentService {
       gender,
       programStudi,
       academicAdvisorId,
+      fakultas,
     });
   }
 

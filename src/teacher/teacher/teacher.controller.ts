@@ -56,6 +56,8 @@ export class TeacherController {
     @Body('nip') nip: string,
     @Body('tanggalLahir') tanggalLahir: Date,
     @Body('gender') gender: Gender,
+    @Body('fakultas') fakultas?: string,
+    @GetUser() user?: User
   ): Promise<UserResponse> {
     return await this.TeacherService.register(
       name,
@@ -64,6 +66,8 @@ export class TeacherController {
       nip,
       tanggalLahir,
       gender,
+      fakultas,
+      user
     );
   }
 

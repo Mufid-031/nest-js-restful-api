@@ -56,6 +56,7 @@ export class CourseController {
     @Body('sks') sks: number,
     @Body('semester') semester: Semester,
     @Body('programStudi') programStudi: string,
+    @Body('fakultas') fakultas?: string,
   ): Promise<CourseResponse> {
     return await this.courseService.create(
       name,
@@ -64,6 +65,7 @@ export class CourseController {
       sks,
       semester,
       programStudi,
+      fakultas
     );
   }
 
