@@ -36,9 +36,9 @@ export class AdminService {
 
     update(name?: string, email?: string, password?: string) {
         const schema = z.object({
-            name: z.string().min(1).max(100).optional(),
-            email: z.string().min(1).max(100).optional(),
-            password: z.string().min(1).max(100).optional(),
+            name: z.string().max(100).optional(),
+            email: z.string().max(100).optional(),
+            password: z.string().max(100).optional(),
         });
 
         return this.validation.validate(schema, { name, email, password });
@@ -48,9 +48,9 @@ export class AdminService {
         const schema = z.object({
             id: z.number().min(1),
             role: z.enum([Role.ADMIN, Role.TEACHER, Role.STUDENT]),
-            name: z.string().min(1).max(100).optional(),
-            email: z.string().min(1).max(100).optional(),
-            password: z.string().min(1).max(100).optional(),
+            name: z.string().max(100).optional(),
+            email: z.string().max(100).optional(),
+            password: z.string().max(100).optional(),
         });
 
         return this.validation.validate(schema, { id, role, name, email, password });

@@ -58,6 +58,7 @@ export class AdminController {
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Register a new user' })
+  @ApiHeader(RequestHeader)
   @ApiBody(AdminRequestRegister)
   @ApiResponse(AdminResponseRegister)
   async register(

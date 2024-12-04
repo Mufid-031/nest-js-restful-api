@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Header,
   HttpCode,
   Param,
@@ -28,6 +29,7 @@ import {
   ScheduleResponseDelete,
   ScheduleResponseUpdate,
 } from '../model/schedule.model';
+import { Semester } from 'src/types/course.type';
 
 @ApiTags('Schedule')
 @Controller('/api/schedule')
@@ -75,5 +77,14 @@ export class ScheduleController {
   @ApiResponse(ScheduleResponseDelete)
   async delete(@Param('id') id: number): Promise<ScheduleResponse> {
     return await this.scheduleService.delete(id);
+  }
+
+  @Get('/:semester')
+  @Header('Content-Type', 'application')
+  @HttpCode(200)
+  async getSchedulesBySemester(
+    @Param('semester') semester: Semester,
+  ): Promise<ScheduleResponse> {
+    return await this.scheduleService.getSchedulesBySemester(semester);
   }
 }

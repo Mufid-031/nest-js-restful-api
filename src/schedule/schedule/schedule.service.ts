@@ -2,9 +2,9 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { Semester } from 'src/types/course.type';
 import { DayOfWeek, ScheduleResponse } from 'src/types/schedule.type';
 import { ScheduleService as ScheduleValidationService } from 'src/validation/schedule/schedule.service';
-
 
 @Injectable()
 export class ScheduleService {
@@ -75,10 +75,10 @@ export class ScheduleService {
     }
 
     const update = await this.prismaService.schedule.update({
-        where: {
-            id: requestUpdate.id,
-        },
-        data: shcedule
+      where: {
+        id: requestUpdate.id,
+      },
+      data: shcedule,
     });
 
     return {
@@ -100,14 +100,41 @@ export class ScheduleService {
     }
 
     await this.prismaService.schedule.deleteMany({
-        where: {
-            id: schedule.id
-        }
+      where: {
+        id: schedule.id,
+      },
     });
 
     return {
       status: 201,
       message: 'Schedule deleted successfully',
+    };
+  }
+
+  async getSchedulesBySemester(semeser: Semester): Promise<ScheduleResponse> {
+    const schedles = await this.prismaService.schedule.findMany({
+      where: {
+        course: {
+          semester: semeser,
+        }
+      },
+      include: {
+        course: {
+          include: {
+            schedule: true,
+          }
+        }
+      },
+    });
+
+    if (schedles.length === 0) {
+      throw new ErrorService(404, 'Schedule not found');
     }
+
+    return {
+      status: 200,
+      message: 'Success get schedules by semester',
+      data: schedles,
+    };
   }
 }

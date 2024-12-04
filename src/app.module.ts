@@ -25,6 +25,7 @@ import { BeritaModule } from './berita/berita.module';
 import { PembayaranModule } from './pembayaran/pembayaran.module';
 import { KritikSaranModule } from './kritik-saran/kritik-saran.module';
 import { AlumniModule } from './alumni/alumni.module';
+import { LogsModule } from './log/logs.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AlumniModule } from './alumni/alumni.module';
     PembayaranModule,
     KritikSaranModule,
     AlumniModule,
+    LogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
