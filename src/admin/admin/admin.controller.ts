@@ -65,7 +65,7 @@ export class AdminController {
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,
-    @GetUser() user: User,
+    @GetUser() user?: User,
   ): Promise<UserResponse> {
     return await this.adminService.register(name, email, password, user);
   }
@@ -211,5 +211,14 @@ export class AdminController {
   @ApiResponse(AdminResponseDetail)
   async getUser(@GetUser() user: User): Promise<UserResponse> {
     return await this.adminService.getAdminDetail(user);
+  }
+
+  @Get('user/:id')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get user by ID' })
+  @ApiHeader(RequestHeader)
+  async getUserById(@Param('id') id: number): Promise<UserResponse> {
+    return await this.adminService.getUserById(id);
   }
 }

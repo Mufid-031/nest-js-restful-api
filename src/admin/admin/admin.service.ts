@@ -461,4 +461,22 @@ export class AdminService {
       data: admin,
     };
   }
+
+  async getUserById(id: number): Promise<UserResponse> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!user) {
+      throw new ErrorService(404, 'User not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success get user',
+      data: user,
+    };
+  }
 }

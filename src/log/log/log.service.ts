@@ -17,7 +17,11 @@ export class LogService {
       throw new ErrorService(401, 'You are not admin');
     }
 
-    const logs = await this.prismaService.log.findMany();
+    const logs = await this.prismaService.log.findMany({
+      include: {
+        user: true,
+      }
+    });
 
     if (logs.length === 0) {
       throw new ErrorService(404, 'Logs not found');

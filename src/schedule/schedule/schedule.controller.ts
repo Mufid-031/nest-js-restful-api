@@ -80,11 +80,21 @@ export class ScheduleController {
   }
 
   @Get('/:semester')
-  @Header('Content-Type', 'application')
+  @Header('Content-Type', 'application/json') 
   @HttpCode(200)
   async getSchedulesBySemester(
     @Param('semester') semester: Semester,
   ): Promise<ScheduleResponse> {
     return await this.scheduleService.getSchedulesBySemester(semester);
+  }
+
+  @Get()
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiHeader(RequestHeader)
+  @ApiOperation({ summary: 'Get all schedules' })
+  // @ApiResponse(ScheduleResponseGetAll)
+  async getSchedules(): Promise<ScheduleResponse> {
+    return await this.scheduleService.getSchedules();
   }
 }

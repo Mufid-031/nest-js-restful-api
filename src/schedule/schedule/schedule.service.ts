@@ -116,14 +116,14 @@ export class ScheduleService {
       where: {
         course: {
           semester: semeser,
-        }
+        },
       },
       include: {
         course: {
           include: {
             schedule: true,
-          }
-        }
+          },
+        },
       },
     });
 
@@ -135,6 +135,24 @@ export class ScheduleService {
       status: 200,
       message: 'Success get schedules by semester',
       data: schedles,
+    };
+  }
+
+  async getSchedules(): Promise<ScheduleResponse> {
+    const schedules = await this.prismaService.schedule.findMany({
+      include: {
+        course: true,
+      },
+    });
+
+    if (!schedules || schedules.length === 0) {
+      throw new ErrorService(404, 'Schedule not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success get schedules',
+      data: schedules,
     };
   }
 }

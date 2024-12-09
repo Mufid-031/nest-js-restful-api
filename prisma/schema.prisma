@@ -80,6 +80,7 @@ model Teacher {
   nip       String    @unique
   courses   Course[]
   students  Student[]
+  enrollments Enrollment[]
   gelar     String?
   keahlian  String?
   fakultas  String?
@@ -131,6 +132,10 @@ model Enrollment {
   scheduleId Int
   grade     Grade?
   evaluasiDosen EvaluasiDosen?
+  isValidated Boolean @default(false)
+  validatedAt  DateTime?
+  validatedById  Int?
+  validatedBy Teacher? @relation(fields: [validatedById], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("enrollments")
