@@ -74,6 +74,13 @@ export class EnrollmentService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: student.userId,
+        action: 'Add Course',
+      },
+    });
+
     return {
       status: 201,
       message: 'Success register course',
@@ -145,6 +152,13 @@ export class EnrollmentService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: student.userId,
+        action: 'Delete Course',
+      },
+    });
+
     return {
       status: 201,
       message: 'Success delete enrollments',
@@ -159,15 +173,12 @@ export class EnrollmentService {
       include: {
         schedule: {
           include: {
-            course: {
+            teacher: {
               include: {
-                teacher: {
-                  include: {
-                    user: true
-                  },
-                },
-              },
+                user: true,
+              }
             },
+            course: true,
           },
         },
       },
@@ -181,6 +192,37 @@ export class EnrollmentService {
       status: 200,
       message: 'Success get enrollments',
       data: enrollments,
+    };
+  }
+
+  async getEnrollment(student: Student, scheduleId: number): Promise<EnrollmentResponse> {
+    const enrollment = await this.prismaService.enrollment.findFirst({
+      where: {
+        studentId: student.id,
+        scheduleId: Number(scheduleId),
+      },
+      include: {
+        schedule: {
+          include: {
+            teacher: {
+              include: {
+                user: true,
+              }
+            },
+            course: true,
+          },
+        },
+      },
+    });
+
+    if (!enrollment) {
+      throw new ErrorService(404, 'Enrollment not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success get enrollment',
+      data: enrollment,
     };
   }
 }

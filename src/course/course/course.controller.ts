@@ -52,7 +52,6 @@ export class CourseController {
   async create(
     @Body('name') name: string,
     @Body('code') code: string,
-    @Body('teacherId') teacherId: number,
     @Body('sks') sks: number,
     @Body('semester') semester: Semester,
     @Body('programStudi') programStudi: string,
@@ -61,7 +60,6 @@ export class CourseController {
     return await this.courseService.create(
       name,
       code,
-      teacherId,
       sks,
       semester,
       programStudi,
@@ -79,7 +77,6 @@ export class CourseController {
   async update(
     @Body('code') code: string,
     @Body('name') name?: string,
-    @Body('teacherId') teacherId?: number,
     @Body('sks') sks?: number,
     @Body('semester') semester?: Semester,
     @Body('programStudi') programStudi?: string,
@@ -87,7 +84,6 @@ export class CourseController {
     return this.courseService.update(
       code,
       name,
-      teacherId,
       sks,
       semester,
       programStudi,

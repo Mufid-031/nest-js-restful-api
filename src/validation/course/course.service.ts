@@ -21,7 +21,6 @@ export class CourseService {
   create(
     name: string,
     code: string,
-    teacherId: number,
     sks: number,
     semester: Semester,
     programStudi: string,
@@ -30,7 +29,6 @@ export class CourseService {
     const schema = z.object({
       name: z.string().min(1).max(100),
       code: z.string().min(1).max(100),
-      teacherId: z.number().min(1),
       sks: z.number().min(1).max(100),
       semester: z.enum([
         Semester.SEMESTER_1,
@@ -49,7 +47,6 @@ export class CourseService {
     return this.validation.validate(schema, {
       name,
       code,
-      teacherId,
       sks,
       semester,
       programStudi,
@@ -60,7 +57,6 @@ export class CourseService {
   update(
     name?: string,
     code?: string,
-    teacherId?: number,
     sks?: number,
     semester?: Semester,
     programStudi?: string
@@ -68,7 +64,6 @@ export class CourseService {
     const schema = z.object({
       name: z.string().min(1).max(100).optional(),
       code: z.string().min(1).max(100).optional(),
-      teacherId: z.number().min(1).optional(),
       sks: z.number().min(1).max(100).optional(),
       semester: z
         .enum([
@@ -88,7 +83,6 @@ export class CourseService {
     return this.validation.validate(schema, {
       name,
       code,
-      teacherId,
       sks,
       semester,
       programStudi,

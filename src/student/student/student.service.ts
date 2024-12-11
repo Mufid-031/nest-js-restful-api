@@ -120,6 +120,13 @@ export class StudentService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Login Student',
+      },
+    });
+
     return {
       status: 200,
       message: 'Student logged in successfully',
@@ -134,6 +141,13 @@ export class StudentService {
       },
       data: {
         token: null,
+      },
+    });
+
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Logout Student',
       },
     });
 
@@ -204,6 +218,13 @@ export class StudentService {
       data: requestUpdate,
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Update Student By Admin',
+      },
+    });
+
     return {
       status: 201,
       message: 'Student updated successfully',
@@ -221,6 +242,13 @@ export class StudentService {
     if (count === 0) {
       throw new ErrorService(404, 'Student not found');
     }
+
+    await this.prismaService.log.create({
+      data: {
+        userId: id,
+        action: 'Delete Student By Admin',
+      },
+    });
 
     return {
       status: 201,

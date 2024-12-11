@@ -7,6 +7,7 @@ export const ScheduleRequestCreate = {
       day: { type: 'string', example: 'MONDAY' },
       time: { type: 'string', example: '08:00' },
       room: { type: 'string', example: 'R1' },
+      teacherId: { type: 'number', example: 1 },
     },
   },
 };
@@ -27,6 +28,7 @@ export const ScheduleResponseCreate = {
           day: { type: 'string', example: 'MONDAY' },
           time: { type: 'string', example: '08:00' },
           room: { type: 'string', example: 'R1' },
+          teacherId: { type: 'number', example: 1 },
           createdAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
           updatedAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
         },
@@ -43,6 +45,7 @@ export const ScheduleRequestUpdate = {
       day: { type: 'string', example: 'MONDAY' },
       time: { type: 'string', example: '08:00' },
       room: { type: 'string', example: 'R1' },
+      teacherId: { type: 'number', example: 1 },
     },
   },
 };
@@ -63,6 +66,7 @@ export const ScheduleResponseUpdate = {
           day: { type: 'string', example: 'MONDAY' },
           time: { type: 'string', example: '08:00' },
           room: { type: 'string', example: 'R1' },
+          teacherId: { type: 'number', example: 1 },
           createdAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
           updatedAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
         },
@@ -94,8 +98,65 @@ export const ScheduleResponseDelete = {
           day: { type: 'string', example: 'MONDAY' },
           time: { type: 'string', example: '08:00' },
           room: { type: 'string', example: 'S1' },
+          teacherId: { type: 'number', example: 1 },
           createdAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
           updatedAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
+        },
+      },
+    },
+  },
+};
+
+export const ScheduleResponseGetBySemester = {
+  status: 200,
+  description: 'Success get schedule by semester',
+  schema: {
+    type: 'object',
+    properties: {
+      status: { type: 'number', example: 200 },
+      message: { type: 'string', example: 'Success get schedule by semester' },
+      data: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            courseId: { type: 'number', example: 1 },
+            day: { type: 'string', example: 'MONDAY' },
+            time: { type: 'string', example: '08:00' },
+            room: { type: 'string', example: 'S1' },
+            teacherId: { type: 'number', example: 1 },
+            createdAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
+            updatedAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const ScheduleResponseGetAll = {
+  status: 200,
+  description: 'Success get all schedule',
+  schema: {
+    type: 'object',
+    properties: {
+      status: { type: 'number', example: 200 },
+      message: { type: 'string', example: 'Success get all schedule' },
+      data: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            courseId: { type: 'number', example: 1 },
+            day: { type: 'string', example: 'MONDAY' },
+            time: { type: 'string', example: '08:00' },
+            room: { type: 'string', example: 'S1' },
+            teacherId: { type: 'number', example: 1 },
+            createdAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
+            updatedAt: { type: 'string', example: '2022-01-01T00:00:00.000Z' },
+          },
         },
       },
     },

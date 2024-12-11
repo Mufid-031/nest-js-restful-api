@@ -19,22 +19,32 @@ export class ScheduleService {
     day: DayOfWeek,
     time: string,
     room: string,
+    teacherId: number,
   ): Promise<ScheduleResponse> {
     const requestCreate = this.ScheduleValidationService.create(
       courseId,
       day,
       time,
       room,
+      teacherId,
     );
 
     const schedule = await this.prismaService.schedule.create({
       data: {
         courseId: requestCreate.courseId,
+        teacherId: requestCreate.teacherId,
         day: requestCreate.day,
         time: requestCreate.time,
         room: requestCreate.room,
       },
     });
+
+    // await this.prismaService.log.create({
+    //   data: {
+    //     userId: schedule.userId,
+    //     action: 'Create Schedule By Admin',
+    //   },
+    // });
 
     return {
       status: 201,
@@ -48,12 +58,14 @@ export class ScheduleService {
     day?: DayOfWeek,
     time?: string,
     room?: string,
+    teacherId?: number,
   ): Promise<ScheduleResponse> {
     const requestUpdate = this.ScheduleValidationService.update(
       id,
       day,
       time,
       room,
+      teacherId,
     );
 
     const shcedule = await this.prismaService.schedule.findUnique({
@@ -72,6 +84,10 @@ export class ScheduleService {
 
     if (requestUpdate.room) {
       shcedule.room = requestUpdate.room;
+    }
+
+    if (requestUpdate.teacherId) {
+      shcedule.teacherId = requestUpdate.teacherId;
     }
 
     const update = await this.prismaService.schedule.update({

@@ -5,7 +5,6 @@ export const CourseRequestCreate = {
     properties: {
       name: { type: 'string', example: 'PAW' },
       code: { type: 'string', example: 'S140' },
-      teacherId: { type: 'number', example: 1 },
       sks: { type: 'number', example: 4 },
       semester: { type: 'string', example: 'semester_3' },
       programStudi: { type: 'string', example: 'Informatika' },
@@ -14,7 +13,6 @@ export const CourseRequestCreate = {
     required: [
       'name',
       'code',
-      'teacherId',
       'sks',
       'semester',
       'programStudi',
@@ -36,7 +34,6 @@ export const CourseResponseCreate = {
         properties: {
           name: { type: 'string', example: 'PAW' },
           code: { type: 'string', example: 'S140' },
-          teacherId: { type: 'number', example: 1 },
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_3' },
           programStudi: { type: 'string', example: 'Informatika' },
@@ -55,7 +52,6 @@ export const CourseRequestUpdate = {
     properties: {
       code: { type: 'string', example: 'S140' },
       name: { type: 'string', example: 'DPW' },
-      teacherId: { type: 'number', example: 1 },
       sks: { type: 'number', example: 4 },
       semester: { type: 'string', example: 'semester_2' },
       programStudi: { type: 'string', example: 'Informatika' },
@@ -77,7 +73,6 @@ export const CourseResponseUpdate = {
         properties: {
           name: { type: 'string', example: 'DPW' },
           code: { type: 'string', example: 'S140' },
-          teacherId: { type: 'number', example: 1 },
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_2' },
           programStudi: { type: 'string', example: 'Informatika' },
@@ -110,7 +105,6 @@ export const CourseResponseDelete = {
         properties: {
           name: { type: 'string', example: 'PAW' },
           code: { type: 'string', example: 'S140' },
-          teacherId: { type: 'number', example: 1 },
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_2' },
           programStudi: { type: 'string', example: 'Informatika' },
@@ -138,7 +132,6 @@ export const CourseResponseGetCourses = {
           properties: {
             name: { type: 'string', example: 'PAW' },
             code: { type: 'string', example: 'S140' },
-            teacherId: { type: 'number', example: 1 },
             sks: { type: 'number', example: 4 },
             semester: { type: 'string', example: 'semester_2' },
             programStudi: { type: 'string', example: 'Informatika' },
@@ -209,7 +202,6 @@ export const CourseResponseGetCourse = {
         properties: {
           name: { type: 'string', example: 'PAW' },
           code: { type: 'string', example: 'S140' },
-          teacherId: { type: 'number', example: 1 },
           sks: { type: 'number', example: 4 },
           semester: { type: 'string', example: 'semester_2' },
           programStudi: { type: 'string', example: 'Informatika' },
@@ -244,7 +236,6 @@ export const CourseResponseGetCoursesByName = {
           properties: {
             name: { type: 'string', example: 'PAW' },
             code: { type: 'string', example: 'S140' },
-            teacherId: { type: 'number', example: 1 },
             sks: { type: 'number', example: 4 },
             semester: { type: 'string', example: 'semester_2' },
             programStudi: { type: 'string', example: 'Informatika' },

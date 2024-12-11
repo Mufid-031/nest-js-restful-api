@@ -16,7 +16,6 @@ export class CourseService {
   async create(
     name: string,
     code: string,
-    teacherId: number,
     sks: number,
     semester: Semester,
     programStudi: string,
@@ -25,7 +24,6 @@ export class CourseService {
     const requestCreate = this.CourseValidationService.create(
       name,
       code,
-      teacherId,
       sks,
       semester,
       programStudi,
@@ -36,7 +34,6 @@ export class CourseService {
       data: {
         name: requestCreate.name,
         code: requestCreate.code,
-        teacherId: requestCreate.teacherId,
         sks: requestCreate.sks,
         semester: requestCreate.semester,
         programStudi: requestCreate.programStudi,
@@ -54,7 +51,6 @@ export class CourseService {
   async update(
     code: string,
     name?: string,
-    teacherId?: number,
     sks?: number,
     semester?: Semester,
     programStudi?: string
@@ -62,7 +58,6 @@ export class CourseService {
     const requestUpdate = this.CourseValidationService.update(
       name,
       code,
-      teacherId,
       sks,
       semester,
       programStudi
@@ -89,10 +84,6 @@ export class CourseService {
       course.code = requestUpdate.code;
     }
 
-    if (requestUpdate.teacherId) {
-      course.teacherId = requestUpdate.teacherId;
-    }
-
     if (requestUpdate.sks) {
       course.sks = requestUpdate.sks;
     }
@@ -108,7 +99,6 @@ export class CourseService {
       data: {
         name: course.name,
         code: course.code,
-        teacherId: course.teacherId,
         sks: course.sks,
         semester: course.semester,
       },
@@ -143,10 +133,9 @@ export class CourseService {
   async getCourses(): Promise<CourseResponse> {
     const courses = await this.prismaService.course.findMany({
       include: {
-        schedule: true,
-        teacher: {
+        schedule: {
           include: {
-            user: true,
+            teacher: true,
           }
         },
       },

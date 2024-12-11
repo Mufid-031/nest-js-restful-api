@@ -27,6 +27,8 @@ import {
   ScheduleRequestUpdate,
   ScheduleResponseCreate,
   ScheduleResponseDelete,
+  ScheduleResponseGetAll,
+  ScheduleResponseGetBySemester,
   ScheduleResponseUpdate,
 } from '../model/schedule.model';
 import { Semester } from 'src/types/course.type';
@@ -48,8 +50,9 @@ export class ScheduleController {
     @Body('day') day: DayOfWeek,
     @Body('time') time: string,
     @Body('room') room: string,
+    @Body('teacherId') teacherId: number,
   ): Promise<ScheduleResponse> {
-    return await this.scheduleService.create(courseId, day, time, room);
+    return await this.scheduleService.create(courseId, day, time, room, teacherId);
   }
 
   @Patch()
@@ -64,8 +67,9 @@ export class ScheduleController {
     @Body('day') day?: DayOfWeek,
     @Body('time') time?: string,
     @Body('room') room?: string,
+    @Body('teacherId') teacherId?: number,
   ): Promise<ScheduleResponse> {
-    return await this.scheduleService.update(id, day, time, room);
+    return await this.scheduleService.update(id, day, time, room, teacherId);
   }
 
   @Delete('/:id')
@@ -82,6 +86,10 @@ export class ScheduleController {
   @Get('/:semester')
   @Header('Content-Type', 'application/json') 
   @HttpCode(200)
+  @ApiOperation({ summary: 'Get schedules by semester' })
+  @ApiHeader(RequestHeader)
+  @ApiParam({ name: 'semester', enum: Semester })
+  @ApiResponse(ScheduleResponseGetBySemester)
   async getSchedulesBySemester(
     @Param('semester') semester: Semester,
   ): Promise<ScheduleResponse> {
@@ -91,9 +99,9 @@ export class ScheduleController {
   @Get()
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
-  @ApiHeader(RequestHeader)
   @ApiOperation({ summary: 'Get all schedules' })
-  // @ApiResponse(ScheduleResponseGetAll)
+  @ApiHeader(RequestHeader)
+  @ApiResponse(ScheduleResponseGetAll)
   async getSchedules(): Promise<ScheduleResponse> {
     return await this.scheduleService.getSchedules();
   }

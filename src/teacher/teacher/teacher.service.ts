@@ -113,6 +113,13 @@ export class TeacherService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Login Teacher',
+      },
+    });
+
     return {
       status: 200,
       message: 'User logged in successfully',
@@ -127,6 +134,13 @@ export class TeacherService {
       },
       data: {
         token: null,
+      },
+    });
+
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Logout Teacher',
       },
     });
 
@@ -214,6 +228,13 @@ export class TeacherService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Update Teacher By Admin',
+      },
+    });
+
     return {
       status: 201,
       message: 'User updated successfully',
@@ -238,6 +259,13 @@ export class TeacherService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: id,
+        action: 'Delete Teacher By Admin',
+      },
+    });
+
     return {
       status: 201,
       message: 'Success delete teacher',
@@ -250,7 +278,15 @@ export class TeacherService {
         id: user.id,
       },
       include: {
-        teacher: true,
+        teacher: {
+          include: {
+            schedules: {
+              include: {
+                course: true,
+              }
+            },
+          }
+        },
       },
     });
 

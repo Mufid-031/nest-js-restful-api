@@ -78,8 +78,8 @@ model Teacher {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int       @unique
   nip       String    @unique
-  courses   Course[]
   students  Student[]
+  schedules Schedule[]
   enrollments Enrollment[]
   gelar     String?
   keahlian  String?
@@ -101,8 +101,6 @@ model Course {
   id          Int           @id @default(autoincrement())
   name        String
   code        String        @unique
-  teacher     Teacher       @relation(fields: [teacherId], references: [id])
-  teacherId   Int
   semester    Semester
   sks         Int
   programStudi String
@@ -152,10 +150,12 @@ enum Grade {
 model Schedule {
   id          Int      @id @default(autoincrement())
   courseId    Int
+  teacherId   Int
   day         DayOfWeek
   time        String    // Example: "10:00-12:00"
   room        String
   course      Course   @relation(fields: [courseId], references: [id])
+  teacher     Teacher  @relation(fields: [teacherId], references: [id])
   absensi     Absensi[]
   enrollments Enrollment[]
   kouta       Int      @default(30)

@@ -6,6 +6,7 @@ import {
   Get,
   Header,
   HttpCode,
+  Param,
   Post,
 } from '@nestjs/common';
 import {
@@ -71,5 +72,18 @@ export class EnrollmentController {
     @GetStudent() student: Student,
   ): Promise<EnrollmentResponse> {
     return this.enrollmentService.getEnrollments(student);
+  }
+
+  @Get('/:scheduleId')
+  @Header('content-type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get enrollment student' })
+  @ApiHeader(RequestHeader)
+  // @ApiResponse(EnrollmentResponseGetStudentEnrollments)
+  async getEnrollment(
+    @GetStudent() student: Student,
+    @Param('scheduleId') scheduleId: number,
+  ): Promise<EnrollmentResponse> {
+    return this.enrollmentService.getEnrollment(student, scheduleId);
   }
 }

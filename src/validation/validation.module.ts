@@ -13,6 +13,7 @@ import { PembayaranService } from './pembayaran/pembayaran.service';
 import { BeritaService } from './berita/berita.service';
 import { KritikSaranService } from './kritik-saran/kritik-saran.service';
 import { AlumniService } from './alumni/alumni.service';
+import { UserService } from './user/user.service';
 
 @Module({
   providers: [
@@ -30,6 +31,7 @@ import { AlumniService } from './alumni/alumni.service';
     KritikSaranService,
     PembayaranService,
     AlumniService,
+    UserService,
   ],
 })
 export class ValidationModule {
@@ -60,6 +62,7 @@ export class ValidationModule {
         KritikSaranService,
         PembayaranService,
         AlumniService,
+        UserService,
       ],
     };
   }

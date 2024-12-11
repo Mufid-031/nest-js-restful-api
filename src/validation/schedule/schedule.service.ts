@@ -17,7 +17,13 @@ enum DayOfWeek {
 export class ScheduleService {
   constructor(private readonly validation: ValidationService) {}
 
-  create(courseId: number, day: DayOfWeek, time: string, room: string) {
+  create(
+    courseId: number,
+    day: DayOfWeek,
+    time: string,
+    room: string,
+    teacherId: number,
+  ) {
     const schema = z.object({
       courseId: z.number().min(1),
       day: z.enum([
@@ -31,12 +37,19 @@ export class ScheduleService {
       ]),
       time: z.string().min(1).max(100),
       room: z.string().min(1).max(100),
+      teacherId: z.number().min(1),
     });
 
-    return this.validation.validate(schema, { courseId, day, time, room });
+    return this.validation.validate(schema, { courseId, day, time, room, teacherId });
   }
 
-  update(id: number, day: DayOfWeek, time: string, room: string) {
+  update(
+    id: number,
+    day: DayOfWeek,
+    time: string,
+    room: string,
+    teacherId: number,
+  ) {
     const schema = z.object({
       id: z.number().min(1).optional(),
       day: z.enum([
@@ -50,8 +63,9 @@ export class ScheduleService {
       ]).optional(),
       time: z.string().min(1).max(100).optional(),
       room: z.string().min(1).max(100).optional(),
+      teacherId: z.number().min(1).optional(),
     });
 
-    return this.validation.validate(schema, { id, day, time, room });
+    return this.validation.validate(schema, { id, day, time, room, teacherId });
   }
 }
