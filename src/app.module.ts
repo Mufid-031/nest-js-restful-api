@@ -27,6 +27,7 @@ import { KritikSaranModule } from './kritik-saran/kritik-saran.module';
 import { AlumniModule } from './alumni/alumni.module';
 import { LogsModule } from './log/logs.module';
 import { UserModule } from './user/user.module';
+import { EvaluationModule } from './evaluation/evaluation.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { UserModule } from './user/user.module';
     AlumniModule,
     LogsModule,
     UserModule,
+    EvaluationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

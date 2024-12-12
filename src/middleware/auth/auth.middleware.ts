@@ -17,7 +17,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   async use(req: UserRequest, res: Response, next: () => void) {
     const excludeRoutes = [
-      '/api/admin/register',
+      // '/api/admin/register',
       '/api/admin/login',
       '/api/student/login',
       '/api/teacher/login',

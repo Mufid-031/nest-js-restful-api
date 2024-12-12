@@ -15,26 +15,20 @@ export class AbsensiService {
   constructor(private readonly ValidationService: ValidationService) {}
 
   register(
-    studentId: number,
     scheduleId: number,
-    statusKehadiran: StatusKehadiran,
     pertemuan: number,
     materi: string,
     keterangan?: string,
   ) {
     const schema = z.object({
-      studentId: z.number().min(1),
       scheduleId: z.number().min(1),
-      statusKehadiran: z.enum(['HADIR', 'ALPA', 'SAKIT', 'IZIN']),
       pertemuan: z.number().min(1),
       materi: z.string(),
       keterangan: z.string().optional(),
     });
 
     return this.ValidationService.validate(schema, {
-      studentId,
       scheduleId,
-      statusKehadiran,
       pertemuan,
       materi,
       keterangan,

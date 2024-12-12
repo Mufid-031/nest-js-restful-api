@@ -209,7 +209,7 @@ export class AdminController {
   @ApiOperation({ summary: 'Get admin profile' })
   @ApiHeader(RequestHeader)
   @ApiResponse(AdminResponseDetail)
-  async getUser(@GetUser() user: User): Promise<UserResponse> {
+  async getAdminDetail(@GetUser() user: User): Promise<UserResponse> {
     return await this.adminService.getAdminDetail(user);
   }
 

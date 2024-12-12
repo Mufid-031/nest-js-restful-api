@@ -232,7 +232,7 @@ export class StudentService {
     };
   }
 
-  async delete(id: number): Promise<UserResponse> {
+  async delete(id: number, user: User): Promise<UserResponse> {
     const { count } = await this.prismaService.user.deleteMany({
       where: {
         id: id,
@@ -245,7 +245,7 @@ export class StudentService {
 
     await this.prismaService.log.create({
       data: {
-        userId: id,
+        userId: user.id,
         action: 'Delete Student By Admin',
       },
     });

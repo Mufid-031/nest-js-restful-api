@@ -176,14 +176,14 @@ enum DayOfWeek {
 
 model Absensi {
   id              Int      @id @default(autoincrement())
-  studentId       Int
-  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId       Int?
+  student         Student?  @relation(fields: [studentId], references: [id])
   scheduleId      Int
-  schedule        Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  schedule        Schedule @relation(fields: [scheduleId], references: [id])
   statusKehadiran StatusKehadiran
   keterangan      String?
   pertemuan       Int
-  materi          String
+  materi          String?
   createAt        DateTime @default(now())
   updatedAt       DateTime @updatedAt
   @@map("absences")

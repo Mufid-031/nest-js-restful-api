@@ -138,8 +138,8 @@ export class TeacherController {
   @ApiHeader(RequestHeader)
   @ApiParam(TeacherRequestDelete)
   @ApiResponse(TeacherResponseDelete)
-  async delete(@Param('id') id: number): Promise<UserResponse> {
-    return this.TeacherService.delete(id);
+  async delete(@Param('id') id: number, @GetUser() user: User): Promise<UserResponse> {
+    return this.TeacherService.delete(id, user);
   }
 
   @Get('/detail')

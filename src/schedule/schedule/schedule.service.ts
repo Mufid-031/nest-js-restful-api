@@ -157,6 +157,12 @@ export class ScheduleService {
   async getSchedules(): Promise<ScheduleResponse> {
     const schedules = await this.prismaService.schedule.findMany({
       include: {
+        teacher: {
+          include: {
+            user: true,
+          },
+        },
+        enrollments: true,
         course: true,
       },
     });
@@ -169,6 +175,33 @@ export class ScheduleService {
       status: 200,
       message: 'Success get schedules',
       data: schedules,
+    };
+  }
+
+  async getSchedule(id: number): Promise<ScheduleResponse> {
+    const schedule = await this.prismaService.schedule.findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        teacher: {
+          include: {
+            user: true,
+          },
+        },
+        enrollments: true,
+        course: true,
+      },
+    });
+
+    if (!schedule) {
+      throw new ErrorService(404, 'Schedule not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success get schedule',
+      data: schedule,
     };
   }
 }

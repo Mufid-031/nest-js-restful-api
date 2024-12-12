@@ -3,16 +3,12 @@ export const AbsensiRequestRegister = {
   schema: {
     type: 'object',
     properties: {
-      studentId: { type: 'number', example: 1 },
-      scheduleId: {
-        type: 'array',
-        items: { type: 'number', example: 1 },
-      },
+      scheduleId: { type: 'number', example: 1 },
       statusKehadiran: { type: 'string', example: 'HADIR' },
       pertemuan: { type: 'number', example: 1 },
       materi: { type: 'string', example: 'Dasar python' },
     },
-    required: ['studentId', 'scheduleId', 'statusKehadiran', 'pertemuan', 'materi'],
+    required: ['scheduleId', 'statusKehadiran', 'pertemuan', 'materi'],
   },
 };
 

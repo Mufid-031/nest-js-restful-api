@@ -83,7 +83,7 @@ export class ScheduleController {
     return await this.scheduleService.delete(id);
   }
 
-  @Get('/:semester')
+  @Get('/semester/:semester')
   @Header('Content-Type', 'application/json') 
   @HttpCode(200)
   @ApiOperation({ summary: 'Get schedules by semester' })
@@ -104,5 +104,16 @@ export class ScheduleController {
   @ApiResponse(ScheduleResponseGetAll)
   async getSchedules(): Promise<ScheduleResponse> {
     return await this.scheduleService.getSchedules();
+  }
+
+  @Get('/:id')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get schedule by id' })
+  @ApiHeader(RequestHeader)
+  @ApiParam(ScheduleRequestDelete)
+  @ApiResponse(ScheduleResponseGetAll)
+  async getSchedule(@Param('id') id: number): Promise<ScheduleResponse> {
+    return await this.scheduleService.getSchedule(id);
   }
 }

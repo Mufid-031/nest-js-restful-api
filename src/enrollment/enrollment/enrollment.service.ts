@@ -204,6 +204,7 @@ export class EnrollmentService {
       include: {
         schedule: {
           include: {
+            enrollments: true,
             teacher: {
               include: {
                 user: true,

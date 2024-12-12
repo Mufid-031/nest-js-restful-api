@@ -2,8 +2,10 @@
 import {
   Body,
   Controller,
+  Get,
   Header,
   HttpCode,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -23,6 +25,8 @@ import {
   AbsensiResponseRegister,
   AbsensiResponseUpdate,
 } from '../model/absensi.model';
+import { GetStudent } from 'src/decorators/student.decorator';
+import { Student } from '@prisma/client';
 
 @ApiTags('Absensi')
 @Controller('/api/absensi')
@@ -31,23 +35,19 @@ export class AbsensiController {
 
   @Post('/register')
   @Header('Content-Type', 'application/json')
-  @HttpCode(200)
+  @HttpCode(201)
   @ApiOperation({ summary: 'Register absensi' })
   @ApiHeader(RequestHeader)
   @ApiBody(AbsensiRequestRegister)
   @ApiResponse(AbsensiResponseRegister)
   async register(
-    @Body('studentId') studentId: number,
     @Body('scheduleId') scheduleId: number,
-    @Body('statusKehadiran') statusKehadiran: StatusKehadiran,
     @Body('pertemuan') pertemuan: number,
     @Body('materi') materi: string,
     @Body('keterangan') keterangan?: string,
   ): Promise<AbsensiResponse> {
     return await this.absensiService.register(
-      studentId,
       scheduleId,
-      statusKehadiran,
       pertemuan,
       materi,
       keterangan,
@@ -77,5 +77,28 @@ export class AbsensiController {
       materi,
       keterangan,
     );
+  }
+
+  @Get('/:scheduleId')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get absensi by scheduleId' })
+  @ApiHeader(RequestHeader)
+  async getAbsensiByScheduleId(
+    @Param('scheduleId') scheduleId: number,
+  ): Promise<AbsensiResponse> {
+    return await this.absensiService.getAbsensiByScheduleId(scheduleId);
+  }
+
+  @Get('/student/:scheduleId')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get absensi by studentId and scheduleId' })
+  @ApiHeader(RequestHeader)
+  async getStudentAbsensi(
+    @GetStudent() student: Student,
+    @Param('scheduleId') scheduleId: number,
+  ): Promise<AbsensiResponse> {
+    return await this.absensiService.getStudentAbsensi(student, scheduleId);
   }
 }

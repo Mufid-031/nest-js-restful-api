@@ -14,6 +14,7 @@ import { BeritaService } from './berita/berita.service';
 import { KritikSaranService } from './kritik-saran/kritik-saran.service';
 import { AlumniService } from './alumni/alumni.service';
 import { UserService } from './user/user.service';
+import { EvaluationService } from './evaluation/evaluation.service';
 
 @Module({
   providers: [
@@ -32,6 +33,7 @@ import { UserService } from './user/user.service';
     PembayaranService,
     AlumniService,
     UserService,
+    EvaluationService,
   ],
 })
 export class ValidationModule {
@@ -63,6 +65,7 @@ export class ValidationModule {
         PembayaranService,
         AlumniService,
         UserService,
+        EvaluationService,
       ],
     };
   }
