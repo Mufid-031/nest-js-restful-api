@@ -60,10 +60,10 @@ export class StudentService {
     telephone?: string,
   ) {
     const schema = z.object({
-      name: z.string().min(1).max(100).optional(),
-      email: z.string().min(1).max(100).optional(),
-      password: z.string().min(1).max(100).optional(),
-      telephone: z.string().min(1).max(100).optional(),
+      name: z.string().max(100).optional(),
+      email: z.string().max(100).optional(),
+      password: z.string().max(100).optional(),
+      telephone: z.string().max(100).optional(),
     });
 
     return this.validation.validate(schema, {
