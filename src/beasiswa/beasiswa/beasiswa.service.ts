@@ -21,8 +21,8 @@ export class BeasiswaService {
   ): Promise<BeasiswaResponse> {
     const requestRegister = this.beasiswaValidationService.register(
       nama,
-      mulai,
-      akhir,
+      new Date(mulai),
+      new Date(akhir),
       link,
       deskripsi,
     );
