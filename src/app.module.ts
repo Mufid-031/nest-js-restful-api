@@ -28,6 +28,7 @@ import { AlumniModule } from './alumni/alumni.module';
 import { LogsModule } from './log/logs.module';
 import { UserModule } from './user/user.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { EvaluationModule } from './evaluation/evaluation.module';
     LogsModule,
     UserModule,
     EvaluationModule,
+    AnnouncementsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

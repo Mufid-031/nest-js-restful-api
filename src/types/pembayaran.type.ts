@@ -4,7 +4,7 @@ import { Pembayaran } from '@prisma/client';
 export interface PembayaranResponse {
   status: number;
   message: string;
-  data: Pembayaran | Pembayaran[];
+  data?: Pembayaran | Pembayaran[];
 }
 
 export enum JenisPembayaran {

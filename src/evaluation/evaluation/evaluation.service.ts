@@ -71,7 +71,9 @@ export class EvaluationService {
     };
   }
 
-  async getEvaluation(scheduleId: number): Promise<EvaluationResponse> {
+  async getEvaluationByScheduleId(
+    scheduleId: number,
+  ): Promise<EvaluationResponse> {
     const evaluation = await this.prismaService.evaluasiDosen.findMany({
       where: {
         enrollment: {
@@ -101,7 +103,47 @@ export class EvaluationService {
         },
       },
     });
-    if (!evaluation) {
+  
+    if (evaluation.length === 0) {
+      throw new ErrorService(404, 'Evaluation not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Evaluation fetched successfully',
+      data: evaluation,
+    };
+  }
+
+  async getEvaluation(enrollmentId: number): Promise<EvaluationResponse> {
+    const evaluation = await this.prismaService.evaluasiDosen.findMany({
+      where: {
+        enrollmentId: Number(enrollmentId),
+      },
+      include: {
+        enrollment: {
+          include: {
+            student: {
+              include: {
+                user: true,
+              },
+            },
+            schedule: {
+              include: {
+                absensi: true,
+                course: true,
+                teacher: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    if (evaluation.length === 0) {
       throw new ErrorService(404, 'Evaluation not found');
     }
     return {

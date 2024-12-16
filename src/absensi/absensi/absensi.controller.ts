@@ -79,6 +79,18 @@ export class AbsensiController {
     );
   }
 
+  @Get('/pertemuan')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get absensi by pertemuan' })
+  @ApiHeader(RequestHeader)
+  async getAbseensiByPertemuan(
+    @Body('pertemuan') pertemuan: number,
+    @Body('scheduleId') scheduleId: number,
+  ): Promise<AbsensiResponse> {
+    return await this.absensiService.getAbseensiByPertemuan(pertemuan, scheduleId);
+  }
+
   @Get('/:scheduleId')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)

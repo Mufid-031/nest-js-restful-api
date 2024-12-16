@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { Student } from '@prisma/client';
+import { Student, User } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
+import { Semester } from 'src/types/course.type';
 import {
-  JenisPembayaran,
   PembayaranResponse,
   StatusPembayaran,
 } from 'src/types/pembayaran.type';
@@ -18,35 +18,30 @@ export class PembayaranService {
     private readonly pembayaranValidationService: PembayaranValidationService,
   ) {}
 
-  async create(
-    studentId: number,
-    total: number,
-    jenisPembayaran: JenisPembayaran,
-    tanggal: Date,
-    statusPembayaran: StatusPembayaran,
-  ): Promise<PembayaranResponse> {
+  async create(total: number, semester: Semester): Promise<PembayaranResponse> {
     const requestCreate = this.pembayaranValidationService.create(
-      studentId,
       total,
-      jenisPembayaran,
-      tanggal,
-      statusPembayaran,
+      semester,
     );
 
-    const pembayaran = await this.prismaService.pembayaran.create({
-      data: {
-        studentId: requestCreate.studentId,
-        total: requestCreate.total,
-        jenisPembayaran: requestCreate.jenisPembayaran,
-        tanggal: requestCreate.tanggal,
-        statusPembayaran: StatusPembayaran.PENDING,
+    const students = await this.prismaService.user.findMany({
+      where: {
+        role: 'STUDENT',
       },
+    });
+
+    await this.prismaService.pembayaran.createMany({
+      data: students.map((student) => ({
+        studentId: student.id,
+        total: requestCreate.total,
+        statusPembayaran: StatusPembayaran.PENDING,
+        semester: requestCreate.semester,
+      })),
     });
 
     return {
       status: 201,
       message: 'Success Create Pembayaran',
-      data: pembayaran,
     };
   }
 
@@ -83,6 +78,62 @@ export class PembayaranService {
       status: 200,
       message: 'Success Get Pembayaran',
       data: pembayaran,
+    };
+  }
+
+  async getAllPembayaranDetail(user: User): Promise<PembayaranResponse> {
+    if (user.role !== 'ADMIN') {
+      throw new ErrorService(403, 'You are not admin');
+    }
+
+    const groupedPembayaran = await this.prismaService.pembayaran.groupBy({
+      by: ['semester', 'statusPembayaran'],
+      _count: {
+        _all: true,
+      },
+      _min: {
+        total: true,
+        createdAt: true,
+      },
+    });
+
+    if (groupedPembayaran.length === 0) {
+      throw new ErrorService(404, 'Pembayaran not found');
+    }
+
+    const formattedData = groupedPembayaran.reduce((acc, group) => {
+      const { semester, statusPembayaran, _count } = group;
+      const existingSemester = acc.find((item) => item.semester === semester);
+
+      if (existingSemester) {
+        existingSemester.statusCounts.push({
+          statusPembayaran,
+          count: _count._all,
+          total: group._min.total,
+          createdAt: group._min.createdAt,
+        });
+      } else {
+        acc.push({
+          semester,
+          statusCounts: [
+            {
+              statusPembayaran,
+              count: _count._all,
+              total: group._min.total,
+              createdAt: group._min.createdAt,
+            },
+          ],
+        });
+      }
+
+      return acc;
+    }, []);
+
+    return {
+      status: 200,
+      message:
+        'Success Get Pembayaran grouped by semester and statusPembayaran',
+      data: formattedData,
     };
   }
 }

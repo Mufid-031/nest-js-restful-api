@@ -258,17 +258,11 @@ model Pembayaran {
   studentId        Int
   student          Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   total            Int
-  jenisPembayaran  JenisPembayaran
-  tanggal          DateTime
+  semester         Semester
   statusPembayaran StatusPembayaran
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   @@map("payments")
-}
-
-enum JenisPembayaran {
-  BANK
-  EWALLET
 }
 
 enum StatusPembayaran {
@@ -297,4 +291,13 @@ model Log {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("logs")
+}
+
+model Pengumuman {
+  id        Int      @id @default(autoincrement())
+  judul     String
+  konten    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("announcements")
 }

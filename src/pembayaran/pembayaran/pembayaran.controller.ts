@@ -11,9 +11,7 @@ import {
 } from '@nestjs/common';
 import { PembayaranService } from './pembayaran.service';
 import {
-  JenisPembayaran,
   PembayaranResponse,
-  StatusPembayaran,
 } from 'src/types/pembayaran.type';
 import { GetStudent } from 'src/decorators/student.decorator';
 import { Student } from '@prisma/client';
@@ -32,6 +30,7 @@ import {
   PembayaranResponseGetStudent,
 } from '../model/pembayaran.model';
 import { RequestHeader } from 'src/model/x-api-token.model';
+import { Semester } from 'src/types/course.type';
 
 @ApiTags('Pembayaran')
 @Controller('/api/pembayaran')
@@ -46,18 +45,12 @@ export class PembayaranController {
   @ApiBody(PembayaranRequestCreate)
   @ApiResponse(PembayaranResponseCreate)
   async create(
-    @Body('studentId') studentId: number,
     @Body('total') total: number,
-    @Body('jenisPembayaran') jenisPembayaran: JenisPembayaran,
-    @Body('tanggal') tanggal: Date,
-    @Body('statusPembayaran') statusPembayaran: StatusPembayaran,
+    @Body('semester') semester: Semester
   ): Promise<PembayaranResponse> {
     return await this.pembayaranService.create(
-      studentId,
       total,
-      jenisPembayaran,
-      tanggal,
-      statusPembayaran,
+      semester
     );
   }
 

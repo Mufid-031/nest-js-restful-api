@@ -2,37 +2,33 @@
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { ValidationService } from '../validation/validation.service';
-import { JenisPembayaran, StatusPembayaran } from '@prisma/client';
+import { Semester } from 'src/types/course.type';
 
 @Injectable()
 export class PembayaranService {
   constructor(private readonly validation: ValidationService) {}
 
   create(
-    studentId: number,
     total: number,
-    jenisPembayaran: JenisPembayaran,
-    tanggal: Date,
-    statusPembayaran: StatusPembayaran,
+    semester: Semester,
   ) {
     const schema = z.object({
-      studentId: z.number().min(1),
       total: z.number().min(1),
-      jenisPembayaran: z.enum([JenisPembayaran.BANK, JenisPembayaran.EWALLET]),
-      tanggal: z.date(),
-      statusPembayaran: z.enum([
-        StatusPembayaran.FAILED,
-        StatusPembayaran.PENDING,
-        StatusPembayaran.SUCCESS,
-      ]),
+      semester: z.enum([
+        Semester.SEMESTER_1,
+        Semester.SEMESTER_2,
+        Semester.SEMESTER_3,
+        Semester.SEMESTER_4,
+        Semester.SEMESTER_5,
+        Semester.SEMESTER_6,
+        Semester.SEMESTER_7,
+        Semester.SEMESTER_8
+      ])
     });
 
     return this.validation.validate(schema, {
-      studentId,
       total,
-      jenisPembayaran,
-      tanggal,
-      statusPembayaran,
+      semester
     });
   }
 }

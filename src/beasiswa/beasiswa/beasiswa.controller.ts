@@ -6,6 +6,7 @@ import {
   Get,
   Header,
   HttpCode,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -81,7 +82,7 @@ export class BeasiswaController {
   @ApiHeader(RequestHeader)
   @ApiParam({ name: 'id', type: 'number' })
   @ApiResponse(BeasiswaResponseDelete)
-  async delete(@Body('id') id: number): Promise<BeasiswaResponse> {
+  async delete(@Param('id') id: number): Promise<BeasiswaResponse> {
     return await this.beasiswaService.delete(id);
   }
 

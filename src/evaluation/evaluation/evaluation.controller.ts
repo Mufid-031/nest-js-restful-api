@@ -1,5 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Header, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  HttpCode,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
 import { NilaiEvaluasi } from 'src/types/evaluation.type';
 
@@ -25,10 +33,19 @@ export class EvaluationController {
     return this.evaluationService.getEvaluations();
   }
 
-  @Get('/:scheduleId')
+  @Get('/teacher/:scheduleId')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
-  async getEvaluation(@Param('scheduleId') scheduleId: number) {
-    return this.evaluationService.getEvaluation(scheduleId);
+  async getEvaluationByScheduleId(@Param('scheduleId') scheduleId: number) {
+    return this.evaluationService.getEvaluationByScheduleId(scheduleId);
+  }
+
+  @Get('/:enrollmentId')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  async getEvaluation(
+    @Param('enrollmentId') enrollmentId: number,
+  ) {
+    return this.evaluationService.getEvaluation(enrollmentId);
   }
 }

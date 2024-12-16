@@ -145,6 +145,25 @@ export class AbsensiService {
     };
   }
 
+  async getAbseensiByPertemuan(pertemuan: number, scheduleId: number): Promise<AbsensiResponse> {
+    const absensi = await this.prismaService.absensi.findMany({
+      where: {
+        pertemuan: pertemuan,
+        scheduleId: scheduleId,
+      },
+    });
+
+    if (absensi.length === 0) {
+      throw new ErrorService(404, 'No absensi found');
+    }
+
+    return {
+      status: 200,
+      message: 'Get absensi by pertemuan successfully',
+      data: absensi,
+    }
+  }
+
   async getAbsensiByScheduleId(scheduleId: number): Promise<AbsensiResponse> {
     const groupedAbsensi = await this.prismaService.absensi.groupBy({
       by: ['pertemuan', 'statusKehadiran'],

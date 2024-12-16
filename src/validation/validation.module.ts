@@ -15,6 +15,7 @@ import { KritikSaranService } from './kritik-saran/kritik-saran.service';
 import { AlumniService } from './alumni/alumni.service';
 import { UserService } from './user/user.service';
 import { EvaluationService } from './evaluation/evaluation.service';
+import { AnnouncementsService } from './announcements/announcements.service';
 
 @Module({
   providers: [
@@ -34,6 +35,7 @@ import { EvaluationService } from './evaluation/evaluation.service';
     AlumniService,
     UserService,
     EvaluationService,
+    AnnouncementsService,
   ],
 })
 export class ValidationModule {
@@ -66,6 +68,7 @@ export class ValidationModule {
         AlumniService,
         UserService,
         EvaluationService,
+        AnnouncementsService,
       ],
     };
   }

@@ -17,19 +17,45 @@ export class LogService {
       throw new ErrorService(401, 'You are not admin');
     }
 
+    const now = new Date();
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+    const todayEnd = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999,
+    );
+
     const logs = await this.prismaService.log.findMany({
+      where: {
+        createdAt: {
+          gte: todayStart,
+          lte: todayEnd,
+        },
+      },
       include: {
         user: true,
-      }
+      },
     });
 
     if (logs.length === 0) {
-      throw new ErrorService(404, 'Logs not found');
+      throw new ErrorService(404, 'Logs not found for today');
     }
 
     return {
       status: 200,
-      message: 'Success get logs',
+      message: 'Success get logs for today',
       data: logs,
     };
   }

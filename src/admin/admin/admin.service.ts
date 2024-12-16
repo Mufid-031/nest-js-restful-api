@@ -134,31 +134,37 @@ export class AdminService {
       password,
     );
 
+    const admin = await this.prismaService.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+
     if (requestUpdate.name) {
-      user.name = requestUpdate.name;
+      admin.name = requestUpdate.name;
     }
 
     if (requestUpdate.email) {
-      user.email = requestUpdate.email;
+      admin.email = requestUpdate.email;
     }
 
     if (requestUpdate.password) {
-      user.password = await this.prismaService.hashPassword(
+      admin.password = await this.prismaService.hashPassword(
         requestUpdate.password,
       );
     }
 
-    const admin = await this.prismaService.user.update({
+    const adminUpdated = await this.prismaService.user.update({
       where: {
         id: user.id,
       },
-      data: requestUpdate,
+      data: admin,
     });
 
     return {
       status: 201,
       message: 'Update success',
-      data: admin,
+      data: adminUpdated,
     };
   }
 

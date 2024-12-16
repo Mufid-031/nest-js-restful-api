@@ -95,13 +95,13 @@ export class BeasiswaService {
   }
 
   async delete(id: number): Promise<BeasiswaResponse> {
-    const beasiswa = await this.prismaService.beasiswa.deleteMany({
+    const beasiswa = await this.prismaService.beasiswa.delete({
       where: {
-        id: id,
+        id: Number(id),
       },
     });
 
-    if (beasiswa.count === 0) {
+    if (!beasiswa) {
       throw new ErrorService(404, 'Beasiswa not found');
     }
 
