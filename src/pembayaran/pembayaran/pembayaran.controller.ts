@@ -37,7 +37,7 @@ import { Semester } from 'src/types/course.type';
 export class PembayaranController {
   constructor(private readonly pembayaranService: PembayaranService) {}
 
-  @Post()
+  @Post('/create')
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Create Pembayaran' })
@@ -54,18 +54,18 @@ export class PembayaranController {
     );
   }
 
-  @Patch('/confirm/:id')
+  @Patch('/confirm/:semester')
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Confirm Pembayaran' })
   @ApiHeader(RequestHeader)
-  @ApiParam({ name: 'id' })
+  @ApiParam({ name: 'semester' })
   @ApiResponse(PembayaranResponseConfirm)
   async confirm(
-    @Param('id') id: number,
+    @Param('semester') semester: Semester,
     @GetStudent() student: Student,
   ): Promise<PembayaranResponse> {
-    return await this.pembayaranService.confirm(id, student);
+    return await this.pembayaranService.confirm(semester, student);
   }
 
   @Get()

@@ -28,28 +28,62 @@ export class PembayaranService {
       where: {
         role: 'STUDENT',
       },
+      include: {
+        student: true,
+      },
     });
 
-    await this.prismaService.pembayaran.createMany({
-      data: students.map((student) => ({
-        studentId: student.id,
-        total: requestCreate.total,
-        statusPembayaran: StatusPembayaran.PENDING,
+    const semesterCheck = await this.prismaService.pembayaran.findMany({
+      where: {
         semester: requestCreate.semester,
-      })),
+      },
+    });
+
+    if (semesterCheck.length > 0) {
+      throw new ErrorService(400, 'Semester already exist');
+    }
+
+    const pembayaranData = students.map((user) => ({
+      studentId: user.student.id,
+      total: requestCreate.total,
+      semester: requestCreate.semester,
+      statusPembayaran: StatusPembayaran.PENDING,
+    }));
+
+    await this.prismaService.pembayaran.createMany({
+      data: pembayaranData,
+    });
+
+    const pembayaran = await this.prismaService.pembayaran.findMany({
+      where: {
+        semester: requestCreate.semester,
+        statusPembayaran: StatusPembayaran.PENDING,
+      },
     });
 
     return {
       status: 201,
       message: 'Success Create Pembayaran',
+      data: pembayaran,
     };
   }
 
-  async confirm(id: number, student: Student): Promise<PembayaranResponse> {
-    const pembayaran = await this.prismaService.pembayaran.update({
+  async confirm(semester: Semester, student: Student): Promise<PembayaranResponse> {
+    const pembayaran = await this.prismaService.pembayaran.findFirst({
       where: {
-        id: id,
+        semester: semester,
         studentId: student.id,
+        statusPembayaran: StatusPembayaran.PENDING,
+      }
+    });
+
+    if (!pembayaran) {
+      throw new ErrorService(404, 'Pembayaran not found');
+    }
+
+    const updatedPembayaran = await this.prismaService.pembayaran.update({
+      where: {
+        id: pembayaran.id,
       },
       data: {
         statusPembayaran: StatusPembayaran.SUCCESS,
@@ -59,7 +93,7 @@ export class PembayaranService {
     return {
       status: 201,
       message: 'Success Confirm Pembayaran',
-      data: pembayaran,
+      data: updatedPembayaran,
     };
   }
 
@@ -67,6 +101,9 @@ export class PembayaranService {
     const pembayaran = await this.prismaService.pembayaran.findMany({
       where: {
         studentId: student.id,
+      },
+      include: {
+        student: true,
       },
     });
 
