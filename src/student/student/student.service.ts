@@ -193,29 +193,35 @@ export class StudentService {
       telephone,
     );
 
+    const student = await this.prismaService.user.findUnique({
+      where: {
+        id: user.id,
+      },
+    });
+
     if (requestUpdate.name) {
-      user.name = requestUpdate.name;
+      student.name = requestUpdate.name;
     }
 
     if (requestUpdate.email) {
-      user.email = requestUpdate.email;
+      student.email = requestUpdate.email;
     }
 
     if (requestUpdate.password) {
-      user.password = await this.prismaService.hashPassword(
+      student.password = await this.prismaService.hashPassword(
         requestUpdate.password,
       );
     }
 
     if (requestUpdate.telephone) {
-      user.telephone = requestUpdate.telephone;
+      student.telephone = requestUpdate.telephone;
     }
 
-    const student = await this.prismaService.user.update({
+    const studentUpdated = await this.prismaService.user.update({
       where: {
         id: user.id,
       },
-      data: user,
+      data: student,
     });
 
     await this.prismaService.log.create({
@@ -228,7 +234,7 @@ export class StudentService {
     return {
       status: 201,
       message: 'Student updated successfully',
-      data: student,
+      data: studentUpdated,
     };
   }
 

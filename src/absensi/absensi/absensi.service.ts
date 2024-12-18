@@ -36,6 +36,7 @@ export class AbsensiService {
     const pertemuanCheck = await this.prismaService.absensi.findMany({
       where: {
         pertemuan: requestRegister.pertemuan,
+        scheduleId: requestRegister.scheduleId,
       },
     });
 
