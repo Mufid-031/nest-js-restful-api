@@ -61,16 +61,12 @@ export class EnrollmentService {
         id: requestRegister.studentId,
       },
       data: {
-        sksOFSemester: {
-          increment: enrollments
-            .map((enrollment) => enrollment.schedule.course.sks)
-            .reduce((a, b) => a + b, 0),
-        },
-        sks: {
-          increment: enrollments
-            .map((enrollment) => enrollment.schedule.course.sks)
-            .reduce((a, b) => a + b, 0),
-        },
+        sksOFSemester: enrollments
+          .map((enrollment) => enrollment.schedule.course.sks)
+          .reduce((a, b) => a + b, 0),
+        sks: enrollments
+          .map((enrollment) => enrollment.schedule.course.sks)
+          .reduce((a, b) => a + b, 0),
       },
     });
 
@@ -176,7 +172,7 @@ export class EnrollmentService {
             teacher: {
               include: {
                 user: true,
-              }
+              },
             },
             course: true,
           },
@@ -195,7 +191,10 @@ export class EnrollmentService {
     };
   }
 
-  async getEnrollment(student: Student, scheduleId: number): Promise<EnrollmentResponse> {
+  async getEnrollment(
+    student: Student,
+    scheduleId: number,
+  ): Promise<EnrollmentResponse> {
     const enrollment = await this.prismaService.enrollment.findFirst({
       where: {
         studentId: student.id,
@@ -208,7 +207,7 @@ export class EnrollmentService {
             teacher: {
               include: {
                 user: true,
-              }
+              },
             },
             course: true,
           },

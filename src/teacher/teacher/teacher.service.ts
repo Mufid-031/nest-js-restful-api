@@ -285,6 +285,12 @@ export class TeacherService {
                 course: true,
               }
             },
+            students: {
+              include: {
+                enrollments: true,
+                user: true
+              }
+            }
           }
         },
       },

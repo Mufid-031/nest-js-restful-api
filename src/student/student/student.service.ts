@@ -215,7 +215,7 @@ export class StudentService {
       where: {
         id: user.id,
       },
-      data: requestUpdate,
+      data: user,
     });
 
     await this.prismaService.log.create({
