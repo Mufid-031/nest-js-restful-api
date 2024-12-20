@@ -94,7 +94,7 @@ export class CourseService {
       course.semester = requestUpdate.semester;
     }
 
-    if (requestUpdate.isActive) {
+    if (requestUpdate.isActive !== undefined) {
       course.isActive = requestUpdate.isActive;
     }
 
