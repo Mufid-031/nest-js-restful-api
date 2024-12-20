@@ -59,7 +59,8 @@ export class CourseService {
     code?: string,
     sks?: number,
     semester?: Semester,
-    programStudi?: string
+    programStudi?: string,
+    isActive?: boolean
   ) {
     const schema = z.object({
       name: z.string().min(1).max(100).optional(),
@@ -78,6 +79,7 @@ export class CourseService {
         ])
         .optional(),
       programStudi: z.string().min(1).max(100).optional(),
+      isActive: z.boolean().optional(),
     });
 
     return this.validation.validate(schema, {
@@ -86,6 +88,7 @@ export class CourseService {
       sks,
       semester,
       programStudi,
+      isActive
     });
   }
 

@@ -79,7 +79,7 @@ export class AbsensiController {
     );
   }
 
-  @Get('/pertemuan')
+  @Post('/pertemuan/detail')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
   @ApiOperation({ summary: 'Get absensi by pertemuan' })

@@ -19,7 +19,7 @@ export class CourseService {
     sks: number,
     semester: Semester,
     programStudi: string,
-    fakultas?: string
+    fakultas?: string,
   ): Promise<CourseResponse> {
     const requestCreate = this.CourseValidationService.create(
       name,
@@ -53,14 +53,16 @@ export class CourseService {
     name?: string,
     sks?: number,
     semester?: Semester,
-    programStudi?: string
+    programStudi?: string,
+    isActive?: boolean,
   ): Promise<CourseResponse> {
     const requestUpdate = this.CourseValidationService.update(
       name,
       code,
       sks,
       semester,
-      programStudi
+      programStudi,
+      isActive,
     );
 
     const course = await this.prismaService.course.findUnique({
@@ -92,6 +94,10 @@ export class CourseService {
       course.semester = requestUpdate.semester;
     }
 
+    if (requestUpdate.isActive) {
+      course.isActive = requestUpdate.isActive;
+    }
+
     const updatedCourse = await this.prismaService.course.update({
       where: {
         code: requestUpdate.code,
@@ -101,6 +107,7 @@ export class CourseService {
         code: course.code,
         sks: course.sks,
         semester: course.semester,
+        isActive: course.isActive,
       },
     });
 
@@ -136,7 +143,7 @@ export class CourseService {
         schedule: {
           include: {
             teacher: true,
-          }
+          },
         },
       },
     });
@@ -171,8 +178,8 @@ export class CourseService {
     const course = await this.prismaService.course.findMany({
       where: {
         name: {
-          contains: name
-        }
+          contains: name,
+        },
       },
     });
 

@@ -27,7 +27,7 @@ import {
   EnrollmentResponseRegister,
 } from '../model/enrollment.model';
 import { GetStudent } from 'src/decorators/student.decorator';
-import { Student } from '@prisma/client';
+import { Grade, Student } from '@prisma/client';
 
 @ApiTags('Enrollment')
 @Controller('/api/enrollment')
@@ -45,7 +45,7 @@ export class EnrollmentController {
     @GetStudent() student: Student,
     @Body('scheduleId') scheduleId: number[],
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.register(student, scheduleId);
+    return await this.enrollmentService.register(student, scheduleId);
   }
 
   @Delete()
@@ -59,7 +59,7 @@ export class EnrollmentController {
     @GetStudent() student: Student,
     @Body('scheduleId') scheduleId: number[],
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.delete(student, scheduleId);
+    return await this.enrollmentService.delete(student, scheduleId);
   }
 
   @Get()
@@ -71,7 +71,7 @@ export class EnrollmentController {
   async getEnrollments(
     @GetStudent() student: Student,
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.getEnrollments(student);
+    return await this.enrollmentService.getEnrollments(student);
   }
 
   @Get('/:scheduleId')
@@ -84,6 +84,39 @@ export class EnrollmentController {
     @GetStudent() student: Student,
     @Param('scheduleId') scheduleId: number,
   ): Promise<EnrollmentResponse> {
-    return this.enrollmentService.getEnrollment(student, scheduleId);
+    return await this.enrollmentService.getEnrollment(student, scheduleId);
+  }
+
+  @Post('/grade')
+  @Header('Content-type', 'application/json')
+  @HttpCode(201)
+  async addGrade(
+    @Body('id') id: number,
+    @Body('grade') grade: Grade,
+  ): Promise<EnrollmentResponse> {
+    return await this.enrollmentService.addGrade(id, grade);
+  }
+
+  @Get('student/:studentId')
+  @Header('content-type', 'application/json')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get enrollment student' })
+  @ApiHeader(RequestHeader)
+  @ApiResponse(EnrollmentResponseGetStudentEnrollments)
+  async getEnrollmentByStudentId(@Param('studentId') studentId: number) {
+    return await this.enrollmentService.getEnrollmentByStudentId(studentId);
+  }
+
+  @Post('/validation')
+  @Header('content-type', 'application/json')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Validation enrollment student' })
+  @ApiHeader(RequestHeader)
+  @ApiResponse(EnrollmentResponseGetStudentEnrollments)
+  async validation(
+    @Body('studentId') studentId: number,
+    @Body('scheduleId') scheduleId: number,
+  ) {
+    return await this.enrollmentService.validation(studentId, scheduleId);
   }
 }

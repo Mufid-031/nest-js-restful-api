@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { Student } from '@prisma/client';
+import { Grade, Student } from '@prisma/client';
 import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import { EnrollmentResponse } from 'src/types/enrollment.type';
@@ -223,6 +223,87 @@ export class EnrollmentService {
       status: 200,
       message: 'Success get enrollment',
       data: enrollment,
+    };
+  }
+
+  async addGrade(id: number, grade: Grade): Promise<EnrollmentResponse> {
+    const enrollment = await this.prismaService.enrollment.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        grade: grade,
+      },
+    });
+
+    return {
+      status: 201,
+      message: 'Success upadate grade',
+      data: enrollment,
+    };
+  }
+
+  async getEnrollmentByStudentId(
+    studentId: number,
+  ): Promise<EnrollmentResponse> {
+    const enrollments = await this.prismaService.enrollment.findMany({
+      where: {
+        studentId: Number(studentId),
+      },
+      include: {
+        student: {
+          include: {
+            user: true
+          }
+        },
+        schedule: {
+          include: {
+            teacher: {
+              include: {
+                user: true,
+              },
+            },
+            course: true,
+          },
+        },
+      },
+    });
+
+    return {
+      status: 200,
+      message: 'Success get enrollments',
+      data: enrollments,
+    };
+  }
+
+  async validation(
+    studentId: number,
+    scheduleId: number,
+  ): Promise<EnrollmentResponse> {
+    const enrollment = await this.prismaService.enrollment.findFirst({
+      where: {
+        studentId: Number(studentId),
+        scheduleId: Number(scheduleId),
+      },
+    });
+
+    if (!enrollment) {
+      throw new ErrorService(404, 'Enrollment not found');
+    }
+
+    const enrollmentUpdated = await this.prismaService.enrollment.update({
+      where: {
+        id: Number(enrollment.id),
+      },
+      data: {
+        isValidated: !enrollment.isValidated,
+      },
+    });
+
+    return {
+      status: 201,
+      message: 'Success validate enrollment',
+      data: enrollmentUpdated,
     };
   }
 }

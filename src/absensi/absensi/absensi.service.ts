@@ -149,9 +149,21 @@ export class AbsensiService {
   async getAbseensiByPertemuan(pertemuan: number, scheduleId: number): Promise<AbsensiResponse> {
     const absensi = await this.prismaService.absensi.findMany({
       where: {
-        pertemuan: pertemuan,
-        scheduleId: scheduleId,
+        pertemuan: Number(pertemuan),
+        scheduleId: Number(scheduleId),
       },
+      include: {
+        student: {
+          include: {
+            user: true
+          }
+        },
+        schedule: {
+          include: {
+            course: true
+          }
+        }
+      }
     });
 
     if (absensi.length === 0) {

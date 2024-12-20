@@ -105,6 +105,7 @@ model Course {
   sks         Int
   programStudi String
   fakultas    String?
+  isActive    Boolean?      @default(true)
   schedule    Schedule[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

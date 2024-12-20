@@ -156,6 +156,11 @@ export class ScheduleService {
 
   async getSchedules(): Promise<ScheduleResponse> {
     const schedules = await this.prismaService.schedule.findMany({
+      where: {
+        course: {
+          isActive: true,
+        }
+      },
       include: {
         teacher: {
           include: {
@@ -189,7 +194,15 @@ export class ScheduleService {
             user: true,
           },
         },
-        enrollments: true,
+        enrollments: {
+          include: {
+            student: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
         course: true,
       },
     });

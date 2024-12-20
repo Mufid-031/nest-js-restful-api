@@ -53,8 +53,8 @@ export class BeasiswaService {
   ): Promise<BeasiswaResponse> {
     const requestUpdate = this.beasiswaValidationService.update(
       nama,
-      mulai,
-      akhir,
+      new Date(mulai),
+      new Date(akhir),
       deskripsi,
     );
 
