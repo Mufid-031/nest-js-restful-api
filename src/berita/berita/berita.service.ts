@@ -91,7 +91,7 @@ export class BeritaService {
   async delete(id: number): Promise<BeritaResponse> {
     const berita = await this.prismaService.berita.delete({
       where: {
-        id: id,
+        id: Number(id),
       },
     });
 

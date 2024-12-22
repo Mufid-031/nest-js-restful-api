@@ -9,6 +9,8 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { BeritaService } from './berita.service';
 import { BeritaResponse } from 'src/types/berita.type';
@@ -29,6 +31,10 @@ import {
   BeritaResponseGetAll,
   BeritaResponseUpdate,
 } from '../model/berita.model';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import { extname } from 'path';
 
 @ApiTags('Berita')
 @Controller('/api/berita')
@@ -42,12 +48,34 @@ export class BeritaController {
   @ApiHeader(RequestHeader)
   @ApiBody(BeritaRequestCreate)
   @ApiResponse(BeritaResponseCreate)
+  @UseInterceptors(
+    FileInterceptor('gambar', {
+      storage: diskStorage({
+        destination: './uploads/berita',
+        filename: (req, file, callback) => {
+          // Generate nama file unik
+          const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
+          callback(null, uniqueFilename);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        // Validasi tipe file: hanya menerima gambar
+        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          return callback(new Error('Only image files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+    }),
+  )
   async create(
     @Body('judul') judul: string,
     @Body('konten') konten: string,
-    @Body('gambar') gambar?: string,
+    @UploadedFile() gambar?: Express.Multer.File,
   ): Promise<BeritaResponse> {
-    return await this.beritaService.create(judul, konten, gambar);
+    if (!gambar) {
+      throw new Error('No file uploaded!');
+    }
+    return await this.beritaService.create(judul, konten, gambar.filename);
   }
 
   @Patch()

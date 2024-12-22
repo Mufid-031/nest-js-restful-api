@@ -21,7 +21,7 @@ export class LibraryController {
   @UseInterceptors(
     FileInterceptor('cover', {
       storage: diskStorage({
-        destination: './uploads/covers', // Lokasi penyimpanan file
+        destination: './uploads/perpustakaan',
         filename: (req, file, callback) => {
           // Generate nama file unik
           const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;

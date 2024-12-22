@@ -18,6 +18,7 @@ model User {
   email         String   @unique
   password      String
   name          String
+  photo         String?
   role          Role
   student       Student?
   teacher       Teacher?
@@ -207,12 +208,12 @@ model Beasiswa {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   @@map("scholarships")
-} // Beasiswa dari luar tabel penerima tidak dibutuhkan diganti dengan link beasiswa
+}
 
 model Berita {
   id        Int      @id @default(autoincrement())
   judul     String
-  konten    String
+  konten    String   @db.LongText
   gambar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -279,6 +280,7 @@ model Alumni {
   tanggalLulus DateTime
   pekerjaan    String?
   perusahaan   String?
+  motivasi     String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   @@map("graduates")
@@ -297,7 +299,7 @@ model Log {
 model Pengumuman {
   id        Int      @id @default(autoincrement())
   judul     String
-  konten    String
+  konten    String   @db.LongText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("announcements")
@@ -310,7 +312,7 @@ model Library {
   page             Int
   author           String
   cover            String
-  overview         String
+  overview         String   @db.LongText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("libraries")
