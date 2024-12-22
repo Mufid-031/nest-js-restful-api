@@ -46,7 +46,7 @@ export class BeritaService {
     gambar?: string,
   ): Promise<BeritaResponse> {
     const requestUpdate = this.beritaValidationService.update(
-      id,
+      Number(id),
       judul,
       konten,
       gambar,

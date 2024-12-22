@@ -85,13 +85,32 @@ export class BeritaController {
   @ApiHeader(RequestHeader)
   @ApiBody(BeritaRequestUpdate)
   @ApiResponse(BeritaResponseUpdate)
+  @UseInterceptors(
+    FileInterceptor('gambar', {
+      storage: diskStorage({
+        destination: './uploads/berita',
+        filename: (req, file, callback) => {
+          // Generate nama file unik
+          const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
+          callback(null, uniqueFilename);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        // Validasi tipe file: hanya menerima gambar
+        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          return callback(new Error('Only image files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+    }),
+  )
   async update(
     @Body('id') id: number,
     @Body('judul') judul?: string,
     @Body('konten') konten?: string,
-    @Body('gambar') gambar?: string,
+    @UploadedFile() gambar?: Express.Multer.File,
   ): Promise<BeritaResponse> {
-    return await this.beritaService.update(id, judul, konten, gambar);
+    return await this.beritaService.update(id, judul, konten, gambar.filename);
   }
 
   @Delete('/:id')

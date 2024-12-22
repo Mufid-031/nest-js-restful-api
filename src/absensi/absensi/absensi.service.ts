@@ -146,7 +146,10 @@ export class AbsensiService {
     };
   }
 
-  async getAbseensiByPertemuan(pertemuan: number, scheduleId: number): Promise<AbsensiResponse> {
+  async getAbseensiByPertemuan(
+    pertemuan: number,
+    scheduleId: number,
+  ): Promise<AbsensiResponse> {
     const absensi = await this.prismaService.absensi.findMany({
       where: {
         pertemuan: Number(pertemuan),
@@ -155,15 +158,15 @@ export class AbsensiService {
       include: {
         student: {
           include: {
-            user: true
-          }
+            user: true,
+          },
         },
         schedule: {
           include: {
-            course: true
-          }
-        }
-      }
+            course: true,
+          },
+        },
+      },
     });
 
     if (absensi.length === 0) {
@@ -174,7 +177,7 @@ export class AbsensiService {
       status: 200,
       message: 'Get absensi by pertemuan successfully',
       data: absensi,
-    }
+    };
   }
 
   async getAbsensiByScheduleId(scheduleId: number): Promise<AbsensiResponse> {
@@ -253,6 +256,42 @@ export class AbsensiService {
     return {
       status: 200,
       message: 'Get absensi by student id and schedule id successfully',
+      data: absensi,
+    };
+  }
+
+  async updateByTeacher(
+    studentId: number,
+    scheduleId: number,
+    pertemuan: number,
+    statusKehadiran: StatusKehadiran,
+  ): Promise<AbsensiResponse> {
+    const absensi = await this.prismaService.absensi.findFirst({
+      where: {
+        AND: [
+          { studentId: Number(studentId) },
+          { scheduleId: Number(scheduleId) },
+          { pertemuan: Number(pertemuan) },
+        ],
+      },
+    });
+
+    if (!absensi) {
+      throw new ErrorService(404, 'Absensi not found');
+    }
+
+    await this.prismaService.absensi.update({
+      where: {
+        id: absensi.id,
+      },
+      data: {
+        statusKehadiran: statusKehadiran,
+      },
+    });
+
+    return {
+      status: 201,
+      message: 'Absensi updated successfully',
       data: absensi,
     };
   }

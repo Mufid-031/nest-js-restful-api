@@ -113,4 +113,23 @@ export class AbsensiController {
   ): Promise<AbsensiResponse> {
     return await this.absensiService.getStudentAbsensi(student, scheduleId);
   }
+
+  @Patch('/teacher')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Update absensi by teacher' })
+  @ApiHeader(RequestHeader)
+  async updateByTeacher(
+    @Body('studentId') studentId: number,
+    @Body('scheduleId') scheduleId: number,
+    @Body('pertemuan') pertemuan: number,
+    @Body('statusKehadiran') statusKehadiran: StatusKehadiran,
+  ): Promise<AbsensiResponse> {
+    return await this.absensiService.updateByTeacher(
+      studentId,
+      scheduleId,
+      pertemuan,
+      statusKehadiran,
+    );
+  }
 }
