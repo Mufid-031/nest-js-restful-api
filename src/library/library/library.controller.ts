@@ -5,6 +5,11 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Patch,
+  HttpCode,
+  Delete,
+  Param,
+  Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -58,5 +63,39 @@ export class LibraryController {
       file.filename,
       overview,
     );
+  }
+
+  @Patch()
+  @HttpCode(201)
+  async update(
+    @Body('id') id: number,
+    @Body('title') title?: string,
+    @Body('description') description?: string,
+    @Body('page') page?: number,
+    @Body('author') author?: string,
+    @Body('cover') cover?: string,
+    @Body('overview') overview?: string,
+  ): Promise<LibraryResponse> {
+    return await this.libraryService.update(
+      id,
+      title,
+      description,
+      page,
+      author,
+      cover,
+      overview,
+    );
+  }
+
+  @Delete('/:id')
+  @HttpCode(201)
+  async delete(@Param('id') id: number): Promise<LibraryResponse> {
+    return await this.libraryService.delete(id);
+  }
+
+  @Get()
+  @HttpCode(201)
+  async getLibraries(): Promise<LibraryResponse> {
+    return await this.libraryService.getLibraries();
   }
 }
