@@ -9,7 +9,13 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AllExceptionsFilter());
   app.enableCors({
-    origin: 'http://127.0.0.1:8000',
+    origin: [
+      'http://127.0.0.1:8000',
+      'http://localhost:8000',
+      'http://127.0.0.1',
+      'http://localhost',
+      '*',
+    ],
   });
 
   const config = new DocumentBuilder()
@@ -19,7 +25,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
   await app.listen(3000);
 }
 bootstrap();

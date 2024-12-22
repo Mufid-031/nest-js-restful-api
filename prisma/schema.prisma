@@ -302,3 +302,16 @@ model Pengumuman {
   updatedAt DateTime @updatedAt
   @@map("announcements")
 }
+
+model Library {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String
+  page             Int
+  author           String
+  cover            String
+  overview         String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("libraries")
+}

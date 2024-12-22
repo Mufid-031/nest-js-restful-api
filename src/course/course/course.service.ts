@@ -64,7 +64,7 @@ export class CourseService {
       programStudi,
       isActive,
     );
-
+  
     const course = await this.prismaService.course.findUnique({
       where: {
         code: requestUpdate.code,
@@ -73,31 +73,32 @@ export class CourseService {
         schedule: true,
       },
     });
-
+  
     if (!course) {
       throw new ErrorService(404, 'Course not found');
     }
-
+  
+    // Update hanya jika properti diberikan
     if (requestUpdate.name) {
       course.name = requestUpdate.name;
     }
-
+  
     if (requestUpdate.code) {
       course.code = requestUpdate.code;
     }
-
+  
     if (requestUpdate.sks) {
       course.sks = requestUpdate.sks;
     }
-
+  
     if (requestUpdate.semester) {
       course.semester = requestUpdate.semester;
     }
-
-    if (requestUpdate.isActive !== undefined) {
+  
+    if (requestUpdate.isActive != undefined) {
       course.isActive = requestUpdate.isActive;
     }
-
+  
     const updatedCourse = await this.prismaService.course.update({
       where: {
         code: requestUpdate.code,
@@ -110,7 +111,7 @@ export class CourseService {
         isActive: course.isActive,
       },
     });
-
+  
     return {
       status: 201,
       message: 'Success update course',

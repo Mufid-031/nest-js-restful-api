@@ -80,6 +80,7 @@ export class CourseController {
     @Body('sks') sks?: number,
     @Body('semester') semester?: Semester,
     @Body('programStudi') programStudi?: string,
+    @Body('isActive') isActive?: boolean,
   ): Promise<CourseResponse> {
     return this.courseService.update(
       code,
@@ -87,6 +88,7 @@ export class CourseController {
       sks,
       semester,
       programStudi,
+      isActive
     );
   }
 

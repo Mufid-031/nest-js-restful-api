@@ -29,6 +29,9 @@ import { LogsModule } from './log/logs.module';
 import { UserModule } from './user/user.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
+import { LibraryModule } from './library/library.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -56,6 +59,11 @@ import { AnnouncementsModule } from './announcements/announcements.module';
     UserModule,
     EvaluationModule,
     AnnouncementsModule,
+    LibraryModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
