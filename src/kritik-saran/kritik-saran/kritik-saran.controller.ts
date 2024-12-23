@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -42,7 +43,11 @@ export class KritikSaranController {
   @ApiHeader(RequestHeader)
   @ApiBody(KritikSaranRequestCreate)
   @ApiResponse(KritikSaranResponseCreate)
-  async create(name: string, email: string, pesan: string) {
+  async create(
+    @Body('name') name: string,
+    @Body('email') email: string,
+    @Body('pesan') pesan: string,
+  ) {
     return this.kritikSaranService.create(name, email, pesan);
   }
 
@@ -53,11 +58,14 @@ export class KritikSaranController {
   @ApiHeader(RequestHeader)
   @ApiBody(KritikSaranRequestUpdate)
   @ApiResponse(KritikSaranResponseUpdate)
-  async update(id: number, pesan: string) {
+  async update(
+    @Body('id') id: number,
+    @Body('pesan') pesan: string,
+  ) {
     return this.kritikSaranService.update(id, pesan);
   }
 
-  @Delete()
+  @Delete('/:id')
   @Header('Content-Type', 'application/json')
   @HttpCode(201)
   @ApiOperation({ summary: 'Delete Kritik Saran' })
