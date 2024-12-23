@@ -5,7 +5,6 @@ import { ErrorService } from 'src/error/error/error.service';
 import { PrismaService } from 'src/prisma/prisma/prisma.service';
 import {
   KritikSaranResponse,
-  KritikSaranType,
 } from 'src/types/kritik-saran.model';
 import { KritikSaranService as KritikSaranValidationService } from 'src/validation/kritik-saran/kritik-saran.service';
 
@@ -18,17 +17,17 @@ export class KritikSaranService {
   ) {}
 
   async create(
-    user: User,
+    name: string,
+    email: string,
     pesan: string,
-    type: KritikSaranType,
   ): Promise<KritikSaranResponse> {
-    const requestCreate = this.kritikSaranValidationService.create(pesan, type);
+    const requestCreate = this.kritikSaranValidationService.create(name, email, pesan);
 
     const kritikSaran = await this.prismaService.kritikSaran.create({
       data: {
-        userId: user.id,
+        name: requestCreate.name,
+        email: requestCreate.email,
         pesan: requestCreate.pesan,
-        type: requestCreate.type,
       },
     });
 
@@ -40,15 +39,12 @@ export class KritikSaranService {
   }
 
   async update(
-    user: User,
     id: number,
     pesan?: string,
-    type?: KritikSaranType,
   ): Promise<KritikSaranResponse> {
     const requestUpdate = this.kritikSaranValidationService.update(
       id,
       pesan,
-      type,
     );
 
     const kritikSaran = await this.prismaService.kritikSaran.findUnique({
@@ -65,18 +61,12 @@ export class KritikSaranService {
       kritikSaran.pesan = requestUpdate.pesan;
     }
 
-    if (requestUpdate.type) {
-      kritikSaran.type = requestUpdate.type;
-    }
-
     const kritikSaranUpdated = await this.prismaService.kritikSaran.update({
       where: {
-        userId: user.id,
         id: kritikSaran.id,
       },
       data: {
         pesan: kritikSaran.pesan,
-        type: kritikSaran.type,
       },
     });
 
@@ -87,10 +77,9 @@ export class KritikSaranService {
     };
   }
 
-  async delete(user: User, id: number) {
+  async delete(id: number) {
     const kritikSaran = await this.prismaService.kritikSaran.delete({
       where: {
-        userId: user.id,
         id: id,
       },
     });

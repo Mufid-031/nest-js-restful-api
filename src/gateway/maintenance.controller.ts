@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Patch } from '@nestjs/common';
+import { Controller, Get, Patch } from '@nestjs/common';
 import { MaintenanceService } from './maintenance.service';
 
 @Controller('maintenance')
@@ -9,5 +9,10 @@ export class MaintenanceController {
   @Patch('/toggle-maintenance')
   async toggleMaintenance() {
     return await this.maintenanceService.toggleMaintenance();
+  }
+
+  @Get()
+  async getServer() {
+    return await this.maintenanceService.getServer();
   }
 }

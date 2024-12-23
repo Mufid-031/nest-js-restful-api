@@ -3,10 +3,11 @@ export const KritikSaranRequestCreate = {
   schema: {
     type: 'object',
     properties: {
+      name: { type: 'string', example: 'John' },
+      email: { type: 'string', example: 'pKQ9T@example.com' },
       pesan: { type: 'string', example: 'Webnya keren' },
-      type: { type: 'string', example: 'KRITIK | SARAN' },
     },
-    required: ['pesan', 'type'],
+    required: ['name', 'email', 'pesan'],
   },
 };
 
@@ -22,8 +23,11 @@ export const KritikSaranResponseCreate = {
         type: 'object',
         properties: {
           id: { type: 'number', example: 1 },
+          name: { type: 'string', example: 'John' },
+          email: { type: 'string', example: 'pKQ9T@example.com' },
           pesan: { type: 'string', example: 'Webnya keren' },
-          type: { type: 'string', example: 'KRITIK | SARAN' },
+          createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
+          updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
         },
       },
     },
@@ -36,7 +40,6 @@ export const KritikSaranRequestUpdate = {
     properties: {
       id: { type: 'number', example: 1 },
       pesan: { type: 'string', example: 'Webnya keren' },
-      type: { type: 'string', example: 'KRITIK | SARAN' },
     },
   },
 };
@@ -79,8 +82,11 @@ export const KritikSaranResponseGetAll = {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'John' },
+            email: { type: 'string', example: 'pKQ9T@example.com' },
             pesan: { type: 'string', example: 'Webnya keren' },
-            type: { type: 'string', example: 'KRITIK | SARAN' },
+            createdAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
+            updatedAt: { type: 'string', example: '2023-01-01T00:00:00.000Z' },
           },
         },
       },

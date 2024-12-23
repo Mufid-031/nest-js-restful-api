@@ -23,7 +23,7 @@ model User {
   student       Student?
   teacher       Teacher?
   Admin         Admin?
-  kritikSaran   KritikSaran[]
+  // kritikSaran   KritikSaran[]
   telephone     String?
   tanggalLahir  DateTime?
   gender        Gender?
@@ -222,18 +222,14 @@ model Berita {
 
 model KritikSaran {
   id         Int      @id @default(autoincrement())
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  email      String
+  // userId     Int?
+  // user       User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   pesan      String
-  type       TypeKritikSaran
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   @@map("feedbacks")
-}
-
-enum TypeKritikSaran {
-  KRITIK
-  SARAN
 }
 
 model EvaluasiDosen {
@@ -323,3 +319,4 @@ model ServerStatus {
   isMaintenance Boolean @default(false)
   updatedAt    DateTime @updatedAt
 }
+

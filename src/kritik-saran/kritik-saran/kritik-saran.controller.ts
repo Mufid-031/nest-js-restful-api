@@ -10,12 +10,25 @@ import {
   Post,
 } from '@nestjs/common';
 import { KritikSaranService } from './kritik-saran.service';
-import { KritikSaranType } from 'src/types/kritik-saran.model';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/decorators/user.decorator';
-import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiHeader,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RequestHeader } from 'src/model/x-api-token.model';
-import { KritikSaranRequestCreate, KritikSaranRequestUpdate, KritikSaranResponseCreate, KritikSaranResponseDelete, KritikSaranResponseGetAll, KritikSaranResponseUpdate } from '../model/kritik-saran.model';
+import {
+  KritikSaranRequestCreate,
+  KritikSaranRequestUpdate,
+  KritikSaranResponseCreate,
+  KritikSaranResponseDelete,
+  KritikSaranResponseGetAll,
+  KritikSaranResponseUpdate,
+} from '../model/kritik-saran.model';
 
 @ApiTags('Kritik Saran')
 @Controller('/api/kritikSaran')
@@ -29,8 +42,8 @@ export class KritikSaranController {
   @ApiHeader(RequestHeader)
   @ApiBody(KritikSaranRequestCreate)
   @ApiResponse(KritikSaranResponseCreate)
-  async create(@GetUser() user: User, pesan: string, type: KritikSaranType) {
-    return this.kritikSaranService.create(user, pesan, type);
+  async create(name: string, email: string, pesan: string) {
+    return this.kritikSaranService.create(name, email, pesan);
   }
 
   @Patch()
@@ -40,13 +53,8 @@ export class KritikSaranController {
   @ApiHeader(RequestHeader)
   @ApiBody(KritikSaranRequestUpdate)
   @ApiResponse(KritikSaranResponseUpdate)
-  async update(
-    @GetUser() user: User,
-    id: number,
-    pesan?: string,
-    type?: KritikSaranType,
-  ) {
-    return this.kritikSaranService.update(user, id, pesan, type);
+  async update(id: number, pesan: string) {
+    return this.kritikSaranService.update(id, pesan);
   }
 
   @Delete()
@@ -56,8 +64,8 @@ export class KritikSaranController {
   @ApiHeader(RequestHeader)
   @ApiParam({ name: 'id', type: 'number' })
   @ApiResponse(KritikSaranResponseDelete)
-  async delete(@GetUser() user: User, @Param('id') id: number) {
-    return this.kritikSaranService.delete(user, id);
+  async delete(@Param('id') id: number) {
+    return this.kritikSaranService.delete(id);
   }
 
   @Get()

@@ -36,6 +36,20 @@ export class MaintenanceService {
       this.gateway.notifyMaintenance(users);
     }
 
-    return { message: `Server is now ${newStatus ? 'under maintenance' : 'active'}` };
+    return {
+      status: 200,
+      message: `Server is now ${newStatus ? 'under maintenance' : 'active'}`,
+      data: newStatus,
+    };
+  }
+
+  async getServer() {
+    const server = await this.prisma.serverStatus.findFirst();
+
+    return {
+      status: 200,
+      message: server.isMaintenance ? 'Server is under maintenance' : 'Server is active',
+      data: server,
+    }
   }
 }
