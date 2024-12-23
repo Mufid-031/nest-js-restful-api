@@ -68,13 +68,16 @@ export class PembayaranService {
     };
   }
 
-  async confirm(semester: Semester, student: Student): Promise<PembayaranResponse> {
+  async confirm(
+    semester: Semester,
+    student: Student,
+  ): Promise<PembayaranResponse> {
     const pembayaran = await this.prismaService.pembayaran.findFirst({
       where: {
         semester: semester,
         studentId: student.id,
         statusPembayaran: StatusPembayaran.PENDING,
-      }
+      },
     });
 
     if (!pembayaran) {
@@ -171,6 +174,28 @@ export class PembayaranService {
       message:
         'Success Get Pembayaran grouped by semester and statusPembayaran',
       data: formattedData,
+    };
+  }
+
+  async getAllPaymentsSuccess(user: User): Promise<PembayaranResponse> {
+    if (user.role !== 'ADMIN') {
+      throw new ErrorService(403, 'Anda bukan admin');
+    }
+
+    const payments = await this.prismaService.pembayaran.findMany({
+      where: {
+        statusPembayaran: 'SUCCESS',
+      },
+    });
+
+    if (payments.length === 0) {
+      throw new ErrorService(404, 'Pembayaran not found');
+    }
+
+    return {
+      status: 200,
+      message: 'Success Get Pembayaran',
+      data: payments,
     };
   }
 }

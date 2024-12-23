@@ -10,11 +10,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { PembayaranService } from './pembayaran.service';
-import {
-  PembayaranResponse,
-} from 'src/types/pembayaran.type';
+import { PembayaranResponse } from 'src/types/pembayaran.type';
 import { GetStudent } from 'src/decorators/student.decorator';
-import { Student } from '@prisma/client';
+import { Student, User } from '@prisma/client';
 import {
   ApiBody,
   ApiHeader,
@@ -31,6 +29,7 @@ import {
 } from '../model/pembayaran.model';
 import { RequestHeader } from 'src/model/x-api-token.model';
 import { Semester } from 'src/types/course.type';
+import { GetUser } from 'src/decorators/user.decorator';
 
 @ApiTags('Pembayaran')
 @Controller('/api/pembayaran')
@@ -46,12 +45,9 @@ export class PembayaranController {
   @ApiResponse(PembayaranResponseCreate)
   async create(
     @Body('total') total: number,
-    @Body('semester') semester: Semester
+    @Body('semester') semester: Semester,
   ): Promise<PembayaranResponse> {
-    return await this.pembayaranService.create(
-      total,
-      semester
-    );
+    return await this.pembayaranService.create(total, semester);
   }
 
   @Patch('/confirm/:semester')
@@ -74,7 +70,18 @@ export class PembayaranController {
   @ApiOperation({ summary: 'Get Pembayaran' })
   @ApiHeader(RequestHeader)
   @ApiResponse(PembayaranResponseGetStudent)
-  async getPembayaranStudent(@GetStudent() student: Student): Promise<PembayaranResponse> {
+  async getPembayaranStudent(
+    @GetStudent() student: Student,
+  ): Promise<PembayaranResponse> {
     return await this.pembayaranService.getPembayaranStudent(student);
+  }
+
+  @Get('/admin')
+  @Header('Content-Type', 'application/json')
+  @HttpCode(200)
+  async getAllPaymentsSuccess(
+    @GetUser() user: User,
+  ): Promise<PembayaranResponse> {
+    return await this.pembayaranService.getAllPaymentsSuccess(user);
   }
 }
