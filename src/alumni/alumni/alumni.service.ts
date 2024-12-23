@@ -43,6 +43,52 @@ export class AlumniService {
     };
   }
 
+  async update(
+    id: number,
+    studentId?: number,
+    tanggalLulus?: Date,
+  ): Promise<AlumniResponse> {
+    const alumni = await this.prismaService.alumni.findUnique({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!alumni) {
+      throw new ErrorService(404, 'Alumni not found');
+    }
+
+    const alumniUpdated = await this.prismaService.alumni.update({
+      where: {
+        id: alumni.id,
+      },
+      data: {
+        studentId: studentId || alumni.studentId,
+        tanggalLulus: tanggalLulus || alumni.tanggalLulus,
+      },
+    });
+
+    return {
+      status: 201,
+      message: 'Alumni updated successfully',
+      data: alumniUpdated,
+    };
+  }
+
+  async delete(id: number): Promise<AlumniResponse> {
+    const alumni = await this.prismaService.alumni.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return {
+      status: 201,
+      message: 'Alumni deleted successfully',
+      data: alumni,
+    };
+  }
+
   async getAllAlumni(): Promise<AlumniResponse> {
     const alumni = await this.prismaService.alumni.findMany();
 

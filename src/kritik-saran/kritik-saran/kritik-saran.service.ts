@@ -80,7 +80,7 @@ export class KritikSaranService {
   async delete(id: number) {
     const kritikSaran = await this.prismaService.kritikSaran.delete({
       where: {
-        id: id,
+        id: Number(id),
       },
     });
 
