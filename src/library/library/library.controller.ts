@@ -66,6 +66,25 @@ export class LibraryController {
   }
 
   @Patch()
+  @UseInterceptors(
+    FileInterceptor('cover', {
+      storage: diskStorage({
+        destination: './uploads/perpustakaan',
+        filename: (req, file, callback) => {
+          // Generate nama file unik
+          const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
+          callback(null, uniqueFilename);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        // Validasi tipe file: hanya menerima gambar
+        if (!file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+          return callback(new Error('Only image files are allowed!'), false);
+        }
+        callback(null, true);
+      }
+    })
+  )
   @HttpCode(201)
   async update(
     @Body('id') id: number,
@@ -73,7 +92,7 @@ export class LibraryController {
     @Body('description') description?: string,
     @Body('page') page?: number,
     @Body('author') author?: string,
-    @Body('cover') cover?: string,
+    @UploadedFile('cover') cover?: Express.Multer.File,
     @Body('overview') overview?: string,
   ): Promise<LibraryResponse> {
     return await this.libraryService.update(
@@ -82,7 +101,7 @@ export class LibraryController {
       description,
       page,
       author,
-      cover,
+      cover?.filename,
       overview,
     );
   }

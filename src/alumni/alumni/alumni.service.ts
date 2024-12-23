@@ -16,7 +16,7 @@ export class AlumniService {
   async create(studentId: number, tanggalLulus: Date): Promise<AlumniResponse> {
     const requestCreate = this.alumniValidationService.create(
       studentId,
-      tanggalLulus,
+      new Date(tanggalLulus),
     );
 
     const alumniCount = await this.prismaService.alumni.count({
@@ -64,7 +64,7 @@ export class AlumniService {
       },
       data: {
         studentId: studentId || alumni.studentId,
-        tanggalLulus: tanggalLulus || alumni.tanggalLulus,
+        tanggalLulus: new Date(tanggalLulus) || alumni.tanggalLulus,
       },
     });
 

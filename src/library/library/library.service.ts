@@ -53,24 +53,23 @@ export class LibraryService {
       throw new ErrorService(404, 'Library not found');
     }
 
-    if (title) library.title = title;
-    if (description) library.description = description;
-    if (page) library.page = Number(page);
-    if (author) library.author = author;
-    if (cover) library.cover = cover;
-    if (overview) library.overview = overview;
-
-    await this.prismaService.library.update({
+    const updatedLibrary = await this.prismaService.library.update({
       where: {
         id: Number(id),
       },
-      data: library,
+      data: {
+        title: title || library.title,
+        description: description || library.description,
+        page: Number(page) || library.page,
+        author: author || library.author,
+        cover: cover || library.cover,
+        overview: overview || library.overview,
+      },
     });
-
     return {
       status: 201,
       message: 'Library updated successfully!',
-      data: library,
+      data: updatedLibrary,
     };
   }
 
