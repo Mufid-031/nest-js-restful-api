@@ -72,8 +72,10 @@ export class LibraryController {
         destination: './uploads/perpustakaan',
         filename: (req, file, callback) => {
           // Generate nama file unik
-          const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
-          callback(null, uniqueFilename);
+          if (file) {
+            const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
+            callback(null, uniqueFilename);
+          }
         },
       }),
       fileFilter: (req, file, callback) => {

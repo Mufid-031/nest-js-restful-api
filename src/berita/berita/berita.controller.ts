@@ -91,8 +91,10 @@ export class BeritaController {
         destination: './uploads/berita',
         filename: (req, file, callback) => {
           // Generate nama file unik
-          const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
-          callback(null, uniqueFilename);
+          if (file) {
+            const uniqueFilename = `${uuidv4()}${extname(file.originalname)}`;
+            callback(null, uniqueFilename);
+          }
         },
       }),
       fileFilter: (req, file, callback) => {
@@ -110,7 +112,7 @@ export class BeritaController {
     @Body('konten') konten?: string,
     @UploadedFile() gambar?: Express.Multer.File,
   ): Promise<BeritaResponse> {
-    return await this.beritaService.update(id, judul, konten, gambar.filename);
+    return await this.beritaService.update(id, judul, konten, gambar?.filename);
   }
 
   @Delete('/:id')
