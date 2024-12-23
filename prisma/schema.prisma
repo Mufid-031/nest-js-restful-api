@@ -317,3 +317,9 @@ model Library {
   updatedAt DateTime @updatedAt
   @@map("libraries")
 }
+
+model ServerStatus {
+  id          Int      @id @default(autoincrement())
+  isMaintenance Boolean @default(false)
+  updatedAt    DateTime @updatedAt
+}

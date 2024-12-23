@@ -32,6 +32,7 @@ import { AnnouncementsModule } from './announcements/announcements.module';
 import { LibraryModule } from './library/library.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MaintenanceModule } from './gateway/maintenance.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { join } from 'path';
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
     }),
+    MaintenanceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

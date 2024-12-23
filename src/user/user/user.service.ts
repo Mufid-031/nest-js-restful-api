@@ -20,6 +20,8 @@ export class UserService {
       password,
     );
 
+    const server = await this.prismaService.serverStatus.findFirst();
+
     let user = await this.prismaService.user.findFirst({
       where: {
         OR: [
@@ -29,6 +31,10 @@ export class UserService {
         ],
       } as any,
     });
+
+    if (user.role !== 'ADMIN' && server.isMaintenance) {
+      throw new ErrorService(403, 'Server is under maintenance');
+    }
 
     if (!user) {
       throw new ErrorService(404, 'Not valid creadential');
