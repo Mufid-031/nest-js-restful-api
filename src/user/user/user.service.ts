@@ -58,6 +58,13 @@ export class UserService {
       },
     });
 
+    await this.prismaService.log.create({
+      data: {
+        userId: user.id,
+        action: 'Login',
+      },
+    });
+
     return {
       status: 200,
       message: 'Success login',
